@@ -112,7 +112,7 @@ We begin by appending the bytes signalling the beginning of the header to the fi
 
 A random 32-byte `fileKey` and a random 24-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction.
 
-`fileKey`, `fileNonce` and `fileName` (the file's intended name upon decryption) are then stored within the JSON header as described in §3. The name of the `fileInfo` property in which they are stored is a 24-byte nonce, which is used to then encrypt the underlying object asymetrically according to the recipient's public key(s) using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. This is done once for every recipient. For `n` recipients, we will obtain `n` properties of `fileInfo` with nonces as the property name and a Base64-encrypted object as the property value.
+`fileKey`, `fileNonce` and `fileName` (the file's intended name upon decryption) are then stored within the JSON header as described in §3. The name of the `fileInfo` property in which they are stored is a 24-byte nonce, which is used to then encrypt the underlying object asymmetrically according to the recipient's public key(s) using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. This is done once for every recipient. For `n` recipients, we will obtain `n` properties of `fileInfo` with nonces as the property name and a Base64-encrypted object as the property value.
 
 TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity.
 
