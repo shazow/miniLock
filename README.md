@@ -28,7 +28,7 @@ This section outlines an example user flow in order to help demonstrate how mini
 Alice wants to send a scan of her passport to Bob. Sending it over email would compromise personal information, so Alice decided to first encrypt the scan using miniLock.
 
 Bob opens miniLock and enters his passphrase. miniLock displays his miniLock ID, which is tied to his passphrase and is persistent. He sends Alice his miniLock ID, which looks something like this:
-`O8uUe9I+qIi12pHtEvOOgtD9sYNi4N1QOqBS9N8w51M=`
+`HUG7p95ffj5B1FRbsE5VCF3ZaKF5q5GHBLYqoQxWHZdY`
 
 Alice drags and drops her passport scan into miniLock and enters Bob's miniLock ID as the recipient. She clicks the encrypt button and sends the resulting `.minilock` file to Bob. Once Bob drags the encrypted file into miniLock, it automatically detects it as a miniLock-encrypted file destined to Bob, and decrypts and saves the passport scan on his computer.
 
