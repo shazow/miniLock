@@ -13,11 +13,11 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 				result,
 				result.name,
 				[
-					'ejSSnXzCP806SWiDgeueYlMwf2U8utLSkNhwU1VoiAE=',
-					'Sv/SmemydDPmJHXnBuAxivZ98tRwYZ9swBkpzbFbLSE='
+					'9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe',
+					'63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'
 				],
-				nacl.util.decodeBase64('ejSSnXzCP806SWiDgeueYlMwf2U8utLSkNhwU1VoiAE='),
-				nacl.util.decodeBase64('X5GlsT2y8/H+nQQwgd8bDoDybtWIFq1o/AK6Rc8qKX0='),
+				Base58.decode('9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe'),
+				Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
 				'miniLock.test.encryptFileCallback'
 			)
 		})
@@ -31,8 +31,8 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 			result.name = 'userHasChangedTheName.minilock'
 			miniLock.crypto.decryptFile(
 				result,
-				nacl.util.decodeBase64('Sv/SmemydDPmJHXnBuAxivZ98tRwYZ9swBkpzbFbLSE='),
-				nacl.util.decodeBase64('lWCrI2ExjZAw8nsgHJvq5OiT6SFwmUuSc279K+ijbIU='),
+				Base58.decode('63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'),
+				Base58.decode('B47Ez1ftjTPSL5Mu74YaQ33WAbDjNcBwYWnx7Fp6kvmr'),
 				'miniLock.test.decryptFileCallback'
 			)
 		})

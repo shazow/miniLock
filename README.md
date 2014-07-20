@@ -55,7 +55,7 @@ The key derivation salt is constant and is composed of the following 16 bytes:
 
 Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL `curve25519-xsalsa20-poly1305` construction.
 
-The user's `miniLock ID` is a Base64 representation of their public key, meant to be easily communicable via email or instant messaging.
+The user's `miniLock ID` is a Base58 representation of their public key, meant to be easily communicable via email or instant messaging.
 
 
 ##3. File format
@@ -126,7 +126,7 @@ If there are multiple properties within `fileInfo`, the recipient must iterate t
 If the authenticated asymmetric decryption of the header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.
 
 ##6. Key Identity Authentication
-In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base64-encoded characters). Therefore, no specialized key identity authentication mechanism is required.
+In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.
 
 ##7. Caveats
 miniLock is not intended to protect against malicious files being sent and received. It is the user's responsibility to vet the safety of the files they send or receive over miniLock. miniLock cannot protect against malware being sent over it.

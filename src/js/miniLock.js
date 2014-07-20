@@ -40,7 +40,7 @@ miniLock.util.validateID = function(id) {
 		return false
 	}
 	if (base64Match.test(id)) {
-		var bytes = nacl.util.decodeBase64(id)
+		var bytes = Base58.decode(id)
 		return bytes.length === 32
 	}
 	return false
@@ -204,9 +204,9 @@ miniLock.crypto.getFileKey = function() {
 }
 
 // Input: Public encryption key (Uint8Array)
-// Output: miniLock ID (Base64)
+// Output: miniLock ID (Base58)
 miniLock.crypto.getMiniLockID = function(publicKey) {
-	return nacl.util.encodeBase64(publicKey)
+	return Base58.encode(publicKey)
 }
 
 // Input: Object:
@@ -216,7 +216,7 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 //		data: File (ArrayBuffer),
 //	}
 // saveName: Name to use when saving resulting file. '.minilock' extension will be added.
-// publicKeys: Array of (Base64) public keys to encrypt for
+// publicKeys: Array of (Base58) public keys to encrypt for
 // myPublicKey: My public key (Uint8Array)
 // mySecretKey: My secret key (Uint8Array)
 // callback: Name of the callback function to which encrypted result is passed.

@@ -255,7 +255,7 @@ $('input.encryptFile').click(function() {
 //		type: File MIME type
 //	}
 //	operation: 'encrypt' or 'decrypt'
-//	senderID: Sender's miniLock ID (Base64)
+//	senderID: Sender's miniLock ID (Base58)
 // Result: Anchor HTML element which can be used to save file
 miniLock.UI.save = function(file, operation, senderID) {
 	var endText = 'encryptioncomplete'

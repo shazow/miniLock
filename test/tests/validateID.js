@@ -2,12 +2,10 @@
 QUnit.test('validateID', function(assert) {
 	'use strict';
 	var IDs = [
-		'ejSSnXzCP806SWiDgeueYlMwf2U8utLSkNhwU1VoiAE=',
-		'7m+Saj2zhy0mGNKEJPDI8V1kyFfZZfcxbWxCcYlwPF0=',
-		'4153+icvEiQuiBpttMHjUsMuy2vDCylzpnTSMQFY2SQ=',
-		'u1F4OzpS9PO3ZQitXFDDwTWdLsZmLlA3rCNwCYsnBjY=',
-		nacl.util.encodeBase64((nacl.box.keyPair()).publicKey),
-		nacl.util.encodeBase64((nacl.box.keyPair()).publicKey)
+		Base58.encode((nacl.box.keyPair()).publicKey),
+		Base58.encode((nacl.box.keyPair()).publicKey),
+		Base58.encode((nacl.box.keyPair()).publicKey),
+		Base58.encode((nacl.box.keyPair()).publicKey)
 	]
 	var notIDs = [
 		'clearly not an ID',

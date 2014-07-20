@@ -7,7 +7,8 @@ var window = {}
 /*jshint +W079 */
 importScripts(
 	'../lib/crypto/nacl.js',
-	'../lib/indexOfMulti.js'
+	'../lib/indexOfMulti.js',
+	'../lib/base58.js'
 )
 var nacl = window.nacl
 
@@ -30,7 +31,7 @@ var validateID = function(id) {
 		return false
 	}
 	if (base64Match.test(id)) {
-		var bytes = nacl.util.decodeBase64(id)
+		var bytes = Base58.decode(id)
 		return bytes.length === 32
 	}
 	return false
@@ -53,7 +54,22 @@ var validateNonce = function(nonce) {
 	return false
 }
 
-var validateKey = validateID
+// Input: String
+// Output: Boolean
+// Notes: Validates if string is a proper symmetric key.
+var validateKey = function(key) {
+	if (
+		(key.length > 50) ||
+		(key.length < 40)
+	) {
+		return false
+	}
+	if (base64Match.test(key)) {
+		var bytes = nacl.util.decodeBase64(key)
+		return bytes.length === 32
+	}
+	return false
+}
 
 // -----------------------
 // Cryptographic functions
@@ -68,7 +84,7 @@ var validateKey = validateID
 //		saveName: Name to use for saving resulting file (String),
 //		fileKey: 32-byte key used for file encryption (Uint8Array),
 //		fileNonce: 24-byte nonce used for file encryption/decryption (Uint8Array),
-//		publicKeys: Array of (Base64) public keys to encrypt to (not used for 'decrypt' operation),
+//		publicKeys: Array of (Base58) public keys to encrypt to (not used for 'decrypt' operation),
 //		myPublicKey: My public key (Uint8Array),
 //		mySecretKey: My secret key (Uint8Array)
 //	}
@@ -110,7 +126,7 @@ message = message.data
 if (message.operation === 'encrypt') {
 	(function() {
 		var info = {
-			senderID: nacl.util.encodeBase64(message.myPublicKey),
+			senderID: Base58.encode(message.myPublicKey),
 			fileInfo: {}
 		}
 		var fileInfo = {
@@ -126,7 +142,7 @@ if (message.operation === 'encrypt') {
 			var encryptedFileInfo = nacl.box(
 				nacl.util.decodeUTF8(fileInfo),
 				nacl.util.decodeBase64(message.nonces[i]),
-				nacl.util.decodeBase64(message.publicKeys[i]),
+				Base58.decode(message.publicKeys[i]),
 				message.mySecretKey
 			)
 			info.fileInfo[message.nonces[i]] = nacl.util.encodeBase64(encryptedFileInfo)
@@ -150,7 +166,7 @@ if (message.operation === 'encrypt') {
 			name: message.name,
 			saveName: message.saveName,
 			info: info,
-			senderID: nacl.util.encodeBase64(message.myPublicKey),
+			senderID: Base58.encode(message.myPublicKey),
 			error: false,
 			callback: message.callback
 		})
@@ -217,7 +233,7 @@ if (message.operation === 'decrypt') {
 				actualFileInfo = nacl.box.open(
 					nacl.util.decodeBase64(info.fileInfo[i]),
 					nacl.util.decodeBase64(i),
-					nacl.util.decodeBase64(info.senderID),
+					Base58.decode(info.senderID),
 					message.mySecretKey
 				)
 				if (actualFileInfo) {
