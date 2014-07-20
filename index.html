@@ -489,7 +489,7 @@ pre[class*="language-"] {
 
 <p>Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL <code>curve25519-xsalsa20-poly1305</code> construction.</p>
 
-<p>The user&rsquo;s <code>miniLock ID</code> is a Base64 representation of their public key, meant to be easily communicable via email or instant messaging.</p>
+<p>The user&rsquo;s <code>miniLock ID</code> is a Base58 representation of their public key, meant to be easily communicable via email or instant messaging.</p>
 
 <h2>3. File format</h2>
 
@@ -543,7 +543,7 @@ Ciphertext bytes
 
 <p>A random 32-byte <code>fileKey</code> and a random 24-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction.</p>
 
-<p><code>fileKey</code>, <code>fileNonce</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) are then stored within the JSON header as described in §3. The name of the <code>fileInfo</code> property in which they are stored is a 24-byte nonce, which is used to then encrypt the underlying object asymetrically according to the recipient&rsquo;s public key(s) using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. This is done once for every recipient. For <code>n</code> recipients, we will obtain <code>n</code> properties of <code>fileInfo</code> with nonces as the property name and a Base64-encrypted object as the property value.</p>
+<p><code>fileKey</code>, <code>fileNonce</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) are then stored within the JSON header as described in §3. The name of the <code>fileInfo</code> property in which they are stored is a 24-byte nonce, which is used to then encrypt the underlying object asymmetrically according to the recipient&rsquo;s public key(s) using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. This is done once for every recipient. For <code>n</code> recipients, we will obtain <code>n</code> properties of <code>fileInfo</code> with nonces as the property name and a Base64-encrypted object as the property value.</p>
 
 <p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity.</p>
 
@@ -559,7 +559,7 @@ Ciphertext bytes
 
 <h2>6. Key Identity Authentication</h2>
 
-<p>In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base64-encoded characters). Therefore, no specialized key identity authentication mechanism is required.</p>
+<p>In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.</p>
 
 <h2>7. Caveats</h2>
 
@@ -578,7 +578,7 @@ Ciphertext bytes
 <p><strong>miniLock</strong></p>
 
 <ul>
-<li>Copyright 2014 <a href="http://nadim.computer">Nadim Kobeissi</a>. Released under the APGLv3 license.</li>
+<li>Copyright 2014 <a href="http://nadim.computer">Nadim Kobeissi</a>. Released under the AGPLv3 license.</li>
 </ul>
 
 <p><strong>TweetNaCL</strong></p>
