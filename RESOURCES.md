@@ -1,5 +1,9 @@
 #Resources
 
+##bs58
+Origin: https://github.com/cryptocoinjs/bs58
+License: None (?)
+
 ##iOS 7 Style Switches
 Origin: http://codepen.io/BandarRaffah/pen/ibwje
 License: None (public domain)
