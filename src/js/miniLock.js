@@ -30,8 +30,8 @@ miniLock.util = {}
 // Output: Boolean
 // Notes: Validates if string is a proper miniLock ID.
 miniLock.util.validateID = function(id) {
-	var base64Match = new RegExp(
-		'^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$'
+	var base58Match = new RegExp(
+		'^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$'
 	)
 	if (
 		(id.length > 50) ||
@@ -39,7 +39,7 @@ miniLock.util.validateID = function(id) {
 	) {
 		return false
 	}
-	if (base64Match.test(id)) {
+	if (base58Match.test(id)) {
 		var bytes = Base58.decode(id)
 		return bytes.length === 32
 	}
