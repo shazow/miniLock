@@ -231,12 +231,20 @@ miniLock.crypto.encryptFile = function(
 	callback
 ) {
 	saveName += '.minilock'
-	var nonces = []
+	var fileInfoNonces = []
+	var fileKeyNonces  = []
+	var fileNameNonces = []
+	// We are generating the nonces here simply because we cannot do that securely
+	// inside the web worker due to the lack of CSPRNG access.
 	for (var i = 0; i < publicKeys.length; i++) {
-		nonces.push(
-			nacl.util.encodeBase64(
-				miniLock.crypto.getNonce()
-			)
+		fileInfoNonces.push(
+			miniLock.crypto.getNonce()
+		)
+		fileKeyNonces.push(
+			miniLock.crypto.getNonce()
+		)
+		fileNameNonces.push(
+			miniLock.crypto.getNonce()
 		)
 	}
 	miniLock.crypto.worker.postMessage({
@@ -246,7 +254,10 @@ miniLock.crypto.encryptFile = function(
 		saveName: saveName,
 		fileKey: miniLock.crypto.getFileKey(),
 		fileNonce: miniLock.crypto.getNonce(),
-		nonces: nonces,
+		fileInfoNonces: fileInfoNonces,
+		fileKeyNonces: fileKeyNonces,
+		fileNameNonces: fileNameNonces,
+		ephemeral: nacl.box.keyPair(),
 		publicKeys: publicKeys,
 		myPublicKey: myPublicKey,
 		mySecretKey: mySecretKey,
