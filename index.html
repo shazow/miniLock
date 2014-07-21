@@ -427,7 +427,7 @@ pre[class*="language-"] {
 
 <h2>File encryption software that does more with less.</h2>
 
-<h3>Links</h3>
+<p><a href="https://travis-ci.org/kaepora/miniLock"><img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" alt="Build Status"></a></p>
 
 <ul>
 <li><strong><a href="https://github.com/kaepora/miniLock">Code</a></strong> | <strong><a href="https://github.com/kaepora/miniLock/issues">Issues</a></strong></li>
@@ -449,7 +449,7 @@ pre[class*="language-"] {
 
 <p>When first opened, miniLock asks the user for their passphrase which it then uses to derive the user&rsquo;s private and public keys. Via this model, the user can establish their key pair on any computer that has miniLock installed using only this passphrase, without having to manage key files or identities and so on. Thanks to the small key sizes present in <code>curve25519</code>, we are guaranteed small, easily tweetable public keys and private keys that can be derived from passphrases. miniLock also contains checks to ensure the passphrases entered by the user are of sufficient entropy. miniLock will refuse weak passphrases completely and instead suggest stronger passphrases for use by the user.</p>
 
-<p>miniLock then allows the user to encrypt files to other miniLock users via their miniLock IDs and decrypt files sent to them. miniLock&rsquo;s encryption format supports encrypting a single file to multiple recipients with a negligible increase in file size. Another feature is that analyzing a miniLock-encrypted file does not yield the miniLock IDs of the recipients, only of the sender.</p>
+<p>miniLock then allows the user to encrypt files to other miniLock users via their miniLock IDs and decrypt files sent to them. miniLock&rsquo;s encryption format supports encrypting a single file to multiple recipients with a negligible increase in file size. Another feature is that analyzing a miniLock-encrypted file does not yield the miniLock IDs or identities of the sender or the recipient(s). Upon decryption, a legitimate recipient will be able to know and verify the identity of the sender, but will still be unable to determine the identity of other potential recipients.</p>
 
 <p>miniLock file encryption provides both confidentiality and integrity. miniLock uses the <a href="http://tweetnacl.cr.yp.to">TweetNaCL</a> cryptography library, <a href="https://github.com/dchest/tweetnacl-js">ported to JavaScript</a>, entirely due to its focus on simplicity, auditability and small size. Similarly, miniLock is designed to be as simple, portable, auditable and usable as possible. miniLock also uses <a href="http://www.tarsnap.com/scrypt.html">scrypt</a> for <q>memory-hard</q> key derivation.</p>
 
@@ -520,16 +520,23 @@ Ciphertext bytes
 <p>The header itself is a stringified JSON object which contains information necessary for the recipients to decrypt the file. The JSON object has the following format:</p>
 
 <pre><code>{
-    senderID: Sender&#39;s miniLock ID,
+    ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
     fileInfo: {
-        (One copy of the below object for every recipient.)
+        (One copy of the below object for every recipient)
         Unique nonce for decrypting this object (Base64): {
-            fileKey: Key for file decryption (Base64),
-            fileName: The file&#39;s original filename (String),
+            fileKey: {
+                data: Key for file decryption, encrypted using long-term secret key to recipient&#39;s long-term public key (Base64),
+                nonce: Unique nonce for the above (Base64)
+            }
+            fileName: {
+                data: The file&#39;s original filename, encrypted using long-term secret key to recipient&#39;s long-term public key (Base64),
+                nonce: Unique nonce for the above (Base64)
+            }
             fileNonce: Nonce for file decryption (Base64),
+            senderID: Sender&#39;s miniLock ID (Base58)
         }
         (Encrypted with shared secret derived from the sender’s
-         private key and recipient&#39;s public key.
+         private ephemeral key and recipient&#39;s long-term public key.
          Stored as Base64 string.)
     }
 }
@@ -539,23 +546,27 @@ Ciphertext bytes
 
 <h2>4. File encryption</h2>
 
-<p>We begin by appending the bytes signalling the beginning of the header to the final encrypted file.</p>
+<p>We begin by generating an ephemeral <code>curve25519</code> key pair.</p>
+
+<p>We append the bytes signalling the beginning of the header to the final encrypted file.</p>
 
 <p>A random 32-byte <code>fileKey</code> and a random 24-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction.</p>
 
-<p><code>fileKey</code>, <code>fileNonce</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) are then stored within the JSON header as described in §3. The name of the <code>fileInfo</code> property in which they are stored is a 24-byte nonce, which is used to then encrypt the underlying object asymmetrically according to the recipient&rsquo;s public key(s) using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. This is done once for every recipient. For <code>n</code> recipients, we will obtain <code>n</code> properties of <code>fileInfo</code> with nonces as the property name and a Base64-encrypted object as the property value.</p>
+<p><code>fileKey</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) are encrypted with the sender&rsquo;s long-term key pair and stored within the JSON header along with <code>fileNonce</code> and <code>senderID</code>, as described in §3.</p>
 
-<p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity.</p>
+<p>The name of the <code>fileInfo</code> property in which the aforementioned elements are stored is a 24-byte nonce. We use this nonce, along with our ephemeral key pair, to encrypt the underlying JSON object asymmetrically to the recipient&rsquo;s public key, using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. This is done once for every recipient, creating a different <code>fileInfo</code> object for every recipient, each labeled by their unique nonces. For <code>n</code> recipients, we will obtain <code>n</code> properties of <code>fileInfo</code> with nonces as the property name and a Base64-encrypted object as the property value. Note that ephemeral key pairs are only used once, only for one file, and then discarded.</p>
 
 <p>Finally, we append the bytes signalling the end of the header, followed by the ciphertext bytes.</p>
 
+<p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction also provides forward secrecy from file to file, and makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.</p>
+
 <h2>5. File decryption</h2>
 
-<p>In order to decrypt the file, the recipient needs the <code>fileKey</code> and the <code>fileNonce</code>, which are within the <code>fileInfo</code> section of the header. They also will need the <code>senderID</code> property of the header in order to derive the shared secret which can be used to decrypt their copies of the <code>fileKey</code> and <code>fileNonce</code> contained within <code>fileInfo</code>.</p>
+<p>In order to decrypt the file, the recipient needs the information stored within the <code>fileInfo</code> section of the header. They also will need the <code>ephemeral</code> property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the <code>fileInfo</code> header object.</p>
 
-<p>If there are multiple properties within <code>fileInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>fileInfo</code> property occurs, the recipient can then use the obtained <code>fileKey</code> and <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes. The recipient then proceeds to remove the padding of <code>0x00</code> bytes from <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
+<p>If there are multiple properties within <code>fileInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>fileInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes. The recipient then decrypts <code>fileName</code> (again using <code>senderID</code>), and removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
 
-<p>If the authenticated asymmetric decryption of the header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
+<p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
 
 <h2>6. Key Identity Authentication</h2>
 
@@ -569,9 +580,11 @@ Ciphertext bytes
 
 <p>Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback on an early draft of this document.</p>
 
-<p>Sincere thanks are presented to Dr. Mario Heiderich and his team at <a href="https://cure53.de/">Cure53</a> for their work on performing a full audit of the miniLock codebase. We also sincerely thank the <a href="https://www.opentechfund.org/">Open Technology Fund</a> for funding the audit.</p>
+<p>Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock&rsquo;s design, which introduced sender ID anonymity in the ciphertext and forward secrecy between files.</p>
 
-<p>Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project.</p>
+<p>Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project, including many helpful and crucial suggestions.</p>
+
+<p>Sincere thanks are presented to Dr. Mario Heiderich and his team at <a href="https://cure53.de/">Cure53</a> for their work on performing a full audit of the miniLock codebase. We also sincerely thank the <a href="https://www.opentechfund.org/">Open Technology Fund</a> for funding the audit.</p>
 
 <h2>9. Credits</h2>
 
