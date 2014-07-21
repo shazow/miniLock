@@ -1,6 +1,8 @@
 #![miniLock](http://minilock.io/files/icon48.png) miniLock
 ##File encryption software that does more with less.
-###Links
+
+[![Build Status](https://travis-ci.org/kaepora/miniLock.svg?branch=master)](https://travis-ci.org/kaepora/miniLock)
+
 * **[Code](https://github.com/kaepora/miniLock)** | **[Issues](https://github.com/kaepora/miniLock/issues)**
 * **HOPE X [Video](https://vimeo.com/101237413) | [Slides](http://minilock.io/files/HOPEX.pdf)**
 * **Follow on [Twitter](https://twitter.com/minilockapp)** for latest project news
