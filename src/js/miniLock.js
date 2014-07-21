@@ -50,14 +50,7 @@ miniLock.util.validateID = function(id) {
 // Output: Random string suitable for use as filename.
 miniLock.util.getRandomFilename = function() {
 	var randomBytes = nacl.randomBytes(18)
-	var filename = ''
-	randomBytes = nacl.util.encodeBase64(randomBytes)
-	for (var i = 0; i < randomBytes.length; i++) {
-		if (randomBytes[i].match(/\w/)) {
-			filename += randomBytes[i]
-		}
-	}
-	return filename
+	return Base58.encode(randomBytes)
 }
 
 // Input: Filename (String)
