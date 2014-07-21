@@ -175,8 +175,11 @@ div.unlock p {
 }
 
 div.unlock input.miniLockKey {
-	font-size: 1.3em;
+	font-size: 0.7em;
 	width: 450px;
+	height: 23px;
+	position: relative;
+	bottom: 4px;
 	font-family: 'Octicons';
 }
 
