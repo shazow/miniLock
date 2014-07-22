@@ -304,120 +304,116 @@ sup {
 </style>
 <style type="text/css">
 /**
- * prism.js Dark theme for JavaScript, CSS and HTML
- * Based on the slides of the talk “/Reg(exp){2}lained/”
- * @author Lea Verou
+ * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML
+ * Based on https://github.com/chriskempson/tomorrow-theme
+ * @author Rose Pritchard
  */
 
 code[class*="language-"],
 pre[class*="language-"] {
-	color: white;
-	text-shadow: 0 -.1em .2em black;
-	font-family: Consolas, Monaco, 'Andale Mono', monospace;
-	direction: ltr;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
+  color: #ccc;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
 
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
 
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
-}
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
 
-@media print {
-	code[class*="language-"],
-	pre[class*="language-"] {
-		text-shadow: none;
-	}
-}
-
-pre[class*="language-"],
-:not(pre) > code[class*="language-"] {
-	background: hsl(30,20%,25%);
 }
 
 /* Code blocks */
 pre[class*="language-"] {
-	padding: 1em;
-	margin: .5em 0;
-	overflow: auto;
-	border: .3em solid hsl(30,20%,40%);
-	border-radius: .5em;
-	box-shadow: 1px 1px .5em black inset;
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #2d2d2d;
 }
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-	padding: .15em .2em .05em;
-	border-radius: .3em;
-	border: .13em solid hsl(30,20%,40%);
-	box-shadow: 1px 1px .3em -.1em black inset;
+  padding: .1em;
+  border-radius: .3em;
 }
 
 .token.comment,
+.token.block-comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: hsl(30,20%,50%);
+  color: #999;
 }
 
 .token.punctuation {
-	opacity: .7;
+  color: #ccc;
 }
 
-.namespace {
-	opacity: .7;
+
+.token.tag,
+.token.attr-name,
+.token.namespace {
+  color: #e2777a;
+}
+
+.token.function-name {
+  color: #6196cc;
+}
+
+
+.token.boolean,
+.token.number,
+.token.function {
+  color: #f08d49;
 }
 
 .token.property,
-.token.tag,
-.token.boolean,
-.token.number,
+.token.class-name,
 .token.constant,
 .token.symbol {
-	color: hsl(350, 40%, 70%);
+  color: #f8c555;
 }
 
 .token.selector,
-.token.attr-name,
-.token.string,
+.token.important,
+.token.atrule,
+.token.keyword,
 .token.builtin {
-	color: hsl(75, 70%, 60%);
+  color: #cc99cd;
+}
+
+.token.string,
+.token.attr-value,
+.token.regex,
+.token.variable {
+  color: #7ec699;
 }
 
 .token.operator,
 .token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string,
-.token.variable {
-	color: hsl(40, 90%, 60%);
+.token.url
+{
+  color: #67cdcc;
 }
 
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-	color: hsl(350, 40%, 70%);
-}
-
-
-.token.regex,
-.token.important {
-	color: #e90;
-}
 
 .token.important {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .token.entity {
-	cursor: help;
+  cursor: help;
 }
 
 </style>
@@ -430,16 +426,22 @@ pre[class*="language-"] {
 <p><a href="https://travis-ci.org/kaepora/miniLock"><img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" alt="Build Status"></a></p>
 
 <ul>
-<li><strong><a href="https://github.com/kaepora/miniLock">Code</a></strong> | <strong><a href="https://github.com/kaepora/miniLock/issues">Issues</a></strong></li>
+<li><strong><a href="https://github.com/kaepora/miniLock">Code</a></strong> | <strong><a href="https://github.com/kaepora/miniLock/issues">Issues and Discussion</a></strong></li>
 <li><strong>HOPE X <a href="https://vimeo.com/101237413">Video</a> | <a href="http://minilock.io/files/HOPEX.pdf">Slides</a></strong></li>
 <li><strong>Follow on <a href="https://twitter.com/minilockapp">Twitter</a></strong> for latest project news</li>
 </ul>
 
-<h2>Pre-Release Software</h2>
+<h2>Software Status: Pre-Release Feedback Period</h2>
 
-<p>miniLock is currently audited, peer-reviewed software. However, before a general release, we would like to allow a feedback period. We encourage further review of the software before a release is made for general public use. We hope to provide a public release by August 2014. Our first release platform will be Google Chrome and Chrome OS.</p>
+<p>miniLock is currently audited, peer-reviewed software. However, before a general release, we would like to allow a feedback period. We encourage further review of the software before a release is made for general public use. We hope to provide a public release by <strong>Monday August 4th, 2014</strong>. Our first release platform will be Google Chrome and Chrome OS.</p>
 
-<p>miniLock&rsquo;s audit documents will be released as soon as the auditing team finishes their editing process (by the third week of July 2014). miniLock also ships with a Unit Test Kit located in <code>test</code>.</p>
+<p>miniLock was subjected to a cryptographic code audit carried out by <a href="https://cure53.de/">Cure53</a> and with the support of the <a href="https://www.opentechfund.org/">Open Technology Fund</a>. Quoting from the conclusion of the audit report (<strong><a href="http://minilock.io/files/cure53.pdf">PDF</a></strong>):</p>
+
+<blockquote>
+<p>Cure53 was tasked to test against the application security of miniLock and evaluate its cryptographic properties and promises. Over the course of four days of manual testing, no severe errors have been spotted. The code is soundly and neatly written, well structured, minimal and therefore offers no sinks for direct exploitation.</p>
+</blockquote>
+
+<p>miniLock also ships with a Unit Test Kit located in <code>test</code>.</p>
 
 <h2>0. Overview</h2>
 
