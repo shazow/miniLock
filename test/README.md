@@ -6,7 +6,7 @@ miniLock Unit Test Kit (mUTK) is a set of unit tests that attempt to evaluate mi
 In order to run mUTK, do the following (just opening `index.html` will not work):
 
 1. `cd` into the `test` directory of the miniLock codebase (this directory).
-2. `python -m SimpleHTTPServer`
+2. `python -m SimpleHTTPServer` (or `python -m http.server` if you are using Python 3)
 3. Visit [the resulting web server](http://127.0.0.1:8000).
 
 ##Notes
