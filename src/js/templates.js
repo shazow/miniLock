@@ -1,10 +1,9 @@
 miniLock.templates = {}
 
-miniLock.templates.keyStrengthMoreInfo = 'Key is too weak. '
-	+ '<span class="keyStrengthMoreInfo">Help me pick a key!</span>'
+miniLock.templates.keyStrengthMoreInfo = 'The key you have entered is too weak.'
 	+ '<p>Having a long, unique key is very important for using miniLock. '
-	+ 'Try using a <strong>phrase</strong> that makes sense only to you.</p>'
-	+ '<p>miniLock can generate a	 phrase for you to use as a key:<br />'
+	+ 'Try using a <strong>phrase</strong> that makes sense only to you.<br /><br />'
+	+ 'We strongly recommend allowing miniLock to generate a key for you:<br />'
 	+ '<input type="text" value="{{phrase}}" spellcheck="false" readonly="readonly" />'
 	+ '<input type="button" value="Get another phrase" /></p>'
 

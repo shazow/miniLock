@@ -54,13 +54,11 @@ $('form.unlockForm').submit(function() {
 				}
 			)
 		)
-		$('span.keyStrengthMoreInfo').unbind().click(function() {
-			$('div.keyStrength').animate({height: 180})
-		})
-		$('div.keyStrength input[type=text]').click(function() {
+		$('div.keyStrength').animate({height: 180})
+		$('div.keyStrength input[type=text]').unbind().click(function() {
 			$(this).select()
 		})
-		$('div.keyStrength input[type=button]').click(function() {
+		$('div.keyStrength input[type=button]').unbind().click(function() {
 			$('div.keyStrength input[type=text]').val(
 				miniLock.phrase.get(7)
 			)
