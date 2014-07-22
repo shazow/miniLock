@@ -112,7 +112,7 @@ $('input.fileSelectDialog').change(function(e) {
 	return false
 })
 
-// Click to select the miniLock ID for easy copy-n-paste.
+// Click to select user's miniLock ID for easy copy-n-paste.
 $('div.myMiniLockID').click(function() {
 	var range = document.createRange()
 	range.selectNodeContents($(this).find('code').get(0))
