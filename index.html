@@ -419,11 +419,9 @@ pre[class*="language-"] {
 </style>
 </head>
 <body>
-<h1><img src="http://minilock.io/files/icon48.png" alt="miniLock"> miniLock</h1>
+<h1><img src="http://minilock.io/files/icon48.png" alt="miniLock"> miniLock  <a href="https://travis-ci.org/kaepora/miniLock"><img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" alt="Build Status"></a></h1>
 
 <h2>File encryption software that does more with less.</h2>
-
-<p><a href="https://travis-ci.org/kaepora/miniLock"><img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" alt="Build Status"></a></p>
 
 <ul>
 <li><strong><a href="https://github.com/kaepora/miniLock">Code</a></strong> | <strong><a href="https://github.com/kaepora/miniLock/issues">Issues and Discussion</a></strong></li>
@@ -431,7 +429,7 @@ pre[class*="language-"] {
 <li><strong>Follow on <a href="https://twitter.com/minilockapp">Twitter</a></strong> for latest project news</li>
 </ul>
 
-<h2>Software Status: Pre-Release Feedback Period</h2>
+<h3>Software Status: Pre-Release Feedback Period</h3>
 
 <p>miniLock is currently audited, peer-reviewed software. However, before a general release, we would like to allow a feedback period. We encourage further review of the software before a release is made for general public use. We hope to provide a public release by <strong>Monday August 4th, 2014</strong>. Our first release platform will be Google Chrome and Chrome OS.</p>
 
@@ -443,7 +441,7 @@ pre[class*="language-"] {
 
 <p>miniLock also ships with a Unit Test Kit located in <code>test</code>.</p>
 
-<h2>0. Overview</h2>
+<h3>0. Overview</h3>
 
 <p>miniLock is a small, portable file encryption software. The idea behind its design is that a passphrase, memorized by the user, can act as a complete, portable basis for a persistent public key identity and provide a full substitute for other key pair models, such as having the key pair stored on disk media (the PGP approach).  </p>
 
@@ -455,7 +453,7 @@ pre[class*="language-"] {
 
 <p>miniLock file encryption provides both confidentiality and integrity. miniLock uses the <a href="http://tweetnacl.cr.yp.to">TweetNaCL</a> cryptography library, <a href="https://github.com/dchest/tweetnacl-js">ported to JavaScript</a>, entirely due to its focus on simplicity, auditability and small size. Similarly, miniLock is designed to be as simple, portable, auditable and usable as possible. miniLock also uses <a href="http://www.tarsnap.com/scrypt.html">scrypt</a> for <q>memory-hard</q> key derivation.</p>
 
-<h2>1. User Flow</h2>
+<h3>1. User Flow</h3>
 
 <p>This section outlines an example user flow in order to help demonstrate how miniLock is supposed to help people.</p>
 
@@ -466,7 +464,7 @@ pre[class*="language-"] {
 
 <p>Alice drags and drops her passport scan into miniLock and enters Bob&rsquo;s miniLock ID as the recipient. She clicks the encrypt button and sends the resulting <code>.minilock</code> file to Bob. Once Bob drags the encrypted file into miniLock, it automatically detects it as a miniLock-encrypted file destined to Bob, and decrypts and saves the passport scan on his computer.</p>
 
-<h2>2. Key Derivation</h2>
+<h3>2. Key Derivation</h3>
 
 <p>miniLock uses the <a href="https://github.com/dropbox/zxcvbn">zxcvbn</a> library in order to impose a strict limit on the amount of detected entropy present in entered passphrases. miniLock will not allow passphrases that fall below the threshold of 100 bits of entropy: if a passphrase of lower entropy is detected, miniLock will refuse it and will not allow access to encryption or decryption functions.</p>
 
@@ -493,7 +491,7 @@ pre[class*="language-"] {
 
 <p>The user&rsquo;s <code>miniLock ID</code> is a Base58 representation of their public key, meant to be easily communicable via email or instant messaging.</p>
 
-<h2>3. File format</h2>
+<h3>3. File format</h3>
 
 <p>miniLock saves encrypted files as binary blobs with the following format:</p>
 
@@ -546,7 +544,7 @@ Ciphertext bytes
 
 <p>Note that in the above header, <code>fileName</code> is padded with the <code>0x00</code> byte until it reaches 256 bytes in length. This is done in order to prevent the discovery of the <code>fileName</code> length purely by analyzing an encrypted miniLock file&rsquo;s header.</p>
 
-<h2>4. File encryption</h2>
+<h3>4. File encryption</h3>
 
 <p>We begin by generating an ephemeral <code>curve25519</code> key pair.</p>
 
@@ -560,9 +558,9 @@ Ciphertext bytes
 
 <p>Finally, we append the bytes signalling the end of the header, followed by the ciphertext bytes.</p>
 
-<p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction also provides forward secrecy from file to file, and makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.</p>
+<p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.</p>
 
-<h2>5. File decryption</h2>
+<h3>5. File decryption</h3>
 
 <p>In order to decrypt the file, the recipient needs the information stored within the <code>fileInfo</code> section of the header. They also will need the <code>ephemeral</code> property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the <code>fileInfo</code> header object.</p>
 
@@ -570,25 +568,25 @@ Ciphertext bytes
 
 <p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
 
-<h2>6. Key Identity Authentication</h2>
+<h3>6. Key Identity Authentication</h3>
 
 <p>In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.</p>
 
-<h2>7. Caveats</h2>
+<h3>7. Caveats</h3>
 
 <p>miniLock is not intended to protect against malicious files being sent and received. It is the user&rsquo;s responsibility to vet the safety of the files they send or receive over miniLock. miniLock cannot protect against malware being sent over it.</p>
 
-<h2>8. Thanks</h2>
+<h3>8. Thanks</h3>
 
 <p>Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback on an early draft of this document.</p>
 
-<p>Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock&rsquo;s design, which introduced sender ID anonymity in the ciphertext and forward secrecy between files.</p>
+<p>Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock&rsquo;s design, which introduced sender ID anonymity in the ciphertext.</p>
 
 <p>Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project, including many helpful and crucial suggestions.</p>
 
 <p>Sincere thanks are presented to Dr. Mario Heiderich and his team at <a href="https://cure53.de/">Cure53</a> for their work on performing a full audit of the miniLock codebase. We also sincerely thank the <a href="https://www.opentechfund.org/">Open Technology Fund</a> for funding the audit.</p>
 
-<h2>9. Credits</h2>
+<h3>9. Credits</h3>
 
 <p><strong>miniLock</strong></p>
 
