@@ -118,7 +118,7 @@ div.squareContainer.flip div.square {
 
 div.squareContainer, div.squareFront, div.squareBack {
 	width: 600px;
-	height: 670px;
+	height: 600px;
 }
 
 div.square {
@@ -162,7 +162,7 @@ div.squareFront {
 div.unlock {
 	margin: 0 auto;
 	width: 500px;
-	margin-top: 20px;
+	margin-top: 130px;
 }
 
 div.unlock h1 {
@@ -172,15 +172,6 @@ div.unlock h1 {
 div.unlock p {
 	font-size: 0.9em;
 	margin: 20px 0;
-}
-
-div.unlock input.miniLockID {
-	font-size: 0.7em;
-	width: 450px;
-	height: 23px;
-	position: relative;
-	bottom: 4px;
-	font-family: 'Octicons';
 }
 
 div.unlock input.miniLockKey {
@@ -229,18 +220,6 @@ div.unlock div.keyStrength input[type=text] {
 div.unlock div.keyStrength input[type=button] {
 	font-size: 1.1em;
 	margin-top: 7px;
-}
-
-div.unlock div.keyVerify {
-	background: rgba(0, 0, 0, 0.15);
-	font-size: 0.8em;
-	font-weight: bold;
-	width: 449px;
-	padding: 3px 5px;
-	line-height: 1.6em;
-	overflow: hidden;
-	height: 20px;
-	border-radius: 1px 1px 2px 2px;
 }
 
 
