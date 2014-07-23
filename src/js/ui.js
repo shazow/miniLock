@@ -14,11 +14,42 @@ $('span.dragFileInfo').text(
 )
 
 // -----------------------
+// Previous ID form UI Bindings
+// -----------------------
+
+$('form.prevIDForm').submit(function() {
+	var prevID = $('form.prevIDForm > input.miniLockID').val()
+	var key = $('form.prevIDForm > input.miniLockKey').val()
+	if (!(prevID.length && key.length)) {
+		return false
+	}
+	$('div.keyVerify').text($('div.keyVerify').data('keywait'))
+	miniLock.user.unlock(key, prevID)
+	var keyReadyInterval = setInterval(function() {
+		if (miniLock.session.keyPairReady) {
+			clearInterval(keyReadyInterval)
+			$('div.myMiniLockID code').text(miniLock.session.miniLockID)
+			$('div.unlock').delay(200).fadeOut(200, function() {
+				$('div.selectFile').fadeIn(200)
+				$('div.squareFront').animate({
+					backgroundColor: '#49698D'
+				})
+			})
+		}
+		else if(miniLock.session.invalidKey){
+			clearInterval(keyReadyInterval)
+			$('div.keyVerify').text($('div.keyStrength').data('keyok'))
+		}
+	}, 100)
+	return false
+})
+
+// -----------------------
 // Unlock UI Bindings
 // -----------------------
 
 $('form.unlockForm').submit(function() {
-	var key = $('input.miniLockKey').val()
+	var key = $('form.unlockForm > input.miniLockKey').val()
 	if (!key.length) {
 		return false
 	}
@@ -31,11 +62,7 @@ $('form.unlockForm').submit(function() {
 		var keyReadyInterval = setInterval(function() {
 			if (miniLock.session.keyPairReady) {
 				clearInterval(keyReadyInterval)
-				$('div.myMiniLockID code').text(
-					miniLock.crypto.getMiniLockID(
-						miniLock.session.keys.publicKey
-					)
-				)
+				$('div.myMiniLockID code').text(miniLock.session.miniLockID)
 				$('div.unlock').delay(200).fadeOut(200, function() {
 					$('div.selectFile').fadeIn(200)
 					$('div.squareFront').animate({
@@ -54,7 +81,7 @@ $('form.unlockForm').submit(function() {
 				}
 			)
 		)
-		$('div.keyStrength').animate({height: 180})
+		$('div.keyStrength').animate({height: 190})
 		$('div.keyStrength input[type=text]').unbind().click(function() {
 			$(this).select()
 		})
@@ -219,9 +246,7 @@ $('input.encryptFile').click(function() {
 	})
 	if (encryptToSelf) {
 		miniLockIDs.push(
-			miniLock.crypto.getMiniLockID(
-				miniLock.session.keys.publicKey
-			)
+			miniLock.session.miniLockID
 		)
 	}
 	if (randomizeFilename) {
@@ -238,6 +263,7 @@ $('input.encryptFile').click(function() {
 			miniLockIDs,
 			miniLock.session.keys.publicKey,
 			miniLock.session.keys.secretKey,
+			miniLock.session.miniLockID,
 			'miniLock.crypto.workerEncryptionCallback'
 		)
 		$('form.fileSelectForm input[type=reset]').click()

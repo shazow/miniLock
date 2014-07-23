@@ -37,11 +37,25 @@
 						Anyone with the same key can impersonate you.
 						If your key can be guessed, miniLock cannot protect your data.
 					</p>
+					<p>
+						Already have a miniLock ID?
+					</p>
+					<form class="prevIDForm">
+						<input class="miniLockID" maxlength="1024" placeholder="miniLock ID" /><br />
+						<input type="password" class="miniLockKey" maxlength="1024" placeholder="passphrase" />
+						<input type="submit" value="&#xf078;" />
+						<div class="keyVerify" data-keywait="Unlocking..." data-keybad="Invalid passphrase...">
+							Enter ID and passphrase...
+						</div>
+					</form>
+					<p>
+						Don't have a miniLock ID? Create one now!
+					</p>
 					<form class="unlockForm">
 						<input type="password" class="miniLockKey" maxlength="1024" placeholder="Enter an original sentence that is unique to you, not from any song or literature." />
 						<input type="submit" value="&#xf078;" />
 						<div class="keyStrength" data-keyok="Key OK. Unlocking...">
-							Enter key...
+							Enter passphrase to generate a new ID...
 						</div>
 					</form>
 				</div>
