@@ -1,0 +1,477 @@
+form.file h1,
+form.file h2,
+form.file h3 {
+	font-weight: normal;
+	font-size: inherit;
+	line-height: inherit;
+	margin: 0;
+}
+
+form.file > div {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 100px;
+	color: rgba(255, 255, 255, 0.4);
+	overflow: auto;
+}
+
+form.unprocessed.file > div { 
+	overflow: auto;
+}
+
+form.file > div > header {
+	position:relative;
+	height: 300px;
+	background: 0px 0px url('../img/backside-background.png');
+}
+
+/* Basic styles for all <a> tags in this form */
+
+form.file a {
+	color: inherit;
+	font-weight: normal;
+}
+
+form.file a.control {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+form.file a.control:hover {
+	color: white;
+}
+
+/* 35x35 square control buttons with centered icon */
+
+input[type=button].button,
+input[type=submit].button {
+	font-family: 'Octicons';
+	font-size: 20px;
+	width: 35px;
+	height: 35px;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+input[type=button].button:hover,
+input[type=submit].button:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+input[type=button].button:active,
+input[type=button].button.activated,
+input[type=submit].button:active,
+input[type=submit].button.activated {
+	background: rgba(255, 255, 255, 1);
+	color: #49698D;
+}
+
+input[type=button].button:disabled,
+input[type=submit].button:disabled {
+	background: rgba(255, 255, 255, 1);
+	color: #49698D;
+}
+
+/* Filename styles */
+
+form.file div.nameContainer { 
+	position: absolute;
+	top: 15px;
+	right: 50px;
+	left: 110px;
+	bottom: 15px;
+	overflow: hidden;
+}
+
+form.file div.name { 
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -60px;
+	opacity: 1;
+	transition: bottom 250ms ease-out, opacity 250ms linear;
+}
+
+form.file div.name.activated { 
+	bottom: 0px;
+}
+
+form.file div.name.shelved {
+	bottom: 60px;
+}
+
+form.file div.name.expired { 
+	opacity: 0;
+	bottom: 60px;
+}
+
+form.file div.name h1 b.basename,
+form.file div.name h1 span.extensions {
+	color: white;
+}
+
+form.file div.name b.basename {
+	font-weight: bold;
+}
+
+form.file div.name span.minilock.extension { 
+	color: inherit;
+}
+
+form.encrypted.file div.name span.minilock.extension { 
+	color: white;
+}
+
+
+form.file div.original.name.activated h3 { opacity: 0; transition: opacity 150ms linear; }
+form.file div.original.name.activated h1 { opacity: 1.0; transition: opacity 250ms linear; }
+form.file div.original.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
+
+form.file div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
+form.file div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
+form.file div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
+
+form.file div.random.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
+form.file div.random.name           span.minilock.extension { opacity: 0; transition: opacity 0ms linear 250ms; }
+
+form.decrypted.file div.input.activated.name  span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
+form.decrypted.file div.output.name span.minilock.extension { display: none; }
+
+
+/* File size, status messages and controls to change the filename. */
+
+form.file div.infoContainer {
+	position: absolute;
+	bottom: 0px;
+	left: 110px;
+	right: 110px;
+}
+
+form.file a {
+	display: none;
+	color: inherit;
+}
+
+form.unprocessed.file                a.setRandomName        { display: inline; }
+form.unprocessed.file.withRandomName a.setRandomName        { display: none;   }
+form.unprocessed.file.withRandomName a.setOriginalName      { display: inline; }
+form.encrypting.file                 a.encrypting           { display: inline; }
+form.encrypted.file                  a.encryptedFileIsReady { display: inline; }
+form.encrypted.file.withHintToSave   a.encryptedFileIsReady { display: none;   }
+form.encrypted.file.withHintToSave   a.saveEncryptedFile    { display: inline; }
+form.decrypting.file                 a.decrypting           { display: inline; }
+form.decrypted.file                  a.decryptedFileIsReady { display: inline; }
+form.decrypted.file.withHintToSave   a.decryptedFileIsReady { display: none;   }
+form.decrypted.file.withHintToSave   a.saveDecryptedFile    { display: inline; }
+
+form.file a.encryptedFileIsReady,
+form.file a.decryptedFileIsReady,
+form.file a.saveEncryptedFile,
+form.file a.saveDecryptedFile {
+	color: white;
+}
+
+form.file span.fileSize {
+	margin: 0px 2px;
+}
+
+/* Link to save file (height is updated programatically in ui.js) */
+
+form.file a.fileSaveLink { 
+	display: block;
+	position: absolute;
+	height: 22px;
+	padding-top: 10px;
+	padding-bottom: 25px;
+	bottom: -10px;
+	left: 50px;
+	right: 50px;
+	visibility: hidden;
+}
+
+form.encrypted.file a.fileSaveLink,
+form.decrypted.file a.fileSaveLink { 
+	visibility: visible;
+}
+
+form.file a.fileSaveLink span.assistive { 
+	opacity: 0;
+}
+
+/* Badge that displays the ID of the person who encrypted the file */
+
+form.file div.senderID {
+	position: absolute;
+	top: 345px;
+	left: 100px;
+	right: 100px;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	padding: 9px;
+	box-sizing:border-box;
+	height: 35px;
+}
+
+form.file div.senderID h3 {
+	position: absolute;
+	top: -20px;
+	left: 10px;
+}
+
+form.file div.senderID code {
+	font-family: Menlo;
+	font-size: 13px;
+	display: block;
+}
+
+form.file div.senderID {
+	opacity: 0;
+}
+
+form.encrypted.file div.senderID,
+form.decrypted.file div.senderID {
+	opacity: 1;
+	transition: opacity 150ms linear;
+}
+
+/* Summary of the audience for an encrypted file, or the source of an unencrypted file */
+
+form.file div.summary {
+	position: absolute;
+	top: 410px;
+	left: 110px;
+	right: 110px;
+	visibility: hidden;
+}
+
+form.encrypted.file div.summary,
+form.decrypted.file div.summary {
+	visibility: visible;
+}
+
+/* Progress bar for encryption and decryption */
+
+form.file div.progressBar {
+	position: absolute;
+	top: 345px;
+	left: 60px;
+	right: 60px;
+	height: 15px;
+	width: auto;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	box-sizing: border-box;
+	padding: 0;
+	opacity: 0;
+	visibility: hidden;
+}
+
+form.file.encrypting div.progressBar,
+form.file.decrypting div.progressBar {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 150ms linear 250ms, visibility 0 linear;
+}
+
+form.file.encrypted div.progressBar,
+form.file.decrypted div.progressBar {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 250ms linear, visibility 0 linear 250ms;
+}
+
+form.file div.progressBar div.progressBarFill {
+	width: 50%;
+	height: 100%;
+	background: #FFF;
+}
+
+form.file div.progressBar div.percentage {
+	position: absolute;
+	left: -50px;
+	width: 45px;
+	top: 0;
+	text-align: right;
+	line-height: 13px;
+}
+
+/* List of the audience members */
+
+form.file div.audience {
+	position: relative;
+	top: 0;
+	opacity: 1;
+	margin-top: 60px;
+	margin-left: 100px;
+	margin-right: 100px;
+}
+
+form.file.encrypting div.audience,
+form.file.encrypted  div.audience,
+form.file.decrypting div.audience,
+form.file.decrypted  div.audience {
+	top: 50px;
+	opacity: 0;
+	transition: top 250ms ease-out, opacity 250ms ease-in;
+}
+
+form.file div.audience > header {
+	position: absolute;
+	top: -30px;
+	left: 10px;
+	right: 10px;
+}
+
+form.file div.audience > header h1,
+form.file div.audience > header h2 {
+	font-weight: normal;
+}
+
+form.file div.audience > header h1 {
+	color: white;
+	font-weight: bold;
+}
+
+/* div.identity elements */
+
+form.file div.identity {
+	position: relative;
+	box-sizing: border-box;
+	height: 35px;
+	padding-bottom: 1px;
+}
+
+form.file div.identity input[type=text] {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	height: 34px;
+	line-height: 20px;
+	padding: 0px 10px;
+	font-weight: normal;
+	background: rgba(255, 255, 255, 0.1);
+	transition: background 100ms linear;
+}
+
+form.file div.identity input:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+form.file div.identity input:focus {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+form.file div.identity label {
+	position: absolute;
+	left: -25px;
+	top: 8px;
+	display: block;
+	height: 18px;
+	line-height: 18px;
+	padding-left: 4px;
+	color: #49698D;
+	background: #A3B6CC;
+	text-align: right;
+	visibility: hidden;
+}
+
+form.file div.identity label:after {
+	left: 100%;
+	top: 50%;
+	margin-top: -9px;
+	border: 9px solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	border-left-color: #A3B6CC;
+}
+
+form.file div.my.identity label,
+form.file div.invalid.identity label {
+	visibility: visible;
+}
+
+form.file div.identity input.removeID {
+	position: absolute;
+	top: 10px;
+	right: 8px;
+	height: 15px;
+	line-height: 15px;
+	width: 15px;
+	font-family: 'Octicons';
+	font-size: 20px;
+	color: #49698D;
+	padding: 0;
+	background: none;
+}
+
+form.file div.identity input.removeID:hover {
+	color: white;
+}
+
+form.file div.blank.identity input.removeID,
+form.file div.blank.identity label {
+	display: none;
+}
+
+/* Notice when you are not in the list */
+
+form.file div.notice {
+	position: absolute;
+	bottom: 45px;
+	left: 80px;
+	right: 10px;
+}
+
+form.file div.notice span.octicon {
+	position: absolute;
+	display: block;
+	font-size: 20px;
+	width: 20px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	vertical-align: middle;
+	left: -25px;
+	bottom: 0px;
+	opacity: 0.5;
+}
+
+form.file div.notice {
+	opacity: 0;
+	transition: opacity 1s linear;
+}
+
+form.file.missingMyMiniLockID div.notice {
+	opacity: 1;
+	transition: opacity 1s linear;
+}
+
+/* Encrypt file button */
+
+form.file input.encrypt.button {
+	position: fixed;
+	bottom: 40px;
+	left: 100px;
+	visibility: visible;
+	opacity: 1;
+}
+
+form.file.encrypted input.encrypt.button {
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 250ms linear, visibility 0 linear 250ms;
+}
+
+form.file.decrypting input.encrypt.button,
+form.file.decrypted  input.encrypt.button {
+	visibility: hidden;
+}
+
+/* Go back-to-front button */
+
+input.flipBack.button {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+}
