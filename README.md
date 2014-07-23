@@ -130,7 +130,7 @@ The name of the `fileInfo` property in which the aforementioned elements are sto
 
 Finally, we append the bytes signalling the end of the header, followed by the ciphertext bytes.
 
-TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction also provides forward secrecy from file to file, and makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
+TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
 
 ###5. File decryption
 In order to decrypt the file, the recipient needs the information stored within the `fileInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `fileInfo` header object.
@@ -148,7 +148,7 @@ miniLock is not intended to protect against malicious files being sent and recei
 ###8. Thanks
 Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback on an early draft of this document.
 
-Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock's design, which introduced sender ID anonymity in the ciphertext and forward secrecy between files.
+Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock's design, which introduced sender ID anonymity in the ciphertext.
 
 Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project, including many helpful and crucial suggestions.
 
