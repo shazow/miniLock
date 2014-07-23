@@ -149,18 +149,14 @@ miniLock.crypto.workerDecryptionCallback = function(message) {
 	}, message.operation, message.senderID)
 }
 
-// Input: User key (String), callback function
+// Input: User key hash (Uint8Array), callback function
 // Result: Calls the scrypt Web Worker which returns
 //	32 bytes of key material in a Uint8Array,
 //	which then passed to the callback.
 miniLock.crypto.getScryptKey = function(key, callback) {
-	var scryptWorker = new Worker('js/workers/scrypt.js')
-	scryptWorker.postMessage({
-		key: key
-	})
-	scryptWorker.onmessage = function(message) {
-		return callback(message.data.keyBytes)
-	}
+	scrypt(key, 'miniLockScrypt..', 17, 8, 32, 1000, function(keyBytes) {
+		return callback(nacl.util.decodeBase64(keyBytes))
+	}, 'base64');
 }
 
 // Input: User key
