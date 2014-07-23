@@ -118,17 +118,21 @@ The header itself is a stringified JSON object which contains information necess
 Note that in the above header, `fileName` is padded with the `0x00` byte until it reaches 256 bytes in length. This is done in order to prevent the discovery of the `fileName` length purely by analyzing an encrypted miniLock file's header.
 
 ###4. File encryption
-We begin by generating an ephemeral `curve25519` key pair.
+The sender begins by generating a new ephemeral `curve25519` key pair, `senderEphemeralSecret` and `senderEphemeralPublic`.
 
-We append the bytes signalling the beginning of the header to the final encrypted file.
+The sender's long-term keys are denoted as `senderSecret` and `senderPublic`.
+
+A recipient `a`'s long-term keys are denoted as `recipientSecret[a]` and `recipientPublic[a]`.
+
+The sender appends the bytes signalling the beginning of the header to the final encrypted file.
 
 A random 32-byte `fileKey` and a random 24-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction.
 
-`fileKey` and `fileName` (the file's intended name upon decryption) are encrypted with the sender's long-term key pair and stored within the JSON header along with `fileNonce` and `senderID`, as described in §3.
+For every recipient `n`, the sender encrypts `fileKey` and `fileName` (the file's intended name upon decryption) using `senderSecret` and `recipientPublic[n]` and stores them within a `fileInfo` object inside the JSON header along with `fileNonce` and `senderID`, as described in §3.
 
-The name of the `fileInfo` property in which the aforementioned elements are stored is a 24-byte nonce. We use this nonce, along with our ephemeral key pair, to encrypt the underlying JSON object asymmetrically to the recipient's public key, using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. This is done once for every recipient, creating a different `fileInfo` object for every recipient, each labeled by their unique nonces. For `n` recipients, we will obtain `n` properties of `fileInfo` with nonces as the property name and a Base64-encrypted object as the property value. Note that ephemeral key pairs are only used once, only for one file, and then discarded.
+The name of the `fileInfo` property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with `senderEphemeralSecret`, to encrypt the underlying JSON object asymmetrically to `senderPublic`, using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. Note that this is done once for every recipient, creating a different `fileInfo` object for every recipient, each labeled by their unique nonces.
 
-Finally, we append the bytes signalling the end of the header, followed by the ciphertext bytes.
+Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.
 
 TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
 
