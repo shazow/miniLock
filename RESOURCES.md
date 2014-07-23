@@ -8,9 +8,9 @@ License: MIT
 Origin: http://codepen.io/BandarRaffah/pen/ibwje
 License: None (public domain)
 
-##js-scrypt
-Origin: https://github.com/tonyg/js-scrypt
-License: BSD (2-clause)
+##scrypt-async-js
+Origin: https://github.com/dchest/scrypt-async-js
+License: BSD-Like
 
 ##jQuery
 Origin: http://jquery.org/
