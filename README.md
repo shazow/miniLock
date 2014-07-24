@@ -124,7 +124,7 @@ The sender's long-term keys are denoted as `senderSecret` and `senderPublic`.
 
 A recipient `a`'s long-term keys are denoted as `recipientSecret[a]` and `recipientPublic[a]`.
 
-The sender appends the bytes signalling the beginning of the header to the final encrypted file.
+The sender creates the final encrypted file by writing the bytes signalling the beginning of the header.
 
 A random 32-byte `fileKey` and a random 24-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction.
 
@@ -134,7 +134,7 @@ The name of the `fileInfo` property in which the aforementioned elements are sto
 
 Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.
 
-TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
+TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing it.
 
 ###5. File decryption
 In order to decrypt the file, the recipient needs the information stored within the `fileInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `fileInfo` header object.
