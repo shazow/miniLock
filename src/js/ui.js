@@ -327,20 +327,26 @@ $('a.setOriginalName').on('mousedown', function(event) {
 $('form.file').on('submit', function(event) {
 	$('#utip').hide()
 	event.preventDefault()
-	var miniLockIDs = $('div.identity input[type=text]').filter(function(){ return $(this).val()}).map(function(){ return $(this).val()}).get()
-	setTimeout(function(){
-		miniLock.crypto.encryptFile(
-			miniLock.UI.readFile,
-			$('form.file input.saveName').val(),
-			[miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)],
-			miniLock.session.keys.publicKey,
-			miniLock.session.keys.secretKey,
-			'miniLock.crypto.workerEncryptionCallback'
-		)
-		delete miniLock.UI.readFile
-	}, 1000)
-	
-	$('form.file').trigger('encrypt:start', miniLock.UI.readFile)
+	if ($('div.blank.identity').size() === $('div.identity').size()) {
+		$('div.identity input').first().focus()
+	} else if ($('div.invalid.identity').size()) {
+		$('div.invalid.identity input').first().focus()
+	} else {
+		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function(){ return this.value}).toArray()
+		var saveName = $('form.file input.saveName').val().trim()
+		setTimeout(function(){
+			miniLock.crypto.encryptFile(
+				miniLock.UI.readFile,
+				saveName,
+				[miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)],
+				miniLock.session.keys.publicKey,
+				miniLock.session.keys.secretKey,
+				'miniLock.crypto.workerEncryptionCallback'
+			)
+			delete miniLock.UI.readFile
+		}, 500)
+		$('form.file').trigger('encrypt:start', miniLock.UI.readFile)
+	}
 })
 
 // Destroy the file and return to the front after you save.
