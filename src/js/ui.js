@@ -239,8 +239,7 @@ $('form.file').on('encrypt:start', function(event, file) {
 	
 	$('input.encrypt').prop('disabled', true)
 	
-	// TODO
-	// miniLock.UI.animateProgressBar(file.size, 'encrypt')
+	miniLock.UI.animateProgressBar(file.size, 'encrypt')
 	
 	var saveName = $('form.file input.saveName').val()
 	var basename = saveName.split('.')[0]
@@ -284,8 +283,7 @@ $('form.file').on('decrypt:start', function(event, file) {
 	$('form.file div.input.name span.extensions').html(extensions)
 	$('form.file div.input.name').addClass('activated')
 	
-	// TODO
-	// miniLock.UI.animateProgressBar(file.size, 'encrypt')
+	miniLock.UI.animateProgressBar(file.size, 'decrypt')
 
 	$('form.file div.summary').text('Decrypted from ' + file.name)
 	
@@ -356,20 +354,19 @@ $('form.file').on('submit', function(event) {
 			var scrollDuration = 33 * Math.sqrt($('form.file > div').prop('scrollTop'))
 			$('form.file div.scrollingsurface').first().animate({scrollTop: 0}, scrollDuration)
 		}
-		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function(){ return this.value}).toArray()
+		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
 		var saveName = $('form.file input.saveName').val().trim()
-		setTimeout(function(){
-			miniLock.crypto.encryptFile(
-				miniLock.UI.readFile,
-				saveName,
-				[miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)],
-				miniLock.session.keys.publicKey,
-				miniLock.session.keys.secretKey,
-				'miniLock.crypto.workerEncryptionCallback'
-			)
-			delete miniLock.UI.readFile
-		}, 500)
+		miniLock.crypto.encryptFile(
+			miniLock.UI.readFile,
+			saveName,
+			[miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)],
+			miniLock.session.keys.publicKey,
+			miniLock.session.keys.secretKey,
+			'miniLock.crypto.workerEncryptionCallback'
+		)
+
 		$('form.file').trigger('encrypt:start', miniLock.UI.readFile)
+		delete miniLock.UI.readFile
 	}
 })
 
