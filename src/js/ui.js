@@ -226,8 +226,8 @@ $('form.file').on('encrypt:setup', function(event, file) {
 	
 	$('div.blank.identity input[type=text]').first().focus()
 	
-	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
-	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
+	var withoutSessionID = $('form.file div.session.identity').size() === 0
+	$('form.file').toggleClass('withoutSessionID', withoutSessionID)
 	
 	$('input.encrypt').prop('disabled', false)
 })
@@ -415,8 +415,8 @@ $('form.file').on('input', 'div.identity', function(event) {
 		}
 	}
 	
-	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
-	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
+	var withoutSessionID = $('form.file div.session.identity').size() === 0
+	$('form.file').toggleClass('withoutSessionID', withoutSessionID)
 	
 	if ($('form.file div.blank.identity').size() === 0) {
 		$('form.file div.miniLockIDList').append(Mustache.render(

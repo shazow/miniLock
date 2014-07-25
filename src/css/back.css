@@ -468,7 +468,7 @@ form.file div.notice {
 	transition: opacity 600ms linear;
 }
 
-form.file.missingMyMiniLockID div.notice {
+form.file.withoutSessionID div.notice {
 	opacity: 1;
 }
 
