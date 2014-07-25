@@ -49,7 +49,7 @@ miniLock.util.validateID = function(id) {
 // Input: none
 // Output: Random string suitable for use as filename.
 miniLock.util.getRandomFilename = function() {
-	var randomBytes = nacl.randomBytes(18)
+	var randomBytes = nacl.randomBytes(6)
 	return Base58.encode(randomBytes)
 }
 
@@ -149,12 +149,12 @@ miniLock.crypto.workerDecryptionCallback = function(message) {
 	}, message.operation, message.senderID)
 }
 
-// Input: User key hash (Uint8Array), callback function
+// Input: User key hash (Uint8Array), Salt (Uint8Array), callback function
 // Result: Calls the scrypt Web Worker which returns
 //	32 bytes of key material in a Uint8Array,
 //	which then passed to the callback.
-miniLock.crypto.getScryptKey = function(key, callback) {
-	scrypt(key, 'miniLockScrypt..', 17, 8, 32, 1000, function(keyBytes) {
+miniLock.crypto.getScryptKey = function(key, salt, callback) {
+	scrypt(key, salt, 17, 8, 32, 1000, function(keyBytes) {
 		return callback(nacl.util.decodeBase64(keyBytes))
 	}, 'base64');
 }
@@ -167,14 +167,15 @@ miniLock.crypto.checkKeyStrength = function(key) {
 	return (zxcvbn(key).entropy > minEntropy)
 }
 
-// Input: User key
+// Input: User key (String), User salt (email) (String)
 // Result: Object: {
 //	publicKey: Public encryption key (Uint8Array),
 //	secretKey: Secret encryption key (Uint8Array)
 // }
-miniLock.crypto.getKeyPair = function(key) {
+miniLock.crypto.getKeyPair = function(key, salt) {
 	key = nacl.hash(nacl.util.decodeUTF8(key))
-	miniLock.crypto.getScryptKey(key, function(keyBytes) {
+	salt = nacl.util.decodeUTF8(salt)
+	miniLock.crypto.getScryptKey(key, salt, function(keyBytes) {
 		miniLock.session.keys = nacl.box.keyPair.fromSecretKey(keyBytes)
 		miniLock.session.keyPairReady = true
 	})
@@ -205,7 +206,7 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 //		data: File (ArrayBuffer),
 //	}
 // saveName: Name to use when saving resulting file. '.minilock' extension will be added.
-// publicKeys: Array of (Base58) public keys to encrypt for
+// miniLockIDs: Array of (Base58) public IDs to encrypt for
 // myPublicKey: My public key (Uint8Array)
 // mySecretKey: My secret key (Uint8Array)
 // callback: Name of the callback function to which encrypted result is passed.
@@ -214,7 +215,7 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 miniLock.crypto.encryptFile = function(
 	file,
 	saveName,
-	publicKeys,
+	miniLockIDs,
 	myPublicKey,
 	mySecretKey,
 	callback
@@ -225,7 +226,7 @@ miniLock.crypto.encryptFile = function(
 	var fileNameNonces = []
 	// We are generating the nonces here simply because we cannot do that securely
 	// inside the web worker due to the lack of CSPRNG access.
-	for (var i = 0; i < publicKeys.length; i++) {
+	for (var i = 0; i < miniLockIDs.length; i++) {
 		fileInfoNonces.push(
 			miniLock.crypto.getNonce()
 		)
@@ -247,7 +248,7 @@ miniLock.crypto.encryptFile = function(
 		fileKeyNonces: fileKeyNonces,
 		fileNameNonces: fileNameNonces,
 		ephemeral: nacl.box.keyPair(),
-		publicKeys: publicKeys,
+		miniLockIDs: miniLockIDs,
 		myPublicKey: myPublicKey,
 		mySecretKey: mySecretKey,
 		callback: callback
@@ -321,8 +322,8 @@ miniLock.user = {}
 
 // Input: User key
 // Result: Unlock
-miniLock.user.unlock = function(key) {
-	miniLock.crypto.getKeyPair(key)
+miniLock.user.unlock = function(key, salt) {
+	miniLock.crypto.getKeyPair(key, salt)
 }
 
 // Input: File size

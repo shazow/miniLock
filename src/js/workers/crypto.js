@@ -97,7 +97,7 @@ var validateEphemeral = validateKey
 //			publicKey: Ephemeral Curve25519 public key (Uint8Array),
 //			secretKey: Ephemeral Curve25519 secret key (Uint8Array)
 //		} (Only used for encryption)
-//		publicKeys: Array of (Base58) public keys to encrypt to (not used for 'decrypt' operation),
+//		miniLockIDs: Array of (Base58) miniLock IDs to encrypt to (not used for 'decrypt' operation),
 //		myPublicKey: My public key (Uint8Array),
 //		mySecretKey: My secret key (Uint8Array)
 //	}
@@ -153,17 +153,17 @@ if (message.operation === 'encrypt') {
 		while (paddedFileName < 256) {
 			paddedFileName += String.fromCharCode(0x00)
 		}
-		for (var i = 0; i < message.publicKeys.length; i++) {
+		for (var i = 0; i < message.miniLockIDs.length; i++) {
 			var encryptedFileKey = nacl.box(
 				message.fileKey,
 				message.fileKeyNonces[i],
-				Base58.decode(message.publicKeys[i]),
+				Base58.decode(message.miniLockIDs[i]),
 				message.mySecretKey
 			)
 			var encryptedFileName = nacl.box(
 				nacl.util.decodeUTF8(paddedFileName),
 				message.fileNameNonces[i],
-				Base58.decode(message.publicKeys[i]),
+				Base58.decode(message.miniLockIDs[i]),
 				message.mySecretKey
 			)
 			var fileInfo = {
@@ -182,7 +182,7 @@ if (message.operation === 'encrypt') {
 			var encryptedFileInfo = nacl.box(
 				nacl.util.decodeUTF8(fileInfo),
 				message.fileInfoNonces[i],
-				Base58.decode(message.publicKeys[i]),
+				Base58.decode(message.miniLockIDs[i]),
 				message.ephemeral.secretKey
 			)
 			header.fileInfo[

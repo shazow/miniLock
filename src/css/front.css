@@ -28,9 +28,10 @@ div.unlock p {
 	margin: 20px 0;
 }
 
+div.unlock input.miniLockEmail,
 div.unlock input.miniLockKey {
-	font-size: 0.7em;
-	width: 450px;
+	font-size: 0.8em;
+	width: 416px;
 	height: 23px;
 	position: relative;
 	bottom: 4px;
@@ -41,9 +42,11 @@ div.unlock input[type=submit] {
 	font-size: 1.3em;
 	font-family: 'Octicons';
 	width: 30px;
+	position: relative;
+	bottom: 1px;
 }
 
-div.unlock div.keyStrength {
+div.unlock div.unlockInfo {
 	background: rgba(0, 0, 0, 0.15);
 	font-size: 0.8em;
 	font-weight: bold;
@@ -55,27 +58,26 @@ div.unlock div.keyStrength {
 	border-radius: 1px 1px 2px 2px;
 }
 
-div.unlock div.keyStrength span.keyStrengthMoreInfo {
+div.unlock div.unlockInfo span.keyStrengthMoreInfo {
 	text-decoration: underline;
 	cursor: pointer;
 }
 
-div.unlock div.keyStrength p {
+div.unlock div.unlockInfo p {
 	border-radius: 6px;
 	padding: 3px;
 	margin-top: 7px;
 }
 
-div.unlock div.keyStrength input[type=text] {
+div.unlock div.unlockInfo input[type=text] {
 	width: 430px;
 	font-size: 1em;
 }
 
-div.unlock div.keyStrength input[type=button] {
+div.unlock div.unlockInfo input[type=button] {
 	font-size: 1.1em;
 	margin-top: 7px;
 }
-
 
 /*
 	* File select

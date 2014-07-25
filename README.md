@@ -15,11 +15,11 @@ miniLock was subjected to a cryptographic code audit carried out by [Cure53](htt
 miniLock also ships with a Unit Test Kit located in `test`.
 
 ###0. Overview
-miniLock is a small, portable file encryption software. The idea behind its design is that a passphrase, memorized by the user, can act as a complete, portable basis for a persistent public key identity and provide a full substitute for other key pair models, such as having the key pair stored on disk media (the PGP approach).  
+miniLock is a small, portable file encryption software. The idea behind its design is that passphrase memorized by the user, along with their email address, can act as a complete, portable basis for a persistent public key identity and provide a full substitute for other key pair models, such as having the key pair stored on disk media (the PGP approach).  
 
 Advancements in elliptic curve cryptography, specifically in systems such as `curve25519`, allow us to generate key pairs where the lengths of both public and private keys are relatively very small. This means that public keys become far easier to share (miniLock public keys, called *miniLock IDs*, fit inside less than half a tweet). This also means that a human-memorizable passphrase of adequate entropy can be used as the basis for deriving a private key.
 
-When first opened, miniLock asks the user for their passphrase which it then uses to derive the user's private and public keys. Via this model, the user can establish their key pair on any computer that has miniLock installed using only this passphrase, without having to manage key files or identities and so on. Thanks to the small key sizes present in `curve25519`, we are guaranteed small, easily tweetable public keys and private keys that can be derived from passphrases. miniLock also contains checks to ensure the passphrases entered by the user are of sufficient entropy. miniLock will refuse weak passphrases completely and instead suggest stronger passphrases for use by the user.
+When first opened, miniLock asks the user for their email address and a passphrase which it then uses to derive the user's private and public keys. Via this model, the user can establish their key pair on any computer that has miniLock installed using only this passphrase, without having to manage key files or identities and so on. Thanks to the small key sizes present in `curve25519`, we are guaranteed small, easily tweetable public keys and private keys that can be derived from passphrases. miniLock also contains checks to ensure the passphrases entered by the user are of sufficient entropy. miniLock will refuse weak passphrases completely and instead suggest stronger passphrases for use by the user.
 
 miniLock then allows the user to encrypt files to other miniLock users via their miniLock IDs and decrypt files sent to them. miniLock's encryption format supports encrypting a single file to multiple recipients with a negligible increase in file size. Another feature is that analyzing a miniLock-encrypted file does not yield the miniLock IDs or identities of the sender or the recipient(s). Upon decryption, a legitimate recipient will be able to know and verify the identity of the sender, but will still be unable to determine the identity of other potential recipients.
 
@@ -30,8 +30,8 @@ This section outlines an example user flow in order to help demonstrate how mini
 
 Alice wants to send a scan of her passport to Bob. Sending it over email would compromise personal information, so Alice decided to first encrypt the scan using miniLock.
 
-Bob opens miniLock and enters his passphrase. miniLock displays his miniLock ID, which is tied to his passphrase and is persistent. He sends Alice his miniLock ID, which looks something like this:
-`HUG7p95ffj5B1FRbsE5VCF3ZaKF5q5GHBLYqoQxWHZdY`
+Bob opens miniLock and enters his email address and passphrase. miniLock displays his miniLock ID, which is tied to his passphrase and is persistent. He sends Alice his miniLock ID, which looks something like this:
+`7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS`
 
 Alice drags and drops her passport scan into miniLock and enters Bob's miniLock ID as the recipient. She clicks the encrypt button and sends the resulting `.minilock` file to Bob. Once Bob drags the encrypted file into miniLock, it automatically detects it as a miniLock-encrypted file destined to Bob, and decrypts and saves the passport scan on his computer.
 
@@ -47,14 +47,7 @@ Once we obtain a suitable passphrase, we hash it using `SHA-512` and then derive
 * p = 1,
 * L = 32
 
-The key derivation salt is constant and is composed of the following 16 bytes:
-
-```
-0x6d, 0x69, 0x6e, 0x69
-0x4c, 0x6f, 0x63, 0x6b
-0x53, 0x63, 0x72, 0x79
-0x70, 0x74, 0x2e, 0x2e
-```
+miniLock uses the email address entered by the user as the `scrypt` key derivation salt. Email addresses are unique by nature and therefore provide a good basis for a salt.
 
 Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL `curve25519-xsalsa20-poly1305` construction.
 
@@ -124,7 +117,7 @@ The sender's long-term keys are denoted as `senderSecret` and `senderPublic`.
 
 A recipient `a`'s long-term keys are denoted as `recipientSecret[a]` and `recipientPublic[a]`.
 
-The sender creates the final encrypted file by writing the bytes signalling the beginning of the header.
+The sender appends the bytes signalling the beginning of the header to the final encrypted file.
 
 A random 32-byte `fileKey` and a random 24-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction.
 
@@ -134,7 +127,7 @@ The name of the `fileInfo` property in which the aforementioned elements are sto
 
 Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.
 
-TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing it.
+TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
 
 ###5. File decryption
 In order to decrypt the file, the recipient needs the information stored within the `fileInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `fileInfo` header object.
@@ -157,6 +150,8 @@ Sincere thanks are presented to Trevor Perrin for his invaluable contribution to
 Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project, including many helpful and crucial suggestions.
 
 Sincere thanks are presented to Dr. Mario Heiderich and his team at [Cure53](https://cure53.de/) for their work on performing a full audit of the miniLock codebase. We also sincerely thank the [Open Technology Fund](https://www.opentechfund.org/) for funding the audit.
+
+Finally, sincere thanks are presented to the wonderful, constructive members of the miniLock community who have contributed many improvements and ideas to the miniLock design and codebase. You rock!
 
 ###9. Credits
 **miniLock**

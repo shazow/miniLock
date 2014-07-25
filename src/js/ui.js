@@ -2,13 +2,12 @@ miniLock.UI = {}
 
 $(window).load(function() {
 'use strict';
-
 // -----------------------
 // UI Startup
 // -----------------------
 
 $('[data-utip]').utip()
-$('input.miniLockKey').focus()
+$('input.miniLockEmail').focus()
 $('span.dragFileInfo').text(
 	$('span.dragFileInfo').data('select')
 )
@@ -17,16 +16,27 @@ $('span.dragFileInfo').text(
 // Unlock UI Bindings
 // -----------------------
 
-$('form.unlockForm').submit(function() {
-	var key = $('input.miniLockKey').val()
+$('form.unlockForm').on('submit', function() {
+	var emailMatch = new RegExp(
+		'[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\\.[a-zA-Z]{2,20}'
+	)
+	var email = $('input.miniLockEmail').val()
+	var key   = $('input.miniLockKey').val()
+	if (!email.length || !emailMatch.test(email)) {
+		$('div.unlockInfo').text($('div.unlockInfo').data('bademail'))
+		$('input.miniLockEmail').select()
+		return false
+	}
 	if (!key.length) {
+		$('div.unlockInfo').text($('div.unlockInfo').data('nokey'))
+		$('input.miniLockKey').select()
 		return false
 	}
 	if (miniLock.crypto.checkKeyStrength(key)) {
-		$('div.keyStrength').animate({height: 20})
-		$('div.keyStrength').text($('div.keyStrength').data('keyok'))
+		$('div.unlockInfo').animate({height: 20})
+		$('div.unlockInfo').text($('div.unlockInfo').data('keyok'))
 		$('input.miniLockKey').attr('readonly', 'readonly')
-		miniLock.user.unlock(key)
+		miniLock.user.unlock(key, email)
 		// Keep polling until we have a key pair
 		var keyReadyInterval = setInterval(function() {
 			if (miniLock.session.keyPairReady) {
@@ -46,7 +56,7 @@ $('form.unlockForm').submit(function() {
 		}, 100)
 	}
 	else {
-		$('div.keyStrength').html(
+		$('div.unlockInfo').html(
 			Mustache.render(
 				miniLock.templates.keyStrengthMoreInfo,
 				{
@@ -54,12 +64,12 @@ $('form.unlockForm').submit(function() {
 				}
 			)
 		)
-		$('div.keyStrength').animate({height: 180})
-		$('div.keyStrength input[type=text]').unbind().click(function() {
+		$('div.unlockInfo').animate({height: 185})
+		$('div.unlockInfo input[type=text]').unbind().click(function() {
 			$(this).select()
 		})
-		$('div.keyStrength input[type=button]').unbind().click(function() {
-			$('div.keyStrength input[type=text]').val(
+		$('div.unlockInfo input[type=button]').unbind().click(function() {
+			$('div.unlockInfo input[type=text]').val(
 				miniLock.phrase.get(7)
 			)
 		})

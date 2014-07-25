@@ -27,4 +27,4 @@ The full license text is included in `LICENSE.md`.
 
 ##Contributors
 * **Dmitry Chestnykh**: TweetNaCL library.  
-* **Nadim Kobeissi**: Lead developer.
+* **Nadim Kobeissi**: Lead developer. Created Cryptocat.  

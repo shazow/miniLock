@@ -2,7 +2,7 @@
 QUnit.asyncTest('deriveKey', function(assert) {
 	'use strict';
 	var passphrase = 'This passphrase is supposed to be good enough for miniLock. :-)'
-	miniLock.crypto.getKeyPair(passphrase)
+	miniLock.crypto.getKeyPair(passphrase, 'miniLockScrypt..')
 	assert.deepEqual(miniLock.session.keyPairReady, false, 'keyPairReady starts as false')
 	assert.deepEqual(Object.keys(miniLock.session.keys).length, 0, 'sessionKeys is empty')
 	var keyInterval = setInterval(function() {
@@ -15,6 +15,7 @@ QUnit.asyncTest('deriveKey', function(assert) {
 			assert.deepEqual(typeof(miniLock.session.keys.secretKey), 'object', 'Secret key type check')
 			assert.deepEqual(miniLock.session.keys.publicKey.length, 32, 'Public key length')
 			assert.deepEqual(miniLock.session.keys.secretKey.length, 32, 'Secret key length')
+
 			assert.deepEqual(
 				Base58.encode(miniLock.session.keys.publicKey),
 				'F9NgHy5pDe5RuvVGe2gRJoPrJ99m1wdE5gutYkVXgjDP',
