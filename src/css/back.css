@@ -19,13 +19,6 @@ div.squareBack p {
 	margin-top: 240px;
 }
 
-div.filenameSuspicious {
-	margin-top: 10px;
-	background: rgba(0, 0, 0, 0.1);
-	padding: 5px;
-	font-size: 0.9em;
-}
-
 form.file h1,
 form.file h2,
 form.file h3 {
@@ -267,6 +260,22 @@ form.file div.summary {
 
 form.encrypted.file div.summary,
 form.decrypted.file div.summary {
+	visibility: visible;
+}
+
+/* Notice when the filename of a decrypted file is suspect */
+
+div.suspectFilenameNotice {
+	position: fixed;
+	top: 455px;
+	left: 100px;
+	right: 100px;
+	padding: 10px;
+	background: rgba(0, 0, 0, 0.1);
+	visibility: hidden;
+}
+
+form.decrypted.file.withSuspectFilename div.suspectFilenameNotice {
 	visibility: visible;
 }
 

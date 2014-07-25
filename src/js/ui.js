@@ -190,7 +190,7 @@ $('input.flipBack').click(function() {
 
 // Setup the screen for a new unencrypted file. 
 $('form.file').on('encrypt:setup', function(event, file) {
-	$('form.file').removeClass('decrypting encrypting decrypted encrypted')
+	$('form.file').removeClass('decrypting encrypting decrypted encrypted withSuspectFilename')
 	$('form.file').addClass('unprocessed')
 	
 	$('form.file div.name').removeClass('activated shelved expired')
@@ -268,7 +268,7 @@ $('form.file').on('encrypt:failure', function(event, file) {
 
 // Setup the screen for the decryption view and start processing.
 $('form.file').on('decrypt:start', function(event, file) {
-	$('form.file').removeClass('encrypting decrypted encrypted unprocessed')
+	$('form.file').removeClass('encrypting decrypted encrypted unprocessed withSuspectFilename')
 	$('form.file').addClass('decrypting')
 
 	$('input.encrypt').prop('disabled', true)
@@ -306,11 +306,11 @@ $('form.file').on('decrypt:complete', function(event, file) {
 		$('div.input.name').removeClass('activated').addClass('expired')
 	}
 	
-	// TODO
-	// if (miniLock.util.isFilenameSuspicious(file.name)) {
-	// 	$('div.filenameSuspicious').fadeIn(200)
-	// }
-
+	// Show the suspect filename notice when applicable.
+	if (miniLock.util.isFilenameSuspicious(file.name)) {
+		$('form.file').addClass('withSuspectFilename')
+	}
+	
 	// Measure the height of the onscreen filename
 	// and resize the file save link to fit.
 	$('a.fileSaveLink').css('height', $(this).find('div.activated.name h1').height())
