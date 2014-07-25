@@ -367,9 +367,30 @@ $('a.fileSaveLink').on('mouseover mouseout', function(){
 // Audience Selection UI Bindings
 // -----------------------
 
-// Classify identity tags as `blank` when their input has no value.
-$('div.identity').on('input', 'input[type=text]', function(event) {
-	$(event.delegateTarget).toggleClass('blank', $(event.target).val().trim() === '')
+// Validate ID input and classify it as blank, invalid or the same as the current session.
+$('form.file').on('input', 'div.identity', function(event) {
+	$(this).removeClass('blank invalid session')
+	$(this).find('label').empty()
+	
+	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	var inputID   = $(this).find('input[type=text]').val().trim()
+	if (inputID.length === 0) {
+		$(this).addClass('blank')
+	} else {
+		if (inputID === sessionID) {
+			$(this).addClass('session')
+			$(this).find('label').text('Me')
+		}
+		if (! miniLock.util.validateID(inputID)) {
+			$(this).addClass('invalid')
+			$(this).find('label').text('Invalid')
+			if (inputID.length < 44) $(this).find('label').text('Too short')
+			if (inputID.length > 44) $(this).find('label').text('Too long')
+		}
+	}
+	
+	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
+	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
 })
 
 $('input.addAnotherRecipient').click(function() {

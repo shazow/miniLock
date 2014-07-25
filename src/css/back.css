@@ -360,7 +360,7 @@ form.file div.audience > header h1 {
 	font-weight: bold;
 }
 
-/* div.identity elements */
+/* Identity elements  */
 
 form.file div.identity {
 	position: relative;
@@ -381,18 +381,18 @@ form.file div.identity input[type=text] {
 	transition: background 100ms linear;
 }
 
-form.file div.identity input:hover {
+form.file div.identity input[type=text]:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-form.file div.identity input:focus {
+form.file div.identity input[type=text]:focus {
 	background: rgba(255, 255, 255, 0.2);
 }
 
 form.file div.identity label {
 	position: absolute;
-	left: -25px;
-	top: 8px;
+	right: 405px;
+	top: 7px;
 	display: block;
 	height: 18px;
 	line-height: 18px;
@@ -401,6 +401,16 @@ form.file div.identity label {
 	background: #A3B6CC;
 	text-align: right;
 	visibility: hidden;
+	white-space: nowrap;
+}
+
+form.file div.session.identity label,
+form.file div.invalid.identity label {
+	visibility: visible;
+}
+
+form.file div.invalid.identity label {
+	background: hsl(50, 55%, 66%);
 }
 
 form.file div.identity label:after {
@@ -415,9 +425,12 @@ form.file div.identity label:after {
 	border-left-color: #A3B6CC;
 }
 
-form.file div.my.identity label,
-form.file div.invalid.identity label {
-	visibility: visible;
+form.file div.invalid.identity label:after {
+	border-left-color: hsl(50, 55%, 66%);
+}
+
+form.file div.invalid.identity input[type=text] {
+	color: hsl(50, 100%, 70%);
 }
 
 form.file div.identity input.removeID {
