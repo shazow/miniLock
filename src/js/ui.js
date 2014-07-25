@@ -299,9 +299,13 @@ $('form.file').on('decrypt:start', function(event, file) {
 		{'basename': basename, 'extensions': extensions}
 	))
 	
-	miniLock.UI.animateProgressBar(file.size, 'decrypt')
+	// Render the input filename in the decryption summary the bottom.
+	$('form.file div.summary').html('Decrypted from ' + Mustache.render(
+		miniLock.templates.filename, 
+		{'basename': basename, 'extensions': extensions}
+	))
 
-	$('form.file div.summary').text('Decrypted from ' + file.name)
+	miniLock.UI.animateProgressBar(file.size, 'decrypt')
 	
 	$(this).data('inputFilename', file.name)
 })
