@@ -205,9 +205,18 @@ $('form.file').on('encrypt:setup', function(event, file) {
 	var fileSize = miniLock.UI.readableFileSize(file.size)
 	$('span.fileSize').html(fileSize)
 	
-	var id = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	$('div.identity input[type=text]').first().val(id)
+	if ($('form.file div.identity').size() === $('form.file div.blank.identity').size()) {
+		var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+		$('div.identity input[type=text]').first().val(sessionID)
+		$('div.identity').first().addClass('session')
+		$('div.identity').first().removeClass('blank')
+		$('div.identity label').first().text('Me')
+	}
+	
 	$('div.blank.identity input[type=text]').first().focus()
+	
+	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
+	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
 	
 	$('input.encrypt').prop('disabled', false)
 })
@@ -268,7 +277,7 @@ $('form.file').on('decrypt:start', function(event, file) {
 	// miniLock.UI.animateProgressBar(file.size, 'encrypt')
 
 	$('form.file div.summary').text('Decrypted from ' + file.name)
-
+	
 	$(this).data('inputFilename', file.name)
 })
 
@@ -397,18 +406,23 @@ $('form.file').on('input', 'div.identity', function(event) {
 	
 	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
 	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
+	
+	if ($('form.file div.blank.identity').size()===0) {
+		var newIdentity = Mustache.render(miniLock.templates.audienceListIdentity, {})
+		$('form.file div.miniLockIDList').append(newIdentity)
+		$('form.file > div').first().stop().animate({
+			scrollTop: $('form.file > div').first().prop('scrollHeight')
+		}, 1500)
+	}
 })
 
-$('input.addAnotherRecipient').click(function() {
-	var recipient = Mustache.render(
-		miniLock.templates.recipient
-	)
-	$(recipient).insertAfter(
-		$('form.recipientForm input[type=text]:last')
-	)
-	$('div.recipientScroller').stop().animate({
-		scrollTop: $('div.recipientScroller').prop('scrollHeight')
-	}, 500)
+$('form.file').on('mousedown', 'div.identity input.remove', function(event) {
+	var oldIdentity = $(this).closest('div.identity')
+	oldIdentity.remove()
+	if ($('form.file div.identity').size() < 4 || $('form.file div.blank.identity').size()===0) {
+		var newIdentity = Mustache.render(miniLock.templates.audienceListIdentity, {})
+		$('form.file div.miniLockIDList').append(newIdentity)
+	}
 })
 
 

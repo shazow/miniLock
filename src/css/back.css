@@ -433,7 +433,7 @@ form.file div.invalid.identity input[type=text] {
 	color: hsl(50, 100%, 70%);
 }
 
-form.file div.identity input.removeID {
+form.file div.identity input.remove {
 	position: absolute;
 	top: 10px;
 	right: 8px;
@@ -447,11 +447,11 @@ form.file div.identity input.removeID {
 	background: none;
 }
 
-form.file div.identity input.removeID:hover {
+form.file div.identity input.remove:hover {
 	color: white;
 }
 
-form.file div.blank.identity input.removeID,
+form.file div.blank.identity input.remove,
 form.file div.blank.identity label {
 	display: none;
 }
