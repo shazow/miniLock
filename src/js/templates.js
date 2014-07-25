@@ -13,3 +13,8 @@ miniLock.templates.audienceListIdentity = ''
 	+ 	'<input class="code" type="text" placeholder="Add another miniLock ID" value="{{id}}" />'
 	+ 	'<input class="remove" type="button" value="&#xf081;" tabindex="-1" />'
 	+ '</div>'
+
+miniLock.templates.filename = ''
+	+ '<b class="basename">{{basename}}</b>'
+	+ '<span class="extensions">{{extensions}}</span>'
+	+ '<span class="minilock extension">.minilock</span>'
