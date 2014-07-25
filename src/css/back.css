@@ -340,6 +340,7 @@ form.file div.audience > header {
 	top: -30px;
 	left: 10px;
 	right: 10px;
+	margin-top: -2px;
 }
 
 form.file div.audience > header h1,
