@@ -57,17 +57,18 @@ form.file > div.scrollingsurface > header {
 
 /* Basic styles for all <a> tags in this form */
 
-form.file a {
+div.squareBack a {
 	color: inherit;
 	font-weight: normal;
 }
 
-form.file a.control {
+div.squareBack a.control {
+	color: inherit;
 	text-decoration: underline;
 	cursor: pointer;
 }
 
-form.file a.control:hover {
+div.squareBack a.control:hover {
 	color: white;
 }
 
@@ -176,7 +177,7 @@ form.file div.infoContainer {
 	right: 110px;
 }
 
-form.file a {
+form.file div.infoContainer a {
 	display: none;
 	color: inherit;
 }
