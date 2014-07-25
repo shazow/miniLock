@@ -136,10 +136,6 @@ form.file div.name h1 span.extensions {
 	color: white;
 }
 
-form.file div.name b.basename {
-	font-weight: bold;
-}
-
 form.file div.name span.minilock.extension { 
 	color: inherit;
 }

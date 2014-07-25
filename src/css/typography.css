@@ -1,19 +1,26 @@
+/* OpenSans with Inconsolata */
+
 body.opensans-inconsolata { font-family: 'Open Sans', sans-serif; }
 body.opensans-inconsolata form.file { font-size:11px; line-height: 15px; }
-body.opensans-inconsolata form.file div.name h1 { font-size: 20px; line-height: 22px; }
+body.opensans-inconsolata form.file div.name h1 { font-size: 23px; line-height: 25px; padding-bottom: 2px; }
 body.opensans-inconsolata form.file b.basename { font-weight: bold; }
-body.opensans-inconsolata form.file h2 { font-weight: bold; color: white; }
-body.opensans-inconsolata form.file h3 { font-weight: normal; }
-body.opensans-inconsolata form.file div.identity input[type=text] { font-family: 'Inconsolata', monospace; font-size: 13px; }
+body.opensans-inconsolata form.file h2 { color: white; }
+
+body.opensans-inconsolata form.file code,
+body.opensans-inconsolata form.file div.identity input[type=text] {
+	font-family: 'Inconsolata', monospace; 
+	font-size: 16px;
+}
+
+/* Lucida Grande with Menlo */
 
 body.lucida-menlo { font-family: 'Lucida Grande', sans-serif; }
 body.lucida-menlo form.file { font-size:11px; line-height: 15px; }
-body.lucida-menlo form.file div.name h1 { font-size: 20px; line-height: 22px; }
+body.lucida-menlo form.file div.name h1 { font-size: 22px; line-height: 24px; padding-bottom: 2px; }
 body.lucida-menlo form.file b.basename { font-weight: bold; }
-body.lucida-menlo form.file h2 { font-weight: bold; color: white; }
-body.lucida-menlo form.file h3 { font-weight: normal; }
-body.lucida-menlo form.file div.identity input[type=text] { font-family: 'Menlo', monospace; font-size: 13px; }
-body.lucida-menlo form.file code { font-family: 'Menlo', monospace; font-size: 13px; }
+body.lucida-menlo form.file h2 { color: white; }
 
-/*body.avenir form.file { font-family: 'AvenirNext-Medium', sans-serif; }*/
-/*body.avenir form.file h2 { font-family: 'AvenirNext-Bold', sans-serif; }*/
+body.lucida-menlo form.file code,
+body.lucida-menlo form.file div.identity input[type=text] {
+	font-family: 'Menlo', monospace; font-size: 14px;
+}
