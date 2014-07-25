@@ -341,6 +341,15 @@ $('a.setOriginalName').on('mousedown', function(event) {
 	$('form.file input.saveName').val(name)
 })
 
+// Add the current session ID to the audience list.
+$('a.addSessionIDtoAudienceList').on('mousedown', function(event) {
+	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	$('form.file div.blank.identity').first().replaceWith(Mustache.render(
+		miniLock.templates.audienceListIdentity, 
+		{'className': 'session', 'id': sessionID, 'label': 'Me'}
+	))
+})
+
 // Press return, or click > to commit the form and begin encrypting.
 $('form.file').on('submit', function(event) {
 	$('#utip').hide()
