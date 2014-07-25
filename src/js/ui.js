@@ -7,7 +7,7 @@ $(window).load(function() {
 // -----------------------
 
 $('[data-utip]').utip()
-$('input.miniLockKey').focus()
+$('input.miniLockEmail').focus()
 $('span.dragFileInfo').text(
 	$('span.dragFileInfo').data('select')
 )
