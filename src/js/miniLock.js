@@ -77,6 +77,14 @@ miniLock.util.isFilenameSuspicious = function(filename) {
 	return (suspicious.indexOf(extension) >= 0)
 }
 
+// Input: Filename (String)
+// Output: Object with basename and extensions members.
+miniLock.util.getBasenameAndExtensions = function(filename) {
+	var basename = filename.split('.')[0]
+	var extensions = filename.substr(basename.length)
+	return {'basename': basename, 'extensions': extensions}
+}
+
 // -----------------------
 // Cryptographic Functions
 // -----------------------
