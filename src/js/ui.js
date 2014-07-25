@@ -215,12 +215,13 @@ $('form.file').on('encrypt:setup', function(event, file) {
 	var fileSize = miniLock.UI.readableFileSize(file.size)
 	$('span.fileSize').html(fileSize)
 	
-	if ($('form.file div.identity').size() === $('form.file div.blank.identity').size()) {
+	// Insert the session ID if the audience list is empty.
+	if ($('form.file div.blank.identity').size() === $('form.file div.identity').size()) {
 		var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-		$('div.identity input[type=text]').first().val(sessionID)
-		$('div.identity').first().addClass('session')
-		$('div.identity').first().removeClass('blank')
-		$('div.identity label').first().text('Me')
+		$('form.file div.blank.identity:first-child').replaceWith(Mustache.render(
+			miniLock.templates.audienceListIdentity, 
+			{'className': 'session', 'id': sessionID, 'label': 'Me'}
+		))
 	}
 	
 	$('div.blank.identity input[type=text]').first().focus()
@@ -421,9 +422,11 @@ $('form.file').on('input', 'div.identity', function(event) {
 	var missingMyMiniLockID = $('form.file div.session.identity').size() === 0
 	$('form.file').toggleClass('missingMyMiniLockID', missingMyMiniLockID)
 	
-	if ($('form.file div.blank.identity').size()===0) {
-		var newIdentity = Mustache.render(miniLock.templates.audienceListIdentity, {})
-		$('form.file div.miniLockIDList').append(newIdentity)
+	if ($('form.file div.blank.identity').size() === 0) {
+		$('form.file div.miniLockIDList').append(Mustache.render(
+			miniLock.templates.audienceListIdentity, 
+			{'className': 'blank'}
+		))
 		$('form.file > div').first().stop().animate({
 			scrollTop: $('form.file > div').first().prop('scrollHeight')
 		}, 1500)
@@ -434,8 +437,10 @@ $('form.file').on('mousedown', 'div.identity input.remove', function(event) {
 	var oldIdentity = $(this).closest('div.identity')
 	oldIdentity.remove()
 	if ($('form.file div.identity').size() < 4 || $('form.file div.blank.identity').size()===0) {
-		var newIdentity = Mustache.render(miniLock.templates.audienceListIdentity, {})
-		$('form.file div.miniLockIDList').append(newIdentity)
+		$('form.file div.miniLockIDList').append(Mustache.render(
+			miniLock.templates.audienceListIdentity, 
+			{'className': 'blank'}
+		))
 	}
 })
 
