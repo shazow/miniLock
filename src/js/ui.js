@@ -2,7 +2,6 @@ miniLock.UI = {}
 
 $(window).load(function() {
 'use strict';
-
 // -----------------------
 // UI Startup
 // -----------------------
@@ -14,55 +13,39 @@ $('span.dragFileInfo').text(
 )
 
 // -----------------------
-// Previous ID form UI Bindings
-// -----------------------
-
-$('form.prevIDForm').submit(function() {
-	var prevID = $('form.prevIDForm > input.miniLockID').val()
-	var key = $('form.prevIDForm > input.miniLockKey').val()
-	if (!(prevID.length && key.length)) {
-		return false
-	}
-	$('div.keyVerify').text($('div.keyVerify').data('keywait'))
-	miniLock.user.unlock(key, prevID)
-	var keyReadyInterval = setInterval(function() {
-		if (miniLock.session.keyPairReady) {
-			clearInterval(keyReadyInterval)
-			$('div.myMiniLockID code').text(miniLock.session.miniLockID)
-			$('div.unlock').delay(200).fadeOut(200, function() {
-				$('div.selectFile').fadeIn(200)
-				$('div.squareFront').animate({
-					backgroundColor: '#49698D'
-				})
-			})
-		}
-		else if(miniLock.session.invalidKey){
-			clearInterval(keyReadyInterval)
-			$('div.keyVerify').text($('div.keyStrength').data('keyok'))
-		}
-	}, 100)
-	return false
-})
-
-// -----------------------
 // Unlock UI Bindings
 // -----------------------
 
-$('form.unlockForm').submit(function() {
-	var key = $('form.unlockForm > input.miniLockKey').val()
+$('form.unlockForm').on('submit', function() {
+	var emailMatch = new RegExp(
+		'[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\\.[a-zA-Z]{2,20}'
+	)
+	var email = $('input.miniLockEmail').val()
+	var key   = $('input.miniLockKey').val()
+	if (!email.length || !emailMatch.test(email)) {
+		$('div.unlockInfo').text($('div.unlockInfo').data('bademail'))
+		$('input.miniLockEmail').select()
+		return false
+	}
 	if (!key.length) {
+		$('div.unlockInfo').text($('div.unlockInfo').data('nokey'))
+		$('input.miniLockKey').select()
 		return false
 	}
 	if (miniLock.crypto.checkKeyStrength(key)) {
-		$('div.keyStrength').animate({height: 20})
-		$('div.keyStrength').text($('div.keyStrength').data('keyok'))
+		$('div.unlockInfo').animate({height: 20})
+		$('div.unlockInfo').text($('div.unlockInfo').data('keyok'))
 		$('input.miniLockKey').attr('readonly', 'readonly')
-		miniLock.user.unlock(key)
+		miniLock.user.unlock(key, email)
 		// Keep polling until we have a key pair
 		var keyReadyInterval = setInterval(function() {
 			if (miniLock.session.keyPairReady) {
 				clearInterval(keyReadyInterval)
-				$('div.myMiniLockID code').text(miniLock.session.miniLockID)
+				$('div.myMiniLockID code').text(
+					miniLock.crypto.getMiniLockID(
+						miniLock.session.keys.publicKey
+					)
+				)
 				$('div.unlock').delay(200).fadeOut(200, function() {
 					$('div.selectFile').fadeIn(200)
 					$('div.squareFront').animate({
@@ -73,7 +56,7 @@ $('form.unlockForm').submit(function() {
 		}, 100)
 	}
 	else {
-		$('div.keyStrength').html(
+		$('div.unlockInfo').html(
 			Mustache.render(
 				miniLock.templates.keyStrengthMoreInfo,
 				{
@@ -81,12 +64,12 @@ $('form.unlockForm').submit(function() {
 				}
 			)
 		)
-		$('div.keyStrength').animate({height: 190})
-		$('div.keyStrength input[type=text]').unbind().click(function() {
+		$('div.unlockInfo').animate({height: 185})
+		$('div.unlockInfo input[type=text]').unbind().click(function() {
 			$(this).select()
 		})
-		$('div.keyStrength input[type=button]').unbind().click(function() {
-			$('div.keyStrength input[type=text]').val(
+		$('div.unlockInfo input[type=button]').unbind().click(function() {
+			$('div.unlockInfo input[type=text]').val(
 				miniLock.phrase.get(7)
 			)
 		})
@@ -246,7 +229,9 @@ $('input.encryptFile').click(function() {
 	})
 	if (encryptToSelf) {
 		miniLockIDs.push(
-			miniLock.session.miniLockID
+			miniLock.crypto.getMiniLockID(
+				miniLock.session.keys.publicKey
+			)
 		)
 	}
 	if (randomizeFilename) {
@@ -263,7 +248,6 @@ $('input.encryptFile').click(function() {
 			miniLockIDs,
 			miniLock.session.keys.publicKey,
 			miniLock.session.keys.secretKey,
-			miniLock.session.miniLockID,
 			'miniLock.crypto.workerEncryptionCallback'
 		)
 		$('form.fileSelectForm input[type=reset]').click()

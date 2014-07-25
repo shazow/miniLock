@@ -1,14 +1,8 @@
 // Key derivation test.
 QUnit.asyncTest('deriveKey', function(assert) {
 	'use strict';
-	miniLock.session = {
-		keys: {},
-		salt: null,
-		keyPairReady: false,
-		invalidKey: false
-	}
 	var passphrase = 'This passphrase is supposed to be good enough for miniLock. :-)'
-	miniLock.user.unlock(passphrase)
+	miniLock.crypto.getKeyPair(passphrase, 'miniLockScrypt..')
 	assert.deepEqual(miniLock.session.keyPairReady, false, 'keyPairReady starts as false')
 	assert.deepEqual(Object.keys(miniLock.session.keys).length, 0, 'sessionKeys is empty')
 	var keyInterval = setInterval(function() {
@@ -21,9 +15,22 @@ QUnit.asyncTest('deriveKey', function(assert) {
 			assert.deepEqual(typeof(miniLock.session.keys.secretKey), 'object', 'Secret key type check')
 			assert.deepEqual(miniLock.session.keys.publicKey.length, 32, 'Public key length')
 			assert.deepEqual(miniLock.session.keys.secretKey.length, 32, 'Secret key length')
-			var decodedID = miniLock.util.decodeID(miniLock.session.miniLockID)
-			assert.deepEqual(decodedID.publicKey.length, 32, 'miniLockID.publicKey length')
-			assert.deepEqual(decodedID.salt.length, 16, 'miniLockID.salt length')
+
+			assert.deepEqual(
+				Base58.encode(miniLock.session.keys.publicKey),
+				'F9NgHy5pDe5RuvVGe2gRJoPrJ99m1wdE5gutYkVXgjDP',
+				'Public key Base58 representation'
+			)
+			assert.deepEqual(
+				nacl.util.encodeBase64(miniLock.session.keys.secretKey),
+				'llu8PDzh8JFJbVmwlS90MpubvLogFbuNXqy9fHk3lYw=',
+				'Secret key Base64 representation'
+			)
+			assert.deepEqual(
+				miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey),
+				'F9NgHy5pDe5RuvVGe2gRJoPrJ99m1wdE5gutYkVXgjDP',
+				'miniLock ID from public key'
+			)
 			QUnit.start()
 		}
 	}, 500)

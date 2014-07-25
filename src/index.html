@@ -28,35 +28,25 @@
 			<div class="squareFront">
 				<!-- File Unlock Screen -->
 				<div class="unlock screen">
-					<h1>Enter your miniLock key</h1>
+					<h1>Enter your email and passphrase</h1>
 					<p>
-						Encrypt and decrypt files from any computer using your miniLock key.
-						Send your miniLock ID to others so they can encrypt files to you.
+						miniLock uses your email and passphrase to derive your <strong>miniLock ID</strong>.
+						Send your miniLock ID to others so they can encrypt files to you. Encrypt files to friends using their miniLock IDs.
 					</p>
 					<p>
-						<strong>Your key must be completely unique.</strong>
-						Anyone with the same key can impersonate you.
-						If your key can be guessed, miniLock cannot protect your data.
-					</p>
-					<p>
-						Already have a miniLock ID?
-					</p>
-					<form class="prevIDForm">
-						<input class="miniLockID" maxlength="1024" placeholder="miniLock ID" /><br />
-						<input type="password" class="miniLockKey" maxlength="1024" placeholder="passphrase" />
-						<input type="submit" value="&#xf078;" />
-						<div class="keyVerify" data-keywait="Unlocking..." data-keybad="Invalid passphrase...">
-							Enter ID and passphrase...
-						</div>
-					</form>
-					<p>
-						Don't have a miniLock ID? Create one now!
+						Enter your email and passphrase on any computer and access your miniLock ID immediately.
+						 <strong>Make sure to enter a unique passphrase.</strong>
 					</p>
 					<form class="unlockForm">
-						<input type="password" class="miniLockKey" maxlength="1024" placeholder="Enter an original sentence that is unique to you, not from any song or literature." />
+						<input type="text" class="miniLockEmail" maxlength="1024" placeholder="Enter your email address (used for your miniLock ID)" />
+						<input type="password" class="miniLockKey" maxlength="1024" placeholder="Enter your passphrase (make it unique, it keeps you secure)" />
 						<input type="submit" value="&#xf078;" />
-						<div class="keyStrength" data-keyok="Key OK. Unlocking...">
-							Enter passphrase to generate a new ID...
+						<div class="unlockInfo"
+							data-keyok="Key OK. Unlocking..."
+							data-bademail="Please enter a valid email address."
+							data-nokey="Please enter a passphrase."
+						>
+							Enter your email and passphrase...
 						</div>
 					</form>
 				</div>

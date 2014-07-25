@@ -13,21 +13,11 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 				result,
 				result.name,
 				[
-					//'This passphrase is supposed to be good enough for miniLock. :-)'
-					//publicKey='CHPqY9NamcGHgG8o71DWZvAJTwg35ubSy6VQLoSkqSch'
-					//secretKey='D7Q88Sy2rVoux1cUehgpa6cS1oFGBUHtLZvmEXF4QCKr'
-					//salt='CEbwKd82ERAqm8n4ofhuBS'
-					'79fgDYepcLgDuHjBcA4AYbxTAR3DSip4w9q48Z3LKXo8KRZXXMwXSaQp8NXvUhHvWg',
-
-					//'This passphrase is supposed to be good enough for miniLock. 1234567890'
-					//publicKey='FJ1bZx1NFnDdMhAqdne3ZpJmV4ixyDsuLytoaX51poDs'
-					//secretKey='DviB6r1YoDWGakzgx481TbHchP98K4RcrGkNXVwxwVmX'
-					//salt='B81Tn7Tzen4vEb48LYGehp'
-					'8nqeeeBw6KzkZqFAGtW24JdrGUcYxLjo8CiAmy4FYnWpQdCazeZgMEue78FjasY14N'
+					'9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe',
+					'63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'
 				],
-				Base58.decode('CHPqY9NamcGHgG8o71DWZvAJTwg35ubSy6VQLoSkqSch'),
-				Base58.decode('D7Q88Sy2rVoux1cUehgpa6cS1oFGBUHtLZvmEXF4QCKr'),
-				'79fgDYepcLgDuHjBcA4AYbxTAR3DSip4w9q48Z3LKXo8KRZXXMwXSaQp8NXvUhHvWg',
+				Base58.decode('9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe'),
+				Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
 				'miniLock.test.encryptFileCallback'
 			)
 		})
@@ -36,13 +26,13 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 	miniLock.test.encryptFileCallback = function(message) {
 		assert.deepEqual(message.name, 'test.jpg', 'Original file name')
 		assert.deepEqual(message.saveName, 'test.jpg.minilock', 'Encrypted file name')
-		assert.deepEqual(message.blob.size, 349480, 'Encrypted file size')
+		assert.deepEqual(message.blob.size, 349424, 'Encrypted file size')
 		miniLock.file.get(message.blob, function(result) {
 			result.name = 'userHasChangedTheName.minilock'
 			miniLock.crypto.decryptFile(
 				result,
-				Base58.decode('FJ1bZx1NFnDdMhAqdne3ZpJmV4ixyDsuLytoaX51poDs'),
-				Base58.decode('DviB6r1YoDWGakzgx481TbHchP98K4RcrGkNXVwxwVmX'),
+				Base58.decode('63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'),
+				Base58.decode('B47Ez1ftjTPSL5Mu74YaQ33WAbDjNcBwYWnx7Fp6kvmr'),
 				'miniLock.test.decryptFileCallback'
 			)
 		})
