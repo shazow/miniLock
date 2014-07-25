@@ -42,11 +42,7 @@ form.file > div.scrollingsurface {
 	top: 0;
 	bottom: 100px;
 	color: rgba(255, 255, 255, 0.4);
-	overflow: none;
-}
-
-form.unprocessed.file > div.scrollingsurface { 
-	overflow: auto;
+	overflow: scroll;
 }
 
 form.file > div.scrollingsurface > header {

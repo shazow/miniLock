@@ -351,6 +351,10 @@ $('form.file').on('submit', function(event) {
 	} else if ($('div.invalid.identity').size()) {
 		$('div.invalid.identity input').first().focus()
 	} else {
+		if ($('form.file div.scrollingsurface').prop('scrollTop') !== 0) {
+			var scrollDuration = 33 * Math.sqrt($('form.file > div').prop('scrollTop'))
+			$('form.file div.scrollingsurface').first().animate({scrollTop: 0}, scrollDuration)
+		}
 		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function(){ return this.value}).toArray()
 		var saveName = $('form.file input.saveName').val().trim()
 		setTimeout(function(){
@@ -540,6 +544,7 @@ miniLock.UI.flipToBack = function() {
 // -----------------------
 // Design & Developer Tools
 // -----------------------
+// $('input.miniLockEmail').val('manufacturing@minilock.io')
 // $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 // $('form.unlockForm').submit()
 // miniLock.UI.readFile = {name: $('form.file input.saveName').val()}
