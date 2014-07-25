@@ -359,12 +359,11 @@ $('form.file').on('submit', function(event) {
 		miniLock.crypto.encryptFile(
 			miniLock.UI.readFile,
 			saveName,
-			[miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)],
+			miniLockIDs,
 			miniLock.session.keys.publicKey,
 			miniLock.session.keys.secretKey,
 			'miniLock.crypto.workerEncryptionCallback'
 		)
-
 		$('form.file').trigger('encrypt:start', miniLock.UI.readFile)
 		delete miniLock.UI.readFile
 	}
