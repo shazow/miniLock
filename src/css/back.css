@@ -194,10 +194,10 @@ form.decrypted.file                  a.decryptedFileIsReady { display: inline; }
 form.decrypted.file.withHintToSave   a.decryptedFileIsReady { display: none;   }
 form.decrypted.file.withHintToSave   a.saveDecryptedFile    { display: inline; }
 
-form.file a.encryptedFileIsReady,
-form.file a.decryptedFileIsReady,
-form.file a.saveEncryptedFile,
-form.file a.saveDecryptedFile {
+form.file div.infoContainer a.encryptedFileIsReady,
+form.file div.infoContainer a.decryptedFileIsReady,
+form.file div.infoContainer a.saveEncryptedFile,
+form.file div.infoContainer a.saveDecryptedFile {
 	color: white;
 }
 
