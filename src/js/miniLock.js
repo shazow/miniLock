@@ -79,17 +79,13 @@ miniLock.util.isFilenameSuspicious = function(filename) {
 
 // Input: Filename (String), Offset (Number)
 // Output: Object consisting of basename and extensions.
-miniLock.util.getBasenameAndExtensions = function(filename, excludeMiniLockExtension) {
+miniLock.util.getBasenameAndExtensions = function(filename) {
 	var pattern = /\.\w+$/
 	var basename = filename + ''
 	var extensions = []
 	while (pattern.test(basename)) {
 		extensions.unshift(basename.match(pattern)[0])
 		basename = basename.replace(pattern, '')
-	}
-	var lastExtension = extensions[extensions.length-1]
-	if (excludeMiniLockExtension && (lastExtension.toLowerCase() === '.minilock')) {
-		extensions = extensions.slice(0, -1)
 	}
 	return {
 		'basename': basename,
