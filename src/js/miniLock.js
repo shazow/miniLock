@@ -163,7 +163,7 @@ miniLock.crypto.worker.onmessage = function(message) {
 
 // Generic callback for use with the above function.
 miniLock.crypto.workerEncryptionCallback = function(message) {
-	miniLock.UI.save({
+	miniLock.UI.fileOperationIsComplete({
 		name: message.saveName,
 		size: message.blob.size,
 		data: message.blob,
@@ -173,7 +173,7 @@ miniLock.crypto.workerEncryptionCallback = function(message) {
 
 // Generic callback for use with the above function.
 miniLock.crypto.workerDecryptionCallback = function(message) {
-	miniLock.UI.save({
+	miniLock.UI.fileOperationIsComplete({
 		name: message.saveName,
 		size: message.blob.size,
 		data: message.blob,

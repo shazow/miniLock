@@ -271,12 +271,18 @@ $('form.file').on('encrypt:start', function(event, file) {
 })
 
 // Set the screen to save an encrypted file.
-$('form.file').on('encrypt:complete', function() {
+$('form.file').on('encrypt:complete', function(event, file, senderID) {
 	$('form.file').removeClass('encrypting')
 	$('form.file').addClass('encrypted')
-	// Measure the height of the onscreen filename
-	// and resize the file save link to fit.
-	$('a.fileSaveLink').css('height', $(this).find('div.activated.name h1').height())
+	
+	// Render encrypted file size.
+	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+
+	// Render link to save encrypted file.
+	miniLock.UI.renderLinkToSaveFile(file)
+	
+	// Render identity of the sender.
+	$('div.senderID code').text(senderID)
 })
 
 // Display an explanation when an encryption error occurs.
@@ -408,7 +414,7 @@ $('form.file').on('submit', function(event) {
 
 // Set the screen to show decryption progress for an encrypted file.
 $('form.file').on('decrypt:start', function(event, file) {
-	$('form.file').removeClass('decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
+	$('form.file').removeClass('unprocessed decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
 	$('form.file').addClass('decrypting')
 
 	$('input.encrypt').prop('disabled', true)
@@ -433,15 +439,17 @@ $('form.file').on('decrypt:start', function(event, file) {
 		{'basename': basename, 'extensions': extensions}
 	))
 
+	// Animate decryption operation progress
 	miniLock.UI.animateProgressBar(file.size)
 
+	// Render input file size.
 	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
 	
 	$(this).data('inputFilename', file.name)
 })
 
 // Set the screen to save the decrypted file.
-$('form.file').on('decrypt:complete', function(event, file) {
+$('form.file').on('decrypt:complete', function(event, file, senderID) {
 	$('form.file').removeClass('decrypting')
 	$('form.file').addClass('decrypted')
 
@@ -464,10 +472,15 @@ $('form.file').on('decrypt:complete', function(event, file) {
 	if (miniLock.util.isFilenameSuspicious(outputName)) {
 		$('form.file').addClass('withSuspectFilename')
 	}
-	
-	// Measure the height of the onscreen filename
-	// and resize the file save link to fit.
-	$('a.fileSaveLink').css('height', $(this).find('div.activated.name h1').height())
+
+	// Render decrypted file size.
+	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+
+	// Render link to save decrypted file.
+	miniLock.UI.renderLinkToSaveFile(file)
+
+	// Render identity of the sender.
+	$('div.senderID code').text(senderID)
 })
 
 // Display an explanation when a decryption error occurs, and then flip back.
@@ -487,14 +500,12 @@ $('form.file').on('decrypt:failed', function() {
 // Link to Save File (appears on decrypt:complete and encrypt:complete)
 // -----------------------
 
-// After you save, destroy reterences to the file and go back to the front.
-$('form.file').on('mousedown', 'a.fileSaveLink', function() {
+// After you save, expire the link and go back to the front.
+$('form.file').on('click', 'a.fileSaveLink', function() {
 	setTimeout(function() {
-		window.URL = window.webkitURL || window.URL
-		window.URL.revokeObjectURL($('a.fileSaveLink')[0].href)
-		$('a.fileSaveLink').attr('download', '')
-		$('a.fileSaveLink').attr('href', '')
-		$('a.fileSaveLink').data('downloadurl', '')
+		miniLock.UI.expireLinkToSaveFile()
+	}, 100)
+	setTimeout(function() {
 		miniLock.UI.flipToFront()
 	}, 1000)
 })
@@ -506,6 +517,31 @@ $('form.file').on('mouseover mouseout', 'a.fileSaveLink', function(){
 	$('form.file').toggleClass('withHintToSave')
 })
 
+miniLock.UI.renderLinkToSaveFile = function(file) {
+	window.URL = window.webkitURL || window.URL
+	$('a.fileSaveLink').attr('download', file.name)
+	$('a.fileSaveLink').attr('href', window.URL.createObjectURL(file.data))
+	$('a.fileSaveLink').data('downloadurl', [
+		file.type,
+		$('a.fileSaveLink').attr('download'),
+		$('a.fileSaveLink').attr('href')
+	].join(':'))
+	$('a.fileSaveLink').css('height', $('form.file div.activated.name h1').height())
+	$('a.fileSaveLink').css('visibility', 'visible')
+}
+
+miniLock.UI.expireLinkToSaveFile = function() {
+	window.URL = window.webkitURL || window.URL
+	window.URL.revokeObjectURL($('a.fileSaveLink')[0].href)
+	$('a.fileSaveLink').attr('download', '')
+	$('a.fileSaveLink').attr('href', '')
+	$('a.fileSaveLink').data('downloadurl', '')
+	$('a.fileSaveLink').css('height', 0)
+	$('a.fileSaveLink').css('visibility', 'hidden')
+}
+
+// The crypto worker calls this method when a 
+// decrypt or encrypt operation is complete.
 // Input: Object:
 //	{
 //		name: File name,
@@ -515,22 +551,15 @@ $('form.file').on('mouseover mouseout', 'a.fileSaveLink', function(){
 //	}
 //	operation: 'encrypt' or 'decrypt'
 //	senderID: Sender's miniLock ID (Base58)
-// Result: Anchor HTML element which can be used to save file
-miniLock.UI.save = function(file, operation, senderID) {
-	window.URL = window.webkitURL || window.URL
-	$('a.fileSaveLink').attr('download', file.name)
-	$('a.fileSaveLink').attr('href', window.URL.createObjectURL(file.data))
-	$('a.fileSaveLink').data('downloadurl', [
-		file.type,
-		$('a.fileSaveLink').attr('download'),
-		$('a.fileSaveLink').attr('href')
-	].join(':'))
-	
-	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+miniLock.UI.fileOperationIsComplete = function(file, operation, senderID) {
+	$('form.file').trigger(operation + ':complete', file, senderID)
+}
 
-	$('div.senderID code').text(senderID)
-	
-	$('form.file').trigger(operation + ':complete', file)
+// The crypto worker calls this method when a 
+// decrypt or encrypt operation has failed.
+// Input: 'encrypt' or 'decrypt'
+miniLock.UI.fileOperationHasFailed = function(operation) {
+	$('form.file').trigger(operation + ':failed')
 }
 
 // Convert an integer from bytes into a readable file size.
@@ -564,12 +593,6 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 			'transition': 'width '+estimateInMiliseconds+'ms linear'
 		})
 	}, 1)
-}
-
-// The crypto worker calls this method when a 
-// decrypt or encrypt operation has failed.
-miniLock.UI.fileOperationHasFailed = function(operation) {
-	$('form.file').trigger(operation + ':failed')
 }
 
 // -----------------------
