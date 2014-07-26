@@ -243,7 +243,7 @@ $('form.file').on('encrypt:setup', function(event, file) {
 	}
 
 	// Render the size of the input file. 
-	$('span.fileSize').html(miniLock.UI.readableFileSize(file.size))
+	$('form.file span.fileSize').html(miniLock.UI.readableFileSize(file.size))
 	
 	// Insert the session ID if the audience list is empty.
 	if ($('form.file div.blank.identity').size() === $('form.file div.identity').size()) {
@@ -287,7 +287,7 @@ $('form.file').on('encrypt:complete', function(event, file, senderID) {
 	$('form.file').addClass('encrypted')
 	
 	// Render encrypted file size.
-	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+	$('form.file span.fileSize').text(miniLock.UI.readableFileSize(file.size))
 
 	// Render link to save encrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
