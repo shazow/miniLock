@@ -177,19 +177,18 @@ miniLock.UI.handleFileSelection = function(file) {
 // -----------------------
 
 $('input.flipBack').click(function() {
-	$('form.fileSelectForm input[type=reset]').click()
 	miniLock.UI.flipToFront()
 })
 
 miniLock.UI.flipToFront = function() {
 	$('form.fileSelectForm input[type=reset]').click()
-	$('div.squareContainer').removeClass('flip')
 	$('#utip').hide()
+	$('div.squareContainer').removeClass('flip')
 }
 
 miniLock.UI.flipToBack = function() {
-	$('div.squareContainer').addClass('flip')
 	$('#utip').hide()
+	$('div.squareContainer').addClass('flip')
 }
 
 // -----------------------
