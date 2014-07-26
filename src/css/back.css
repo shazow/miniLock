@@ -167,17 +167,19 @@ form.file div.infoContainer a {
 	color: inherit;
 }
 
-form.unprocessed.file                a.setRandomName        { display: inline; }
-form.unprocessed.file.withRandomName a.setRandomName        { display: none;   }
-form.unprocessed.file.withRandomName a.setOriginalName      { display: inline; }
-form.encrypting.file                 a.encrypting           { display: inline; }
-form.encrypted.file                  a.encryptedFileIsReady { display: inline; }
-form.encrypted.file.withHintToSave   a.encryptedFileIsReady { display: none;   }
-form.encrypted.file.withHintToSave   a.saveEncryptedFile    { display: inline; }
-form.decrypting.file                 a.decrypting           { display: inline; }
-form.decrypted.file                  a.decryptedFileIsReady { display: inline; }
-form.decrypted.file.withHintToSave   a.decryptedFileIsReady { display: none;   }
-form.decrypted.file.withHintToSave   a.saveDecryptedFile    { display: inline; }
+form.unprocessed.file                a.setRandomName          { display: inline; }
+form.unprocessed.file.withRandomName a.setRandomName          { display: none;   }
+form.unprocessed.file.withRandomName a.setOriginalName        { display: inline; }
+form.encrypting.file                 a.encrypting             { display: inline; }
+form.encrypted.file                  a.encryptedFileIsReady   { display: inline; }
+form.encrypted.file.withHintToSave   a.encryptedFileIsReady   { display: none;   }
+form.encrypted.file.withHintToSave   a.saveEncryptedFile      { display: inline; }
+form.decrypting.file                 a.decrypting             { display: inline; }
+form.decrypted.file                  a.decryptedFileIsReady   { display: inline; }
+form.decrypted.file.withHintToSave   a.decryptedFileIsReady   { display: none;   }
+form.decrypted.file.withHintToSave   a.saveDecryptedFile      { display: inline; }
+form.file.encrypt.failed             a.encryptOperationFailed { display: inline; }
+form.file.decrypt.failed             a.decryptOperationFailed { display: inline; }
 
 form.file div.infoContainer a.encryptedFileIsReady,
 form.file div.infoContainer a.decryptedFileIsReady,
@@ -309,6 +311,13 @@ form.file.decrypted div.progressBar {
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
 }
 
+form.file.encrypt.failed div.progressBar,
+form.file.decrypt.failed div.progressBar {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 250ms linear, visibility 0 linear 250ms;
+}
+
 form.file div.progressBar div.progressBarFill {
 	width: 50%;
 	height: 100%;
@@ -335,10 +344,12 @@ form.file div.audience {
 	margin-right: 100px;
 }
 
-form.file.encrypting div.audience,
-form.file.encrypted  div.audience,
-form.file.decrypting div.audience,
-form.file.decrypted  div.audience {
+form.file.encrypting     div.audience,
+form.file.encrypted      div.audience,
+form.file.decrypting     div.audience,
+form.file.decrypted      div.audience,
+form.file.failed.encrypt div.audience,
+form.file.failed.decrypt div.audience {
 	top: 50px;
 	opacity: 0;
 	transition: top 250ms ease-out, opacity 250ms ease-in;
@@ -504,18 +515,24 @@ form.file input.encrypt.button {
 	position: fixed;
 	bottom: 40px;
 	left: 100px;
+}
+
+form.unprocessed.file input.encrypt.button {
 	visibility: visible;
 	opacity: 1;
 }
 
-form.file.encrypted input.encrypt.button {
+form.file.encrypting input.encrypt.button,
+form.file.encrypted  input.encrypt.button {
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
 }
 
-form.file.decrypting input.encrypt.button,
-form.file.decrypted  input.encrypt.button {
+form.file.decrypting     input.encrypt.button,
+form.file.decrypted      input.encrypt.button,
+form.file.decrypt.failed input.encrypt.button,
+form.file.encrypt.failed input.encrypt.button {
 	visibility: hidden;
 }
 

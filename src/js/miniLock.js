@@ -128,11 +128,11 @@ miniLock.crypto.worker.onmessage = function(message) {
 	if (message.error) {
 		if (message.operation === 'encrypt') {
 			console.log('Encryption error')
-			miniLock.UI.animateProgressBarToShowError(message.operation)
+			miniLock.UI.fileOperationHasFailed(message.operation)
 		}
 		if (message.operation === 'decrypt') {
 			console.log('Decryption error')
-			miniLock.UI.animateProgressBarToShowError(message.operation)
+			miniLock.UI.fileOperationHasFailed(message.operation)
 		}
 		return false
 	}

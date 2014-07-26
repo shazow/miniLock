@@ -197,7 +197,7 @@ miniLock.UI.flipToBack = function() {
 
 // Setup the screen for a new unencrypted file. 
 $('form.file').on('encrypt:setup', function(event, file) {
-	$('form.file').removeClass('decrypting encrypting decrypted encrypted withSuspectFilename')
+	$('form.file').removeClass('decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
 	$('form.file').addClass('unprocessed')
 	
 	var inputName  = file.name
@@ -282,7 +282,14 @@ $('form.file').on('encrypt:complete', function() {
 // Display an explanation when an encryption error occurs.
 $('form.file').on('encrypt:failure', function() {
 	$('form.file').removeClass('encrypting')
-	$('form.file').addClass('failed')
+	$('form.file').addClass('encrypt failed')
+	$('div.progressBarFill').css({
+		'width': '0', 
+		'transition': 'none'
+	})
+	setTimeout(function() {
+		miniLock.UI.flipToFront()
+	}, 5000)
 })
 
 // Set a random filename and put the original on the shelf.
@@ -401,7 +408,7 @@ $('form.file').on('submit', function(event) {
 
 // Set the screen to show decryption progress for an encrypted file.
 $('form.file').on('decrypt:start', function(event, file) {
-	$('form.file').removeClass('encrypting decrypted encrypted unprocessed withSuspectFilename')
+	$('form.file').removeClass('decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
 	$('form.file').addClass('decrypting')
 
 	$('input.encrypt').prop('disabled', true)
@@ -463,10 +470,17 @@ $('form.file').on('decrypt:complete', function(event, file) {
 	$('a.fileSaveLink').css('height', $(this).find('div.activated.name h1').height())
 })
 
-// Display an explanation when a decryption error occurs.
-$('form.file').on('decrypt:failure', function() {
+// Display an explanation when a decryption error occurs, and then flip back.
+$('form.file').on('decrypt:failed', function() {
 	$('form.file').removeClass('decrypting')
-	$('form.file').addClass('failed')
+	$('form.file').addClass('decrypt failed')
+	$('div.progressBarFill').css({
+		'width': '0%', 
+		'transition': 'none'
+	})
+	setTimeout(function() {
+		miniLock.UI.flipToFront()
+	}, 5000)
 })
 
 // -----------------------
@@ -552,27 +566,10 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 	}, 1)
 }
 
-// Animate progress bar to show error.
-miniLock.UI.animateProgressBarToShowError = function(operation) {
-	var errorText = 'encryptionerror'
-	if (operation === 'decrypt') {
-		errorText = 'decryptionerror'
-	}
-	$('div.progressBarFill').stop().css({
-		width: '100%',
-		backgroundColor: '#F00'
-	})
-	$('span.progressBarPercentage').text(
-		$('span.progressBarPercentage').data(errorText)
-	)
-	setTimeout(function() {
-		$('div.squareContainer').toggleClass('flip')
-	}, 4000)
-	setTimeout(function() {
-		$('div.progressBarFill').css({
-			backgroundColor: '#FFF'
-		})
-	}, 4500)
+// The crypto worker calls this method when a 
+// decrypt or encrypt operation has failed.
+miniLock.UI.fileOperationHasFailed = function(operation) {
+	$('form.file').trigger(operation + ':failed')
 }
 
 // -----------------------
