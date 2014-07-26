@@ -10,7 +10,7 @@ miniLock.templates.keyStrengthMoreInfo = 'The key you have entered is too weak.'
 miniLock.templates.audienceListIdentity = ''
 	+ '<div class="{{className}} identity">'
 	+ 	'<label>{{label}}</label>'
-	+ 	'<input class="code" type="text" placeholder="Add another miniLock ID" value="{{id}}" />'
+	+ 	'<input class="code" type="text" placeholder="Add another miniLock ID" value="{{id}}" spellcheck="false" />'
 	+ 	'<input class="remove" type="button" value="&#xf081;" tabindex="-1" />'
 	+ '</div>'
 
