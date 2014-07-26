@@ -129,6 +129,11 @@ form.file div.name h1 span.extensions {
 	color: white;
 }
 
+form.file.failed div.activated.name h1 b.basename,
+form.file.failed div.activated.name h1 span.extensions {
+	color: rgba(255, 255, 255, 0.4);
+}
+
 form.file div.name span.minilock.extension { 
 	color: inherit;
 }
