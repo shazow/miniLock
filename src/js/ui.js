@@ -177,6 +177,7 @@ miniLock.UI.handleFileSelection = function(file) {
 // -----------------------
 
 $('input.flipBack').click(function() {
+	miniLock.UI.expireLinkToSaveFile()
 	miniLock.UI.flipToFront()
 })
 
