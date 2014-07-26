@@ -478,6 +478,10 @@ form.file.withoutSessionID div.notice {
 	opacity: 1;
 }
 
+form.encrypted.file.withoutSessionID div.notice {
+	opacity: 0;
+}
+
 form.file div.notice span.octicon {
 	position: absolute;
 	display: block;
