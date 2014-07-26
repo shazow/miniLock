@@ -204,36 +204,14 @@ $('form.file').on('encrypt:setup', function(event, file) {
 	var originalName = file.name
 	var inputName    = file.name
 	var randomName   = miniLock.util.getRandomFilename()
-	var outputName   = $('form.file').hasClass('withRandomName') ? randomName : file.name
+	var outputName   = $('form.file').hasClass('withRandomName') ? randomName : originalName
 	
-	// Render all filenames in preparation for transitions.
-	$('form.file div.name').removeClass('activated shelved expired')
-	$('form.file div.name input').val('')
-	$('form.file div.name h1').empty()
-
-	$('form.file div.input.name input').val(inputName)
-	$('form.file div.input.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(inputName)
-	))
-
-	$('form.file div.output.name input').val(outputName)
-	$('form.file div.output.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(outputName)
-	))
-
-	$('form.file div.original.name input').val(originalName)
-	$('form.file div.original.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(originalName)
-	))
-
-	$('form.file div.random.name input').val(randomName)
-	$('form.file div.random.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(randomName)
-	))
+	miniLock.UI.renderAllFilenameTags({
+		'input':    inputName,
+		'output':   outputName,
+		'original': originalName,
+		'random':   randomName
+	})
 	
 	if ($('form.file').hasClass('withRandomName')) {
 		$('form.file div.random.name').addClass('activated')
@@ -266,18 +244,7 @@ $('form.file').on('encrypt:setup', function(event, file) {
 $('form.file').on('encrypt:start', function(event, file) {
 	$('form.file').removeClass('unprocessed')
 	$('form.file').addClass('encrypting')
-	
 	$('input.encrypt').prop('disabled', true)
-	
-	// Get the output name that was defined durring setup.
-	var outputName = $('form.file div.output.name input').val()
-	
-	// Render the output name at the top.
-	$('div.output.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(outputName)
-	))
-	
 	miniLock.UI.animateProgressBar(file.size)
 })
 
@@ -321,17 +288,9 @@ $('form.file').on('mousedown', 'a.setRandomName', function() {
 	$('form.file').addClass('withRandomName')
 	$('form.file div.original.name').addClass('shelved')	
 	$('form.file div.random.name').addClass('activated')
-	$('form.file div.random.name input').val(randomName)
-	$('form.file div.random.name h1').html(Mustache.render(
-		miniLock.templates.filename,
-		miniLock.util.getBasenameAndExtensions(randomName)
-	))
+	miniLock.UI.renderFilenameTag('random', randomName)
 	$('form.file div.output.name').removeClass('activated')
-	$('form.file div.output.name input').val(randomName)
-	$('form.file div.output.name h1').val(Mustache.render(
-		miniLock.templates.filename,
-		miniLock.util.getBasenameAndExtensions(randomName)
-	))
+	miniLock.UI.renderFilenameTag('output', randomName)
 })
 
 // Restore the original filename and deactivate the random one.
@@ -341,11 +300,7 @@ $('form.file').on('mousedown', 'a.setOriginalName', function() {
 	$('form.file div.original.name').removeClass('shelved')
 	$('form.file div.random.name').removeClass('activated')
 	$('form.file div.output.name').addClass('activated')
-	$('form.file div.output.name input').val(originalName)
-	$('form.file div.output.name h1').html(Mustache.render(
-		miniLock.templates.filename,
-		miniLock.util.getBasenameAndExtensions(originalName)
-	))
+	miniLock.UI.renderFilenameTag('output', originalName)
 })
 
 // Validate identity input and classify it as blank, invalid or the same as the current session.
@@ -447,21 +402,14 @@ $('form.file').on('decrypt:start', function(event, file) {
 	
 	$('input.encrypt').prop('disabled', true)
 	
-	// Reset all the name tags
-	$('form.file div.name').removeClass('activated shelved expired')
-	$('form.file div.name input').val('')
-	$('form.file div.name h1').empty('')
+	// Render input name and let all the other names be undefined.
+	miniLock.UI.renderAllFilenameTags({
+		'input': file.name.replace(/.minilock$/, '')
+	})
 	
-	// Render name of the input file at the top of the screen.
+	// Activate the input name tag.
 	$('form.file div.input.name').addClass('activated')
-	$('form.file div.input.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(file.name, 'exclude.minilock')
-	))
 	
-	// Remember the input file name.
-	$('form.file div.input.name input').val(file.name)
-
 	// Render input file size.
 	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
 
@@ -476,15 +424,11 @@ $('form.file').on('decrypt:complete', function(event, file, senderID) {
 
 	var outputName = file.name
 	var inputName  = $('form.file div.input.name input').val()
-
-	// Render the output filename at the top.
-	$('form.file div.output.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(outputName)
-	))
-
+	
+	miniLock.UI.renderFilenameTag('output', outputName)
+	
 	// Highlight differences if the output name differs from the input name.
-	if (inputName.replace(/.minilock$/, '') !== outputName) {
+	if (inputName !== outputName) {
 		$('div.output.name').addClass('activated')
 		$('div.input.name').removeClass('activated').addClass('expired')
 	}
@@ -501,7 +445,7 @@ $('form.file').on('decrypt:complete', function(event, file, senderID) {
 	// Render name of the input file in the summary the bottom of the screen.
 	$('form.file div.summary').html('Decrypted from ' + Mustache.render(
 		miniLock.templates.filename, 
-		miniLock.util.getBasenameAndExtensions(inputName, 'exclude.minilock')
+		miniLock.util.getBasenameAndExtensions(inputName)
 	))
 
 	// Show the suspect filename notice when applicable.
@@ -544,6 +488,24 @@ $('form.file').on('click', 'a.fileSaveLink', function() {
 $('form.file').on('mouseover mouseout', 'a.fileSaveLink', function(){ 
 	$('form.file').toggleClass('withHintToSave')
 })
+
+miniLock.UI.renderAllFilenameTags = function(filenames){
+	$('form.file div.name').removeClass('activated shelved expired')
+	$('form.file div.name input').val('')
+	$('form.file div.name h1').empty()
+	miniLock.UI.renderFilenameTag('input',    filenames.input)
+	miniLock.UI.renderFilenameTag('output',   filenames.output)
+	miniLock.UI.renderFilenameTag('original', filenames.original)
+	miniLock.UI.renderFilenameTag('random',   filenames.random)
+}
+
+miniLock.UI.renderFilenameTag = function(className, filename){
+	$('form.file div.'+className+'.name input').val(filename)
+	$('form.file div.'+className+'.name h1').html(Mustache.render(
+		miniLock.templates.filename, 
+		miniLock.util.getBasenameAndExtensions(filename)
+	))
+}
 
 miniLock.UI.renderLinkToSaveFile = function(file) {
 	window.URL = window.webkitURL || window.URL
