@@ -253,7 +253,7 @@ $('form.file').on('encrypt:start', function(event, file) {
 	
 	$('input.encrypt').prop('disabled', true)
 	
-	miniLock.UI.animateProgressBar(file.size, 'encrypt')
+	miniLock.UI.animateProgressBar(file.size)
 	
 	// Get the saveName that was set durring encrypt:setup.
 	var saveName = $('form.file input.saveName').val()
@@ -426,7 +426,7 @@ $('form.file').on('decrypt:start', function(event, file) {
 		{'basename': basename, 'extensions': extensions}
 	))
 
-	miniLock.UI.animateProgressBar(file.size, 'decrypt')
+	miniLock.UI.animateProgressBar(file.size)
 	
 	$(this).data('inputFilename', file.name)
 })
@@ -536,20 +536,18 @@ miniLock.UI.readableFileSize = function(bytes) {
 
 // Animate progress bar based on file size.
 miniLock.UI.animateProgressBar = function(fileSize) {
-	$('div.progressBarFill').css({width: '0%'})
-	$('div.progressBarFill').animate({
-		width: '99%'
-	}, {
-		duration: miniLock.user.progressBarEstimate(fileSize) * 1000,
-		easing: 'linear',
-		progress: function(animation, progress) {
-			var percentage = Math.round(progress * 100)
-			if (percentage >= 99) {
-				percentage = 99
-			}
-			$('span.progressBarPercentage').text(percentage)
-		}
+	var estimateInSeconds = miniLock.user.progressBarEstimate(fileSize)
+	var estimateInMiliseconds = Math.round(estimateInSeconds * 1000)
+	$('form.file div.progressBarFill').css({
+		'width': '0',
+		'transition': 'none'
 	})
+	setTimeout(function(){
+		$('form.file div.progressBarFill').css({
+			'width': '100%',
+			'transition': 'width '+estimateInMiliseconds+'ms linear'
+		})
+	}, 1)
 }
 
 // Animate progress bar to show error.

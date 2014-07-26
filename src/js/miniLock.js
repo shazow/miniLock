@@ -363,7 +363,7 @@ miniLock.user.unlock = function(key, salt) {
 //	will take (in seconds), based on file size
 miniLock.user.progressBarEstimate = function(fileSize) {
 	var MBps = 18.3
-	return Math.ceil(fileSize / 1000000 / MBps)
+	return fileSize / 1000000 / MBps
 }
 
 })()
