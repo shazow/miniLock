@@ -578,13 +578,13 @@ miniLock.UI.fileOperationHasFailed = function(operation) {
 }
 
 // Convert an integer from bytes into a readable file size.
-// For example, 7493 becomes '7.5KB'.
+// For example, 7493 becomes '7KB'.
 miniLock.UI.readableFileSize = function(bytes) {
 	var KB = bytes / 1024
 	var MB = KB    / 1024
 	var GB = MB    / 1024
 	if (KB < 1024) {
-		return (Math.round(KB * 10) / 10) + 'KB'
+		return Math.round(KB) + 'KB'
 	}
 	else if (MB < 1024) {
 		return (Math.round(MB * 10) / 10) + 'MB'
