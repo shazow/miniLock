@@ -281,6 +281,21 @@ form.decrypted.file.withSuspectFilename div.suspectFilenameNotice {
 	visibility: visible;
 }
 
+/* Notice when the operation failed */
+
+div.failureNotice {
+	position: fixed;
+	top: 300px;
+	left: 110px;
+	right: 110px;
+	visibility: hidden;
+}
+
+form.failed.decrypt.file div.failureNotice,
+form.failed.encrypt.file div.failureNotice {
+	visibility: visible;
+}
+
 /* Progress bar for encryption and decryption */
 
 form.file div.progressBar {

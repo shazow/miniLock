@@ -301,10 +301,11 @@ $('form.file').on('encrypt:complete', function(event, file, senderID) {
 	$('form.file div.summary').text(miniLock.util.summarizeAudience(audienceIDs, sessionID))
 })
 
-// Display an explanation when an encryption error occurs.
-$('form.file').on('encrypt:failure', function() {
+// Display encryption error message, reset progress bar, and then flip back.
+$('form.file').on('encrypt:failed', function(event, errorMessage) {
 	$('form.file').removeClass('encrypting')
 	$('form.file').addClass('encrypt failed')
+	$('form.file div.failureNotice').text(errorMessage)
 	$('div.progressBarFill').css({
 		'width': '0', 
 		'transition': 'none'
@@ -498,11 +499,12 @@ $('form.file').on('decrypt:complete', function(event, file, senderID) {
 	}
 })
 
-// Display an explanation when a decryption error occurs, and then flip back.
-$('form.file').on('decrypt:failed', function() {
+// Display decryption error message, reset progress bar, and then flip back.
+$('form.file').on('decrypt:failed', function(event, errorMessage) {
 	$('form.file').removeClass('decrypting')
 	$('form.file').addClass('decrypt failed')
-	$('div.progressBarFill').css({
+	$('form.file div.failureNotice').text(errorMessage)
+	$('form.file div.progressBarFill').css({
 		'width': '0%', 
 		'transition': 'none'
 	})
@@ -572,9 +574,10 @@ miniLock.UI.fileOperationIsComplete = function(file, operation, senderID) {
 
 // The crypto worker calls this method when a 
 // decrypt or encrypt operation has failed.
-// Input: 'encrypt' or 'decrypt'
-miniLock.UI.fileOperationHasFailed = function(operation) {
-	$('form.file').trigger(operation + ':failed')
+// Operation argument is either 'encrypt' or 'decrypt'.
+miniLock.UI.fileOperationHasFailed = function(operation, error) {
+	var details = error.message.match(/Encryption|Decryption failed - (.*)/)[1]
+	$('form.file').trigger(operation+':failed', 'miniLock '+details+'.')
 }
 
 // Convert an integer from bytes into a readable file size.

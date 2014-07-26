@@ -97,7 +97,6 @@ miniLock.util.getBasenameAndExtensions = function(filename, excludeMiniLockExten
 	}
 }
 
-
 // Input: Audience IDs (Array), Session ID (String)
 // Output: String of text that describes who can decrypt a file
 miniLock.util.summarizeAudience = function(audienceIDs, sessionID) {
@@ -138,18 +137,7 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 // Process messages from the crypto worker.
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
-	if (message.error) {
-		if (message.operation === 'encrypt') {
-			console.log('Encryption error')
-			miniLock.UI.fileOperationHasFailed(message.operation)
-		}
-		if (message.operation === 'decrypt') {
-			console.log('Decryption error')
-			miniLock.UI.fileOperationHasFailed(message.operation)
-		}
-		return false
-	}
-	else {
+	if (! message.error) {
 		if (message.operation === 'encrypt') {
 			message.blob = new Blob([
 				'miniLockFileYes.',
@@ -172,6 +160,12 @@ miniLock.crypto.worker.onmessage = function(message) {
 		}
 		return context[func].apply(context, [message])
 	}
+}
+
+// Process errors thrown in the crypto worker.
+miniLock.crypto.worker.onerror = function(error){
+	var operation = /Decrypt/.test(error.message) ? 'decrypt' : 'encrypt'
+	miniLock.UI.fileOperationHasFailed(operation, error)
 }
 
 // Generic callback for use with the above function.
