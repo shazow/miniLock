@@ -181,8 +181,6 @@ form.decrypted.file.withHintToSave   a.saveDecryptedFile      { display: inline;
 form.file.encrypt.failed             a.encryptOperationFailed { display: inline; }
 form.file.decrypt.failed             a.decryptOperationFailed { display: inline; }
 
-form.file div.infoContainer a.encryptedFileIsReady,
-form.file div.infoContainer a.decryptedFileIsReady,
 form.file div.infoContainer a.saveEncryptedFile,
 form.file div.infoContainer a.saveDecryptedFile {
 	color: white;
@@ -190,6 +188,11 @@ form.file div.infoContainer a.saveDecryptedFile {
 
 form.file span.fileSize {
 	margin: 0px 2px 0px 0px;
+}
+
+form.encrypted.file.withHintToSave span.fileSize,
+form.decrypted.file.withHintToSave span.fileSize {
+	color: white;
 }
 
 /* Link to save file (height is updated programatically in ui.js) */
