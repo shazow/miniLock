@@ -427,6 +427,8 @@ $('form.file').on('decrypt:start', function(event, file) {
 	))
 
 	miniLock.UI.animateProgressBar(file.size)
+
+	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
 	
 	$(this).data('inputFilename', file.name)
 })
