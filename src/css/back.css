@@ -460,7 +460,7 @@ form.file div.blank.identity label {
 
 /* Notice when you are not in the list */
 
-form.file div.notice {
+form.file div.missingSessionIDnotice {
 	position: absolute;
 	box-sizing: border-box;
 	padding-top: 3px;
@@ -474,15 +474,15 @@ form.file div.notice {
 	transition: opacity 600ms linear;
 }
 
-form.file.withoutSessionID div.notice {
+form.file.withoutSessionID div.missingSessionIDnotice {
 	opacity: 1;
 }
 
-form.encrypted.file.withoutSessionID div.notice {
+form.encrypted.file.withoutSessionID div.missingSessionIDnotice {
 	opacity: 0;
 }
 
-form.file div.notice span.octicon {
+form.file div.missingSessionIDnotice span.octicon {
 	position: absolute;
 	display: block;
 	font-size: 23px;
@@ -493,7 +493,7 @@ form.file div.notice span.octicon {
 	color: rgba(255, 255, 255, 0.35);
 }
 
-form.file div.notice span.text {
+form.file div.missingSessionIDnotice span.text {
 	color: rgba(255, 255, 255, 0.5);
 }
 
