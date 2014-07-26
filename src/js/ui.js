@@ -265,8 +265,10 @@ $('form.file').on('encrypt:start', function(event, file) {
 		miniLock.util.getBasenameAndExtensions(saveName)
 	))
 	
-	// TODO: Write accurate audience summary for encrypted file.
-	$('form.file div.summary').text('You and one other person can decrypt this file.')
+	// Summarize who can access the file.
+	var audienceIDs = $('form.file div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
+	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	$('form.file div.summary').text(miniLock.util.summarizeAudience(audienceIDs, sessionID))
 })
 
 // Set the screen to save an encrypted file.

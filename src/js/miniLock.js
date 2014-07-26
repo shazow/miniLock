@@ -85,6 +85,30 @@ miniLock.util.getBasenameAndExtensions = function(filename) {
 	return {'basename': basename, 'extensions': extensions}
 }
 
+// Input: Audience IDs (Array), Session ID (String)
+// Output: String of text that describes who can decrypt a file
+miniLock.util.summarizeAudience = function(audienceIDs, sessionID) {
+	var sizeOfAudience = audienceIDs.length
+	var audienceIncludesSessionID = audienceIDs.indexOf(sessionID) === -1 ? false : true
+	var people = function(size) { return (size === 1) ? 'person' : 'people' }
+	if (audienceIncludesSessionID) {
+		if (sizeOfAudience === 1) {
+			return 'Only you can decrypt this file.'
+		} else {
+			return 'You and '+(sizeOfAudience - 1)+' other '+people(sizeOfAudience - 1)+' '
+					 + 'can decrypt this file.'
+		}
+	} else {
+		if (sizeOfAudience === 1) {
+			return 'One person can decrypt this file. You can’t.'
+		} else {
+			return sizeOfAudience+' other '+people(sizeOfAudience)+' '
+					 + 'can decrypt this file. You can’t.'
+		}
+	}
+}
+
+
 // -----------------------
 // Cryptographic Functions
 // -----------------------
