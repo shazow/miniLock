@@ -160,36 +160,38 @@ form.file div.name {
 	position: absolute;
 	left: 0;
 	right: 0;
-	bottom: -60px;
 	opacity: 1;
-/*	transition: bottom 250ms ease-out, opacity 250ms linear;*/
+	bottom: -60px;
 }
 
 form.file div.name.activated { 
 	bottom: 0px;
 }
 
-form.file div.input.name.expired { 
+form.file.unprocessed div.input.name,
+form.file.encrypting  div.input.name,
+form.file.encrypted   div.input.name { 
+	visibility: hidden;
+}
+
+form.file.decrypting div.input.name { 
+	visibility: visible;
+}
+
+form.file.decrypted div.input.name.expired { 
 	opacity: 0;
 	bottom: 60px;
 	transition: bottom 250ms ease-out, opacity 250ms linear;
-}
-
-form.decrypted div.input.name.expired { 
-	opacity: 0;
-	bottom: 60px;
-	transition: bottom 250ms ease-out, opacity 250ms linear;
-}
-
-form.decrypted div.output.name.activated { 
-	opacity: 1;
-	bottom: 0px;
-	transition: bottom 250ms ease-out;
 }
 
 form.file.unprocessed div.output.name {
 	visibility: hidden;
 	transition: visibility 0ms linear 500ms;
+}
+
+form.decrypted div.output.name.activated { 
+	bottom: 0px;
+	transition: bottom 250ms ease-out;
 }
 
 form.file.unprocessed div.output.name.activated {
