@@ -587,7 +587,7 @@ miniLock.UI.readableFileSize = function(bytes) {
 	var MB = KB    / 1024
 	var GB = MB    / 1024
 	if (KB < 1024) {
-		return Math.round(KB) + 'KB'
+		return Math.ceil(KB) + 'KB'
 	}
 	else if (MB < 1024) {
 		return (Math.round(MB * 10) / 10) + 'MB'
