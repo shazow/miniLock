@@ -189,7 +189,7 @@ form.file div.infoContainer a.saveDecryptedFile {
 }
 
 form.file span.fileSize {
-	margin: 0px 2px;
+	margin: 0px 2px 0px 0px;
 }
 
 /* Link to save file (height is updated programatically in ui.js) */
