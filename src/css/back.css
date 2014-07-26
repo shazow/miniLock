@@ -175,10 +175,16 @@ form.file div.input.name.expired {
 	transition: bottom 250ms ease-out, opacity 250ms linear;
 }
 
-form.decrypted div.output.name.expired { 
+form.decrypted div.input.name.expired { 
 	opacity: 0;
 	bottom: 60px;
 	transition: bottom 250ms ease-out, opacity 250ms linear;
+}
+
+form.decrypted div.output.name.activated { 
+	opacity: 1;
+	bottom: 0px;
+	transition: bottom 250ms ease-out;
 }
 
 form.file.unprocessed div.output.name {
