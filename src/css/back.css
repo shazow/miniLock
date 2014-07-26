@@ -91,6 +91,60 @@ input[type=submit].button:disabled {
 	color: #49698D;
 }
 
+/* File status icon */
+
+form.file div.statusIcon {
+	position: absolute;
+	left: 60px;
+	bottom: 0px;
+	height: 40px;
+	width: 40px;
+}
+
+form.file div.statusIcon a.octicon {
+	display: block;
+	text-align: center;
+	position: relative;
+	visibility: hidden;
+}
+
+form.file div.statusIcon a.ready.octicon,
+form.file div.statusIcon a.processing.octicon {
+	position: absolute;
+	bottom: -12px;
+	margin: 2px;
+	height: 28px;
+	width: 28px;
+	overflow: hidden;
+	color: white;
+	border: 4px solid white;
+	border-radius: 25px;
+	background: #49698D;
+}
+
+form.encrypting.file div.statusIcon a.processing,
+form.decrypting.file div.statusIcon a.processing {
+	font-size: 23px;
+	line-height: 30px;
+	visibility: visible;
+}
+
+form.encrypted.file div.statusIcon a.ready.octicon,
+form.decrypted.file div.statusIcon a.ready.octicon {
+	font-size: 24px;
+	line-height: 31px;
+	visibility: visible;
+}
+
+form.file.encrypt.failed div.statusIcon a.failed.octicon,
+form.file.decrypt.failed div.statusIcon a.failed.octicon {
+	color: white;
+	bottom: -25px;
+	font-size: 35px;
+	line-height: 35px;
+	visibility: visible;
+}
+
 /* Filename styles */
 
 form.file div.nameContainer { 
