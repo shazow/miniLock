@@ -268,8 +268,6 @@ $('form.file').on('encrypt:start', function(event, file) {
 	
 	$('input.encrypt').prop('disabled', true)
 	
-	miniLock.UI.animateProgressBar(file.size)
-	
 	// Get the output name that was defined durring setup.
 	var outputName = $('form.file div.output.name input').val()
 	
@@ -279,10 +277,7 @@ $('form.file').on('encrypt:start', function(event, file) {
 		miniLock.util.getBasenameAndExtensions(outputName)
 	))
 	
-	// Summarize who can access the file.
-	var audienceIDs = $('form.file div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
-	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	$('form.file div.summary').text(miniLock.util.summarizeAudience(audienceIDs, sessionID))
+	miniLock.UI.animateProgressBar(file.size)
 })
 
 // Set the screen to save an encrypted file.
@@ -298,6 +293,11 @@ $('form.file').on('encrypt:complete', function(event, file, senderID) {
 	
 	// Render identity of the sender.
 	$('div.senderID code').text(senderID)
+
+	// Summarize who can access the file.
+	var audienceIDs = $('form.file div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
+	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	$('form.file div.summary').text(miniLock.util.summarizeAudience(audienceIDs, sessionID))
 })
 
 // Display an explanation when an encryption error occurs.
@@ -434,26 +434,29 @@ $('form.file').on('decrypt:start', function(event, file) {
 	
 	$('input.encrypt').prop('disabled', true)
 	
-
-	// Render the input filename at the top.
+	// Reset all the name tags
 	$('form.file div.name').removeClass('activated shelved expired')
 	$('form.file div.name input').val('')
 	$('form.file div.name h1').empty('')
+	
+	// Render name of the input file at the top of the screen.
+	var input = miniLock.util.getBasenameAndExtensions(file.name)
+	var inputBasename = input.basename
+	var inputExtensionsExcludingMiniLock = input.extensions.replace(/.minilock$/, '')
 	$('form.file div.input.name').addClass('activated')
 	$('form.file div.input.name h1').html(Mustache.render(
 		miniLock.templates.filename, 
-		{'basename': basename, 'extensions': extensions}
+		{'basename': inputBasename, 'extensions': inputExtensionsExcludingMiniLock}
 	))
 	
-	// Remember the input filename.
+	// Remember the input file name.
 	$('form.file div.input.name input').val(file.name)
-
-
-	// Animate decryption operation progress
-	miniLock.UI.animateProgressBar(file.size)
 
 	// Render input file size.
 	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+
+	// Animate decryption operation progress
+	miniLock.UI.animateProgressBar(file.size)
 })
 
 // Set the screen to save a decrypted file.
@@ -485,10 +488,10 @@ $('form.file').on('decrypt:complete', function(event, file, senderID) {
 	// Render identity of the sender.
 	$('div.senderID code').text(senderID)
 
-	// Render the name of the input file in the summary the bottom.
-	var inputName = miniLock.util.getBasenameAndExtensions(file.name)
-	var inputBasename = inputName.basename
-	var inputExtensionsExcludingMiniLock = inputName.extensions.replace(/.minilock$/, '')
+	// Render name of the input file in the summary the bottom of the screen.
+	var input = miniLock.util.getBasenameAndExtensions(inputName)
+	var inputBasename = input.basename
+	var inputExtensionsExcludingMiniLock = input.extensions.replace(/.minilock$/, '')
 	$('form.file div.summary').html('Decrypted from ' + Mustache.render(
 		miniLock.templates.filename, 
 		{'basename': inputBasename, 'extensions': inputExtensionsExcludingMiniLock}
