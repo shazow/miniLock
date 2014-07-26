@@ -270,7 +270,7 @@ $('form.file').on('encrypt:start', function(event, file) {
 })
 
 // Set the screen to save an encrypted file.
-$('form.file').on('encrypt:complete', function(event, file) {
+$('form.file').on('encrypt:complete', function() {
 	$('form.file').removeClass('encrypting')
 	$('form.file').addClass('encrypted')
 	// Measure the height of the onscreen filename
@@ -279,13 +279,13 @@ $('form.file').on('encrypt:complete', function(event, file) {
 })
 
 // Display an explanation when an encryption error occurs.
-$('form.file').on('encrypt:failure', function(event, file) {
+$('form.file').on('encrypt:failure', function() {
 	$('form.file').removeClass('encrypting')
 	$('form.file').addClass('failed')
 })
 
 // Set a random filename and put the original on the shelf.
-$('form.file').on('mousedown', 'a.setRandomName', function(event) {
+$('form.file').on('mousedown', 'a.setRandomName', function() {
 	var randomName = miniLock.util.getRandomFilename()
 	$('form.file').addClass('withRandomName')
 	$('form.file div.original.name').addClass('shelved')	
@@ -298,7 +298,7 @@ $('form.file').on('mousedown', 'a.setRandomName', function(event) {
 })
 
 // Restore the original filename and deactivate the random one.
-$('form.file').on('mousedown', 'a.setOriginalName', function(event) {
+$('form.file').on('mousedown', 'a.setOriginalName', function() {
 	var name = miniLock.UI.readFile.name
 	$('form.file').removeClass('withRandomName')
 	$('form.file div.original.name').removeClass('shelved').addClass('activated')
@@ -307,7 +307,7 @@ $('form.file').on('mousedown', 'a.setOriginalName', function(event) {
 })
 
 // Validate identity input and classify it as blank, invalid or the same as the current session.
-$('form.file').on('input', 'div.identity', function(event) {
+$('form.file').on('input', 'div.identity', function() {
 	$(this).removeClass('blank invalid session')
 	$(this).find('label').empty()
 	
@@ -323,8 +323,8 @@ $('form.file').on('input', 'div.identity', function(event) {
 		if (! miniLock.util.validateID(inputID)) {
 			$(this).addClass('invalid')
 			$(this).find('label').text('Invalid')
-			if (inputID.length < 44) $(this).find('label').text('Too short')
-			if (inputID.length > 44) $(this).find('label').text('Too long')
+			if (inputID.length < 44){ $(this).find('label').text('Too short') }
+			if (inputID.length > 44){ $(this).find('label').text('Too long')  }
 		}
 	}
 	
@@ -343,7 +343,7 @@ $('form.file').on('input', 'div.identity', function(event) {
 })
 
 // Remove an identity from from the audience list.
-$('form.file').on('mousedown', 'div.identity input.remove', function(event) {
+$('form.file').on('mousedown', 'div.identity input.remove', function() {
 	var oldIdentity = $(this).closest('div.identity')
 	oldIdentity.remove()
 	if ($('form.file div.identity').size() < 4 || $('form.file div.blank.identity').size()===0) {
@@ -355,7 +355,7 @@ $('form.file').on('mousedown', 'div.identity input.remove', function(event) {
 })
 
 // Add the session identity to the audience list.
-$('form.file').on('mousedown', 'a.addSessionIDtoAudienceList', function(event) {
+$('form.file').on('mousedown', 'a.addSessionIDtoAudienceList', function() {
 	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	$('form.file div.blank.identity').first().replaceWith(Mustache.render(
 		miniLock.templates.audienceListIdentity, 
@@ -458,7 +458,7 @@ $('form.file').on('decrypt:complete', function(event, file) {
 })
 
 // Display an explanation when a decryption error occurs.
-$('form.file').on('decrypt:failure', function(event, file) {
+$('form.file').on('decrypt:failure', function() {
 	$('form.file').removeClass('decrypting')
 	$('form.file').addClass('failed')
 })
