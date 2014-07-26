@@ -344,8 +344,10 @@ $('form.file').on('input', 'div.identity', function() {
 
 // Remove an identity from from the audience list.
 $('form.file').on('mousedown', 'div.identity input.remove', function() {
-	var oldIdentity = $(this).closest('div.identity')
-	oldIdentity.remove()
+	var identity = $(this).closest('div.identity')
+	identity.find('input.code').val('')
+	identity.find('input.code').trigger('input')
+	identity.remove()
 	if ($('form.file div.identity').size() < 4 || $('form.file div.blank.identity').size()===0) {
 		$('form.file div.miniLockIDList').append(Mustache.render(
 			miniLock.templates.audienceListIdentity, 
@@ -361,6 +363,7 @@ $('form.file').on('mousedown', 'a.addSessionIDtoAudienceList', function() {
 		miniLock.templates.audienceListIdentity, 
 		{'className': 'session', 'id': sessionID, 'label': 'Me'}
 	))
+	$('form.file div.session.identity input.code').trigger('input')
 })
 
 // Press <return>, or click > to commit the form and begin encrypting.
