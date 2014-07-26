@@ -440,13 +440,10 @@ $('form.file').on('decrypt:start', function(event, file) {
 	$('form.file div.name h1').empty('')
 	
 	// Render name of the input file at the top of the screen.
-	var input = miniLock.util.getBasenameAndExtensions(file.name)
-	var inputBasename = input.basename
-	var inputExtensionsExcludingMiniLock = input.extensions.replace(/.minilock$/, '')
 	$('form.file div.input.name').addClass('activated')
 	$('form.file div.input.name h1').html(Mustache.render(
 		miniLock.templates.filename, 
-		{'basename': inputBasename, 'extensions': inputExtensionsExcludingMiniLock}
+		miniLock.util.getBasenameAndExtensions(file.name, 'exclude.minilock')
 	))
 	
 	// Remember the input file name.
@@ -489,12 +486,9 @@ $('form.file').on('decrypt:complete', function(event, file, senderID) {
 	$('div.senderID code').text(senderID)
 
 	// Render name of the input file in the summary the bottom of the screen.
-	var input = miniLock.util.getBasenameAndExtensions(inputName)
-	var inputBasename = input.basename
-	var inputExtensionsExcludingMiniLock = input.extensions.replace(/.minilock$/, '')
 	$('form.file div.summary').html('Decrypted from ' + Mustache.render(
 		miniLock.templates.filename, 
-		{'basename': inputBasename, 'extensions': inputExtensionsExcludingMiniLock}
+		miniLock.util.getBasenameAndExtensions(inputName, 'exclude.minilock')
 	))
 
 	// Show the suspect filename notice when applicable.

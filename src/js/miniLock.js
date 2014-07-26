@@ -77,13 +77,26 @@ miniLock.util.isFilenameSuspicious = function(filename) {
 	return (suspicious.indexOf(extension) >= 0)
 }
 
-// Input: Filename (String)
-// Output: Object with basename and extensions members.
-miniLock.util.getBasenameAndExtensions = function(filename) {
-	var basename = filename.split('.')[0]
-	var extensions = filename.substr(basename.length)
-	return {'basename': basename, 'extensions': extensions}
+// Input: Filename (String), Offset (Number)
+// Output: Object consisting of basename and extensions.
+miniLock.util.getBasenameAndExtensions = function(filename, excludeMiniLockExtension) {
+	var pattern = /\.\w+$/
+	var basename = filename + ''
+	var extensions = []
+	while (pattern.test(basename)) {
+		extensions.unshift(basename.match(pattern)[0])
+		basename = basename.replace(pattern, '')
+	}
+	var lastExtension = extensions[extensions.length-1]
+	if (excludeMiniLockExtension && (lastExtension.toLowerCase() === '.minilock')) {
+		extensions = extensions.slice(0, -1)
+	}
+	return {
+		'basename': basename,
+		'extensions': extensions.join('')
+	}
 }
+
 
 // Input: Audience IDs (Array), Session ID (String)
 // Output: String of text that describes who can decrypt a file
