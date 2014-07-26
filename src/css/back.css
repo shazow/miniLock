@@ -162,20 +162,63 @@ form.file div.name {
 	right: 0;
 	bottom: -60px;
 	opacity: 1;
-	transition: bottom 250ms ease-out, opacity 250ms linear;
+/*	transition: bottom 250ms ease-out, opacity 250ms linear;*/
 }
 
 form.file div.name.activated { 
 	bottom: 0px;
 }
 
-form.file div.name.shelved {
+form.file div.input.name.expired { 
+	opacity: 0;
+	bottom: 60px;
+	transition: bottom 250ms ease-out, opacity 250ms linear;
+}
+
+form.decrypted div.output.name.expired { 
+	opacity: 0;
+	bottom: 60px;
+	transition: bottom 250ms ease-out, opacity 250ms linear;
+}
+
+form.file.unprocessed div.output.name {
+	visibility: hidden;
+	transition: visibility 0ms linear 500ms;
+}
+
+form.file.unprocessed div.output.name.activated {
+	bottom: 0px;
+	visibility: visible;
+	transition: visibility 0ms linear 250ms;
+}
+
+form.file div.original.name {
+	visibility: hidden;
+}
+
+form.file.unprocessed div.original.name {
+	visibility: hidden;
+	bottom: 0px;
+	transition: bottom 250ms ease-out, visibility 0ms linear 250ms;
+}
+
+form.file div.original.name.shelved {
+	visibility: visible;
 	bottom: 60px;
 }
 
-form.file div.name.expired { 
-	opacity: 0;
+form.file.unprocessed div.original.name.shelved {
+	visibility: visible;
 	bottom: 60px;
+	transition: bottom 250ms ease-out;
+}
+
+form.file.unprocessed div.random.name {
+	transition: bottom 250ms ease-out;
+}
+
+form.file.unprocessed div.random.name.activated {
+	bottom: 0px;
 }
 
 form.file div.name h1 b.basename,
@@ -192,19 +235,22 @@ form.file div.name span.minilock.extension {
 	color: inherit;
 }
 
-form.file div.original.name.activated h3 { opacity: 0; transition: opacity 150ms linear; }
-form.file div.original.name.activated h1 { opacity: 1.0; transition: opacity 250ms linear; }
-form.file div.original.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
+form.file div.output.name span.minilock.extension { opacity: 0; transition: opacity 0ms linear; }
+form.file div.output.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 500ms; }
+
+form.file div.original.name h3 { opacity: 0; transition: opacity 150ms linear; }
+form.file div.original.name h1 { opacity: 1.0; transition: opacity 250ms linear; }
+form.file div.original.name span.minilock.extension { opacity: 1; transition: opacity 500ms linear 500ms; }
 
 form.file div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
 form.file div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
 form.file div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
 
-form.file div.random.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
-form.file div.random.name           span.minilock.extension { opacity: 0; transition: opacity 0ms linear 250ms; }
+/*form.file div.random.name           span.minilock.extension { opacity: 0; transition: opacity 0ms linear 250ms; }*/
+/*form.file div.random.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }*/
 
-form.decrypted.file div.activated.name span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
-form.encrypted.file div.activated.name span.minilock.extension { color: white; transition: color 250ms linear; }
+form.decrypted.file div.activated.name span.minilock.extension { opacity: 0; transition: opacity 150ms linear; }
+form.encrypted.file div.activated.name span.minilock.extension { color: white; transition: color 150ms linear; }
 
 /* File size, status messages and controls to change the filename. */
 
