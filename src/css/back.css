@@ -133,11 +133,6 @@ form.file div.name span.minilock.extension {
 	color: inherit;
 }
 
-form.encrypted.file div.name span.minilock.extension { 
-	color: white;
-}
-
-
 form.file div.original.name.activated h3 { opacity: 0; transition: opacity 150ms linear; }
 form.file div.original.name.activated h1 { opacity: 1.0; transition: opacity 250ms linear; }
 form.file div.original.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
@@ -149,9 +144,8 @@ form.file div.original.name.shelved span.minilock.extension { opacity: 0; transi
 form.file div.random.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }
 form.file div.random.name           span.minilock.extension { opacity: 0; transition: opacity 0ms linear 250ms; }
 
-form.decrypted.file div.input.activated.name  span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
-form.decrypted.file div.output.name span.minilock.extension { display: none; }
-
+form.decrypted.file div.activated.name span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
+form.encrypted.file div.activated.name span.minilock.extension { color: white; transition: color 250ms linear; }
 
 /* File size, status messages and controls to change the filename. */
 
