@@ -198,7 +198,7 @@ miniLock.UI.flipToBack = function() {
 
 // Setup the screen for a new unencrypted file. 
 $('form.process').on('encrypt:setup', function(event, file) {
-	$('form.process').removeClass('decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
+	$('form.process').removeClass(miniLock.UI.resetProcessFormClasses)
 	$('form.process').addClass('unprocessed')
 	var originalName = file.name
 	var inputName    = file.name
@@ -395,7 +395,7 @@ $('form.process').on('submit', function(event) {
 
 // Set the screen to show decryption progress for an encrypted file.
 $('form.process').on('decrypt:start', function(event, file) {
-	$('form.process').removeClass('unprocessed decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
+	$('form.process').removeClass(miniLock.UI.resetProcessFormClasses)
 	$('form.process').addClass('decrypting')
 	$('form.process input.encrypt').prop('disabled', true)
 	// Render input name and let all the other names be undefined.
@@ -473,6 +473,13 @@ $('form.process').on('click', 'a.fileSaveLink', function() {
 $('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){ 
 	$('form.process').toggleClass('withHintToSave')
 })
+
+// Remove these classes to reset the file processing <form>.
+miniLock.UI.resetProcessFormClasses = '' +
+	+ 'unprocessed withSuspectFilename '
+	+ 'encrypting decrypting '
+	+ 'encrypted decrypted ' 
+	+ 'encrypt decrypt failed '
 
 miniLock.UI.renderAllFilenameTags = function(filenames){
 	$('form.process div.name').removeClass('activated shelved expired')
