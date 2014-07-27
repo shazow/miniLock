@@ -342,10 +342,12 @@ $('form.process').on('input', 'div.identity', function() {
 // Remove an identity from from the audience list.
 $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	var identity = $(this).closest('div.identity')
-	identity.find('input.code').val('')
-	identity.find('input.code').trigger('input')
-	identity.remove()
-	if ($('form.process div.identity').size() < 4 || $('form.process div.blank.identity').size()===0) {
+	identity.find('input.code').blur()
+	identity.addClass('expired')
+	identity.bind('transitionend', function(event){
+		if ($(event.target).is(identity)) { identity.remove() }
+	})
+	if ($('form.process div.identity:not(.expired)').size() < 4) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
 			miniLock.templates.audienceListIdentity, 
 			{'className': 'blank'}

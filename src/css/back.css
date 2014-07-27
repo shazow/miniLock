@@ -538,8 +538,18 @@ form.process div.audience > header {
 form.process div.identity {
 	position: relative;
 	box-sizing: border-box;
+	background: #49698D;
+	z-index: 0;
 	height: 35px;
-	padding-bottom: 1px;
+	opacity: 1;
+	visibility: visible;
+}
+form.process div.expired.identity {
+	z-index: -1;
+	opacity: 0.4;
+	height: 0px;
+	visibility: hidden;
+	transition: height 200ms ease-out 200ms, visibility 0ms linear 400ms;
 }
 
 form.process div.identity input[type=text] {
@@ -553,11 +563,9 @@ form.process div.identity input[type=text] {
 	background: rgba(255, 255, 255, 0.1);
 	transition: background 100ms linear;
 }
-
 form.process div.identity input[type=text]:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
-
 form.process div.identity input[type=text]:focus {
 	background: rgba(255, 255, 255, 0.2);
 }
@@ -573,23 +581,8 @@ form.process div.identity label {
 	color: #49698D;
 	background: #A3B6CC;
 	text-align: right;
-	visibility: hidden;
 	white-space: nowrap;
 }
-
-form.process div.blank.identity label {
-	visibility: hidden;
-}
-
-form.process div.session.identity label,
-form.process div.invalid.identity label {
-	visibility: visible;
-}
-
-form.process div.invalid.identity label {
-	background: hsl(50, 55%, 66%);
-}
-
 form.process div.identity label:after {
 	left: 100%;
 	top: 50%;
@@ -602,10 +595,21 @@ form.process div.identity label:after {
 	border-left-color: #A3B6CC;
 }
 
+form.process div.blank.identity label,
+form.process div.expired.session.identity label,
+form.process div.expired.invalid.identity label {
+	visibility: hidden;
+}
+form.process div.session.identity label,
+form.process div.invalid.identity label {
+	visibility: visible;
+}
+form.process div.invalid.identity label {
+	background: hsl(50, 55%, 66%);
+}
 form.process div.invalid.identity label:after {
 	border-left-color: hsl(50, 55%, 66%);
 }
-
 form.process div.invalid.identity input[type=text] {
 	color: hsl(50, 100%, 70%);
 }
@@ -624,11 +628,10 @@ form.process div.identity input[type=button].remove {
 	padding: 0;
 	background: none;
 }
-
-form.process div.identity input[type=button].remove:hover {
+form.process div.identity input[type=button].remove:hover,
+form.process div.expired.identity input[type=button].remove {
 	color: white;
 }
-
 form.process div.blank.identity input[type=button].remove {
 	display: none;
 }
