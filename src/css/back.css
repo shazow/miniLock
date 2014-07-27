@@ -302,6 +302,10 @@ form.decrypted.file.withHintToSave span.fileSize {
 	color: white;
 }
 
+form.file.failed span.fileSize {
+	display: none;
+}
+
 /* Link to save file (height is updated programatically in ui.js) */
 
 form.file a.fileSaveLink { 
