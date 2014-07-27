@@ -1,4 +1,4 @@
-// Test for summarizing the audience of an ecrypted file.
+// Test for summarizing the audience of an encrypted file.
 QUnit.test('summarizeAudience', function(assert) {
 	'use strict';
 	var audienceIDs
