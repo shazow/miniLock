@@ -133,7 +133,7 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 // Process messages from the crypto worker.
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
-	if (! message.error) {
+	if (!message.error) {
 		if (message.operation === 'encrypt') {
 			message.blob = new Blob([
 				'miniLockFileYes.',
