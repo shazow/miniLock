@@ -216,7 +216,8 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	if ($('form.process').hasClass('withRandomName')) {
 		$('form.process div.random.name').addClass('activated')
 		$('form.process div.original.name').addClass('shelved')
-	} else {
+	}
+	else {
 		$('form.process div.output.name').addClass('activated')
 	}
 
@@ -312,7 +313,8 @@ $('form.process').on('input', 'div.identity', function() {
 	var inputID   = $(this).find('input[type=text]').val().trim()
 	if (inputID.length === 0) {
 		$(this).addClass('blank')
-	} else {
+	}
+	else {
 		if (inputID === sessionID) {
 			$(this).addClass('session')
 			$(this).find('label').text('Me')
@@ -378,9 +380,11 @@ $('form.process').on('submit', function(event) {
 	event.preventDefault()
 	if ($('div.blank.identity').size() === $('div.identity').size()) {
 		$('div.identity input').first().focus()
-	} else if ($('div.invalid.identity').size()) {
+	}
+	else if ($('div.invalid.identity').size()) {
 		$('div.invalid.identity input').first().focus()
-	} else {
+	}
+	else {
 		if ($('form.process div.scrollingsurface').prop('scrollTop') !== 0) {
 			var scrollDuration = 33 * Math.sqrt($('form.process > div').prop('scrollTop'))
 			$('form.process div.scrollingsurface').first().animate({scrollTop: 0}, scrollDuration)
