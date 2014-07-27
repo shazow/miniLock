@@ -242,23 +242,23 @@ form.process.failed div.activated.name h1 span.extensions {
 	color: rgba(255, 255, 255, 0.4);
 }
 
-form.process div.name span.minilock.extension { 
+form.process div.name span.miniLockExtension { 
 	color: inherit;
 }
 
-form.process div.output.name span.minilock.extension { opacity: 0; transition: opacity 0ms linear; }
-form.process div.output.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 500ms; }
+form.process div.output.name span.miniLockExtension { opacity: 0; transition: opacity 0ms linear; }
+form.process div.output.name.activated span.miniLockExtension { opacity: 1; transition: opacity 250ms linear 500ms; }
 
 form.process div.original.name h3 { opacity: 0; transition: opacity 150ms linear; }
 form.process div.original.name h1 { opacity: 1.0; transition: opacity 250ms linear; }
-form.process div.original.name span.minilock.extension { opacity: 1; transition: opacity 500ms linear 500ms; }
+form.process div.original.name span.miniLockExtension { opacity: 1; transition: opacity 500ms linear 500ms; }
 
 form.process div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
 form.process div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
-form.process div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
+form.process div.original.name.shelved span.miniLockExtension { opacity: 0; transition: opacity 250ms linear; }
 
-form.process.decrypted div.activated.name span.minilock.extension { opacity: 0; transition: opacity 150ms linear; }
-form.process.encrypted div.activated.name span.minilock.extension { color: white; transition: color 150ms linear; }
+form.process.decrypted div.activated.name span.miniLockExtension { opacity: 0; transition: opacity 150ms linear; }
+form.process.encrypted div.activated.name span.miniLockExtension { color: white; transition: color 150ms linear; }
 
 /* File size, status messages and controls to change the filename. */
 
