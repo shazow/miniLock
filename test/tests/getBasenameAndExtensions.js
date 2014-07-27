@@ -12,7 +12,7 @@ QUnit.test('getBasenameAndExtensions', function(assert) {
 	)
 
 	assert.deepEqual(
-		miniLock.util.getBasenameAndExtensions('General Keith B. Alexander CV.2014.docx.exe.pdf'),
-		{basename: 'General Keith B. Alexander CV', extensions: '.2014.docx.exe.pdf'}
+		miniLock.util.getBasenameAndExtensions('Sombody With A. Period CV.2014.docx.exe.pdf'),
+		{basename: 'Sombody With A. Period CV', extensions: '.2014.docx.exe.pdf'}
 	)
 })
