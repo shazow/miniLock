@@ -234,7 +234,7 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	
 	$('form.process div.blank.identity input[type=text]').first().focus()
 	
-	var withoutSessionID = $('form.process div.session.identity').size() === 0
+	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
 	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
 	
 	$('form.process input.encrypt').prop('disabled', false)
@@ -325,7 +325,7 @@ $('form.process').on('input', 'div.identity', function() {
 		}
 	}
 	
-	var withoutSessionID = $('form.process div.session.identity').size() === 0
+	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
 	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
 	
 	if ($('form.process div.blank.identity').size() === 0) {
@@ -344,6 +344,7 @@ $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	var identity = $(this).closest('div.identity')
 	identity.find('input.code').blur()
 	identity.addClass('expired')
+	identity.find('input.code').trigger('input')
 	identity.bind('transitionend', function(event){
 		if ($(event.target).is(identity)) { identity.remove() }
 	})
