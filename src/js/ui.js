@@ -200,19 +200,16 @@ miniLock.UI.flipToBack = function() {
 $('form.process').on('encrypt:setup', function(event, file) {
 	$('form.process').removeClass('decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
 	$('form.process').addClass('unprocessed')
-	
 	var originalName = file.name
 	var inputName    = file.name
 	var randomName   = miniLock.util.getRandomFilename()
 	var outputName   = $('form.process').hasClass('withRandomName') ? randomName : originalName
-	
 	miniLock.UI.renderAllFilenameTags({
 		'input':    inputName,
 		'output':   outputName,
 		'original': originalName,
 		'random':   randomName
 	})
-	
 	if ($('form.process').hasClass('withRandomName')) {
 		$('form.process div.random.name').addClass('activated')
 		$('form.process div.original.name').addClass('shelved')
@@ -220,10 +217,8 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	else {
 		$('form.process div.output.name').addClass('activated')
 	}
-
 	// Render the size of the input file. 
 	$('form.process a.fileSize').html(miniLock.UI.readableFileSize(file.size))
-	
 	// Insert the session ID if the audience list is empty.
 	if ($('form.process div.blank.identity').size() === $('form.process div.identity').size()) {
 		var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
@@ -232,12 +227,9 @@ $('form.process').on('encrypt:setup', function(event, file) {
 			{'className': 'session', 'id': sessionID, 'label': 'Me'}
 		))
 	}
-	
 	$('form.process div.blank.identity input[type=text]').first().focus()
-	
 	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
 	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
-	
 	$('form.process input.encrypt').prop('disabled', false)
 })
 
@@ -253,16 +245,12 @@ $('form.process').on('encrypt:start', function(event, file) {
 $('form.process').on('encrypt:complete', function(event, file, senderID) {
 	$('form.process').removeClass('encrypting')
 	$('form.process').addClass('encrypted')
-	
 	// Render encrypted file size.
 	$('form.process a.fileSize').text(miniLock.UI.readableFileSize(file.size))
-
 	// Render link to save encrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
-	
 	// Render identity of the sender.
 	$('form.process div.senderID code').text(senderID)
-
 	// Summarize who can access the file.
 	var audienceIDs = $('form.process div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
 	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
@@ -308,7 +296,6 @@ $('form.process').on('mousedown', 'div.setOriginalName a.control', function() {
 $('form.process').on('input', 'div.identity', function() {
 	$(this).removeClass('blank invalid session')
 	$(this).find('label').empty()
-	
 	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	var inputID   = $(this).find('input[type=text]').val().trim()
 	if (inputID.length === 0) {
@@ -326,10 +313,8 @@ $('form.process').on('input', 'div.identity', function() {
 			if (inputID.length > 44){ $(this).find('label').text('Too long')  }
 		}
 	}
-	
 	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
 	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
-	
 	if ($('form.process div.blank.identity').size() === 0) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
 			miniLock.templates.audienceListIdentity, 
@@ -412,20 +397,15 @@ $('form.process').on('submit', function(event) {
 $('form.process').on('decrypt:start', function(event, file) {
 	$('form.process').removeClass('unprocessed decrypting encrypting decrypted encrypted decrypt encrypt failed withSuspectFilename')
 	$('form.process').addClass('decrypting')
-	
 	$('form.process input.encrypt').prop('disabled', true)
-	
 	// Render input name and let all the other names be undefined.
 	miniLock.UI.renderAllFilenameTags({
 		'input': file.name.replace(/.minilock$/, '')
 	})
-	
 	// Activate the input name tag.
 	$('form.process div.input.name').addClass('activated')
-	
 	// Render input file size.
 	$('span.fileSize').text(miniLock.UI.readableFileSize(file.size))
-
 	// Animate decryption operation progress
 	miniLock.UI.animateProgressBar(file.size)
 })
@@ -434,33 +414,25 @@ $('form.process').on('decrypt:start', function(event, file) {
 $('form.process').on('decrypt:complete', function(event, file, senderID) {
 	$('form.process').removeClass('decrypting')
 	$('form.process').addClass('decrypted')
-
 	var outputName = file.name
 	var inputName  = $('form.process div.input.name input').val()
-	
 	miniLock.UI.renderFilenameTag('output', outputName)
-	
 	// Highlight differences if the output name differs from the input name.
 	if (inputName !== outputName) {
 		$('form.process div.output.name').addClass('activated')
 		$('form.process div.input.name').removeClass('activated').addClass('expired')
 	}
-	
 	// Render decrypted file size.
 	$('form.process a.fileSize').text(miniLock.UI.readableFileSize(file.size))
-
 	// Render link to save decrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
-
 	// Render identity of the sender.
 	$('form.process div.senderID code').text(senderID)
-
 	// Render name of the input file in the summary the bottom of the screen.
 	$('form.process div.summary').html('Decrypted from ' + Mustache.render(
 		miniLock.templates.filename, 
 		miniLock.util.getBasenameAndExtensions(inputName)
 	))
-
 	// Show the suspect filename notice when applicable.
 	if (miniLock.util.isFilenameSuspicious(outputName)) {
 		$('form.process').addClass('withSuspectFilename')
