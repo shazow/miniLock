@@ -1,6 +1,4 @@
-/*
-	* Square (back)
-*/
+/* B-side of miniLock */
 
 div.squareBack {
 	-webkit-transform: rotateY(-180deg);
@@ -12,39 +10,18 @@ div.squareBack {
 	border-radius: 2px;
 }
 
-div.squareBack p {
-	font-weight: bold;
-	font-size: 5em;
-	text-align: center;
-	margin-top: 240px;
-}
+/* Basic styles for all headings on the B-side of miniLock */
 
-form.file h1,
-form.file h2,
-form.file h3 {
+div.squareBack h1,
+div.squareBack h2,
+div.squareBack h3 {
 	font-weight: normal;
 	font-size: inherit;
 	line-height: inherit;
 	margin: 0;
 }
 
-form.file > div.scrollingsurface {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 100px;
-	color: rgba(255, 255, 255, 0.4);
-	overflow: scroll;
-}
-
-form.file > div.scrollingsurface > header {
-	position: relative;
-	height: 300px;
-	background: 0px 0px url('../img/backside-background.png');
-}
-
-/* Basic styles for all <a> tags in this form */
+/* Basic styles for all <a> tags on the B-side of miniLock */
 
 div.squareBack a {
 	color: inherit;
@@ -61,10 +38,10 @@ div.squareBack a.control:hover {
 	color: white;
 }
 
-/* 35x35 square control buttons with centered icon */
+/* Basic 35x35 square control buttons with centered icon */
 
-input[type=button].button,
-input[type=submit].button {
+div.squareBack input[type=button].button,
+div.squareBack input[type=submit].button {
 	font-family: 'Octicons';
 	font-size: 20px;
 	width: 35px;
@@ -72,23 +49,49 @@ input[type=submit].button {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-input[type=button].button:hover,
-input[type=submit].button:hover {
+div.squareBack input[type=button].button:hover,
+div.squareBack input[type=submit].button:hover {
 	background: rgba(255, 255, 255, 0.2);
 }
 
-input[type=button].button:active,
-input[type=button].button.activated,
-input[type=submit].button:active,
-input[type=submit].button.activated {
+div.squareBack input[type=button].button:active,
+div.squareBack input[type=button].button.activated,
+div.squareBack input[type=submit].button:active,
+div.squareBack input[type=submit].button.activated {
 	background: rgba(255, 255, 255, 1);
 	color: #49698D;
 }
 
-input[type=button].button:disabled,
-input[type=submit].button:disabled {
+div.squareBack input[type=button].button:disabled,
+div.squareBack input[type=submit].button:disabled {
 	background: rgba(255, 255, 255, 1);
 	color: #49698D;
+}
+
+/* Go back-to-front button */
+
+div.squareBack input.flipBack.button {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+}
+
+/* File processing form scrolling surface */
+
+form.file > div.scrollingsurface {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 100px;
+	color: rgba(255, 255, 255, 0.4);
+	overflow: scroll;
+}
+
+form.file > div.scrollingsurface > header {
+	position: relative;
+	height: 300px;
+	background: 0px 0px url('../img/backside-background.png');
 }
 
 /* File status icon */
@@ -254,9 +257,6 @@ form.file div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms l
 form.file div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
 form.file div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
 
-/*form.file div.random.name           span.minilock.extension { opacity: 0; transition: opacity 0ms linear 250ms; }*/
-/*form.file div.random.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 350ms; }*/
-
 form.decrypted.file div.activated.name span.minilock.extension { opacity: 0; transition: opacity 150ms linear; }
 form.encrypted.file div.activated.name span.minilock.extension { color: white; transition: color 150ms linear; }
 
@@ -325,7 +325,7 @@ form.file a.fileSaveLink span.assistive {
 	opacity: 0;
 }
 
-/* Badge that displays the ID of the person who encrypted the file */
+/* ID of the person who encrypted the file on encrypted and decrypted screens */
 
 form.file div.senderID {
 	position: absolute;
@@ -336,6 +336,13 @@ form.file div.senderID {
 	padding: 9px;
 	box-sizing:border-box;
 	height: 35px;
+	opacity: 0;
+}
+
+form.encrypted.file div.senderID,
+form.decrypted.file div.senderID {
+	opacity: 1;
+	transition: opacity 150ms linear;
 }
 
 form.file div.senderID h3 {
@@ -350,23 +357,14 @@ form.file div.senderID code {
 	display: block;
 }
 
-form.file div.senderID {
-	opacity: 0;
-}
-
-form.encrypted.file div.senderID,
-form.decrypted.file div.senderID {
-	opacity: 1;
-	transition: opacity 150ms linear;
-}
-
-/* Summary of the audience for an encrypted file, or the source of an unencrypted file */
+/* Summary of the audience for an encrypted file, or the input filename of a decrypted file  */
 
 form.file div.summary {
 	position: absolute;
-	top: 410px;
-	left: 110px;
-	right: 110px;
+	top: 400px;
+	left: 100px;
+	right: 100px;
+	margin: 10px;
 	visibility: hidden;
 }
 
@@ -377,7 +375,7 @@ form.decrypted.file div.summary {
 
 /* Notice when the filename of a decrypted file is suspect */
 
-div.suspectFilenameNotice {
+form.file div.suspectFilenameNotice {
 	position: fixed;
 	top: 455px;
 	left: 100px;
@@ -393,7 +391,7 @@ form.decrypted.file.withSuspectFilename div.suspectFilenameNotice {
 
 /* Notice when the operation failed */
 
-div.failureNotice {
+form.file div.failureNotice {
 	position: fixed;
 	top: 300px;
 	left: 110px;
@@ -406,7 +404,7 @@ form.failed.encrypt.file div.failureNotice {
 	visibility: visible;
 }
 
-/* Progress bar for encryption and decryption */
+/* Progress bar for encryption and decryption operations */
 
 form.file div.progressBar {
 	position: absolute;
@@ -446,18 +444,18 @@ form.file.decrypt.failed div.progressBar {
 form.file div.progressBar div.progressBarFill {
 	width: 50%;
 	height: 100%;
-	background: #FFF;
+	background: white;
 }
 
-/* List of the audience members */
+/* List of audience members for an unprocessed file */
 
 form.file div.audience {
 	position: relative;
 	top: 0;
-	opacity: 1;
 	margin-top: 60px;
 	margin-left: 100px;
 	margin-right: 100px;
+	opacity: 1;
 }
 
 form.file.encrypting     div.audience,
@@ -466,9 +464,9 @@ form.file.decrypting     div.audience,
 form.file.decrypted      div.audience,
 form.file.failed.encrypt div.audience,
 form.file.failed.decrypt div.audience {
-	top: 50px;
+	top: 60px;
 	opacity: 0;
-	transition: top 250ms ease-out, opacity 250ms ease-in;
+	transition: top 250ms ease-out, opacity 250ms linear;
 }
 
 form.file div.audience > header {
@@ -477,16 +475,6 @@ form.file div.audience > header {
 	left: 10px;
 	right: 10px;
 	margin-top: -2px;
-}
-
-form.file div.audience > header h1,
-form.file div.audience > header h2 {
-	font-weight: normal;
-}
-
-form.file div.audience > header h1 {
-	color: white;
-	font-weight: bold;
 }
 
 /* Identity elements  */
@@ -533,6 +521,10 @@ form.file div.identity label {
 	white-space: nowrap;
 }
 
+form.file div.blank.identity label {
+	visibility: hidden;
+}
+
 form.file div.session.identity label,
 form.file div.invalid.identity label {
 	visibility: visible;
@@ -562,26 +554,26 @@ form.file div.invalid.identity input[type=text] {
 	color: hsl(50, 100%, 70%);
 }
 
-form.file div.identity input.remove {
+form.file div.identity input[type=button].remove {
 	position: absolute;
+	display: block;
 	top: 10px;
 	right: 8px;
+	width: 15px;
 	height: 15px;
 	line-height: 15px;
-	width: 15px;
 	font-family: 'Octicons';
-	font-size: 20px;
+	font-size: 18px;
 	color: #49698D;
 	padding: 0;
 	background: none;
 }
 
-form.file div.identity input.remove:hover {
+form.file div.identity input[type=button].remove:hover {
 	color: white;
 }
 
-form.file div.blank.identity input.remove,
-form.file div.blank.identity label {
+form.file div.blank.identity input[type=button].remove {
 	display: none;
 }
 
@@ -592,7 +584,6 @@ form.file div.missingSessionIDnotice {
 	box-sizing: border-box;
 	padding-top: 3px;
 	height: 35px;
-	line-height: 14px;
 	bottom: 40px;
 	left: 200px;
 	right: 100px;
@@ -624,13 +615,14 @@ form.file div.missingSessionIDnotice span.text {
 	color: rgba(255, 255, 255, 0.5);
 }
 
-
 /* Encrypt file button */
 
 form.file input.encrypt.button {
 	position: fixed;
 	bottom: 40px;
 	left: 100px;
+	visibility: hidden;
+	opacity: 0;
 }
 
 form.unprocessed.file input.encrypt.button {
@@ -640,22 +632,5 @@ form.unprocessed.file input.encrypt.button {
 
 form.file.encrypting input.encrypt.button,
 form.file.encrypted  input.encrypt.button {
-	visibility: hidden;
-	opacity: 0;
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
-}
-
-form.file.decrypting     input.encrypt.button,
-form.file.decrypted      input.encrypt.button,
-form.file.decrypt.failed input.encrypt.button,
-form.file.encrypt.failed input.encrypt.button {
-	visibility: hidden;
-}
-
-/* Go back-to-front button */
-
-input.flipBack.button {
-	position: absolute;
-	left: 10px;
-	top: 10px;
 }

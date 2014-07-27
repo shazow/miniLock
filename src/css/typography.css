@@ -15,7 +15,7 @@ body.opensans-inconsolata form.file div.identity input[type=text] {
 /* Lucida Grande with Menlo */
 
 body.lucida-menlo { font-family: 'Lucida Grande', sans-serif; }
-body.lucida-menlo form.file { font-size:11px; line-height: 15px; }
+body.lucida-menlo form.file { font-size:11px; line-height: 14px; }
 body.lucida-menlo form.file div.name h1 { font-size: 22px; line-height: 24px; padding-bottom: 2px; }
 body.lucida-menlo form.file b.basename { font-weight: bold; }
 body.lucida-menlo form.file h2 { color: white; }
