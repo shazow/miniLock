@@ -449,15 +449,6 @@ form.file div.progressBar div.progressBarFill {
 	background: #FFF;
 }
 
-form.file div.progressBar div.percentage {
-	position: absolute;
-	left: -50px;
-	width: 45px;
-	top: 0;
-	text-align: right;
-	line-height: 13px;
-}
-
 /* List of the audience members */
 
 form.file div.audience {
