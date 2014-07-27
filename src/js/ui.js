@@ -589,10 +589,9 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // -----------------------
 // Design & Developer Tools
 // -----------------------
-
+// Uncomment the following to unlock a demo session automatically.
 // $('input.miniLockEmail').val('manufacturing@minilock.io')
 // $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 // $('form.unlockForm').submit()
-// miniLock.UI.readFile = {name: $('form.file input.saveName').val()}
 
 })
