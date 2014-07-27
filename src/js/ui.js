@@ -346,7 +346,10 @@ $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	identity.addClass('expired')
 	identity.find('input.code').trigger('input')
 	identity.bind('transitionend', function(event){
-		if ($(event.target).is(identity)) { identity.remove() }
+		if ($(event.target).is(identity)) {
+			identity.remove()
+			$('form.process div.blank.identity input[type=text]:first').focus()
+		}
 	})
 	if ($('form.process div.identity:not(.expired)').size() < 4) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
@@ -364,6 +367,9 @@ $('form.process').on('mousedown', 'a.addSessionIDtoAudienceList', function() {
 		{'className': 'session', 'id': sessionID, 'label': 'Me'}
 	))
 	$('form.process div.session.identity input.code').trigger('input')
+	setTimeout(function(){
+		$('form.process div.blank.identity input[type=text]:first').focus()
+	}, 1)
 })
 
 // Press <return>, or click > to commit the form and begin encrypting.
