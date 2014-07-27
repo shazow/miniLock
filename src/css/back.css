@@ -78,7 +78,7 @@ div.squareBack input.flipBack.button {
 
 /* File processing form scrolling surface */
 
-form.file > div.scrollingsurface {
+form.process > div.scrollingsurface {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -88,7 +88,7 @@ form.file > div.scrollingsurface {
 	overflow: scroll;
 }
 
-form.file > div.scrollingsurface > header {
+form.process > div.scrollingsurface > header {
 	position: relative;
 	height: 300px;
 	background: 0px 0px url('../img/backside-background.png');
@@ -96,7 +96,7 @@ form.file > div.scrollingsurface > header {
 
 /* File status icon */
 
-form.file div.statusIcon {
+form.process div.statusIcon {
 	position: absolute;
 	left: 60px;
 	bottom: 0px;
@@ -104,15 +104,15 @@ form.file div.statusIcon {
 	width: 40px;
 }
 
-form.file div.statusIcon a.octicon {
+form.process div.statusIcon a.octicon {
 	display: block;
 	text-align: center;
 	position: relative;
 	visibility: hidden;
 }
 
-form.file div.statusIcon a.ready.octicon,
-form.file div.statusIcon a.processing.octicon {
+form.process div.statusIcon a.ready.octicon,
+form.process div.statusIcon a.processing.octicon {
 	position: absolute;
 	bottom: -12px;
 	margin: 2px;
@@ -125,22 +125,22 @@ form.file div.statusIcon a.processing.octicon {
 	background: #49698D;
 }
 
-form.encrypting.file div.statusIcon a.processing,
-form.decrypting.file div.statusIcon a.processing {
+form.process.encrypting div.statusIcon a.processing,
+form.process.decrypting div.statusIcon a.processing {
 	font-size: 23px;
 	line-height: 30px;
 	visibility: visible;
 }
 
-form.encrypted.file div.statusIcon a.ready.octicon,
-form.decrypted.file div.statusIcon a.ready.octicon {
+form.process.encrypted div.statusIcon a.ready.octicon,
+form.process.decrypted div.statusIcon a.ready.octicon {
 	font-size: 24px;
 	line-height: 31px;
 	visibility: visible;
 }
 
-form.file.encrypt.failed div.statusIcon a.failed.octicon,
-form.file.decrypt.failed div.statusIcon a.failed.octicon {
+form.encrypt.process.failed div.statusIcon a.failed.octicon,
+form.decrypt.process.failed div.statusIcon a.failed.octicon {
 	color: white;
 	bottom: -25px;
 	font-size: 35px;
@@ -150,7 +150,7 @@ form.file.decrypt.failed div.statusIcon a.failed.octicon {
 
 /* Filename styles */
 
-form.file div.nameContainer { 
+form.process div.nameContainer { 
 	position: absolute;
 	top: 15px;
 	right: 50px;
@@ -159,7 +159,7 @@ form.file div.nameContainer {
 	overflow: hidden;
 }
 
-form.file div.name { 
+form.process div.name { 
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -167,148 +167,148 @@ form.file div.name {
 	bottom: -60px;
 }
 
-form.file div.name.activated { 
+form.process div.name.activated { 
 	bottom: 0px;
 }
 
-form.file.unprocessed div.input.name,
-form.file.encrypting  div.input.name,
-form.file.encrypted   div.input.name { 
+form.process.unprocessed div.input.name,
+form.process.encrypting  div.input.name,
+form.process.encrypted   div.input.name { 
 	visibility: hidden;
 }
 
-form.file.decrypting div.input.name { 
+form.process.decrypting div.input.name { 
 	visibility: visible;
 }
 
-form.file.decrypted div.input.name.expired { 
+form.process.decrypted div.input.name.expired { 
 	opacity: 0;
 	bottom: 60px;
 	transition: bottom 250ms ease-out, opacity 250ms linear;
 }
 
-form.file.unprocessed div.output.name {
+form.process.unprocessed div.output.name {
 	visibility: hidden;
 	transition: visibility 0ms linear 500ms;
 }
 
-form.decrypted div.output.name.activated { 
-	bottom: 0px;
-	transition: bottom 250ms ease-out;
-}
-
-form.file.unprocessed div.output.name.activated {
+form.process.unprocessed div.output.name.activated {
 	bottom: 0px;
 	visibility: visible;
 	transition: visibility 0ms linear 250ms;
 }
 
-form.file div.original.name {
+form.process.decrypted div.output.name.activated { 
+	bottom: 0px;
+	transition: bottom 250ms ease-out;
+}
+
+form.process div.original.name {
 	visibility: hidden;
 }
 
-form.file.unprocessed div.original.name {
+form.process.unprocessed div.original.name {
 	visibility: hidden;
 	bottom: 0px;
 	transition: bottom 250ms ease-out, visibility 0ms linear 250ms;
 }
 
-form.file div.original.name.shelved {
+form.process div.original.name.shelved {
 	visibility: visible;
 	bottom: 60px;
 }
 
-form.file.unprocessed div.original.name.shelved {
+form.process.unprocessed div.original.name.shelved {
 	visibility: visible;
 	bottom: 60px;
 	transition: bottom 250ms ease-out;
 }
 
-form.file.unprocessed div.random.name {
+form.process.unprocessed div.random.name {
 	transition: bottom 250ms ease-out;
 }
 
-form.file.unprocessed div.random.name.activated {
+form.process.unprocessed div.random.name.activated {
 	bottom: 0px;
 }
 
-form.file div.name h1 b.basename,
-form.file div.name h1 span.extensions {
+form.process div.name h1 b.basename,
+form.process div.name h1 span.extensions {
 	color: white;
 }
 
-form.file.failed div.activated.name h1 b.basename,
-form.file.failed div.activated.name h1 span.extensions {
+form.process.failed div.activated.name h1 b.basename,
+form.process.failed div.activated.name h1 span.extensions {
 	color: rgba(255, 255, 255, 0.4);
 }
 
-form.file div.name span.minilock.extension { 
+form.process div.name span.minilock.extension { 
 	color: inherit;
 }
 
-form.file div.output.name span.minilock.extension { opacity: 0; transition: opacity 0ms linear; }
-form.file div.output.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 500ms; }
+form.process div.output.name span.minilock.extension { opacity: 0; transition: opacity 0ms linear; }
+form.process div.output.name.activated span.minilock.extension { opacity: 1; transition: opacity 250ms linear 500ms; }
 
-form.file div.original.name h3 { opacity: 0; transition: opacity 150ms linear; }
-form.file div.original.name h1 { opacity: 1.0; transition: opacity 250ms linear; }
-form.file div.original.name span.minilock.extension { opacity: 1; transition: opacity 500ms linear 500ms; }
+form.process div.original.name h3 { opacity: 0; transition: opacity 150ms linear; }
+form.process div.original.name h1 { opacity: 1.0; transition: opacity 250ms linear; }
+form.process div.original.name span.minilock.extension { opacity: 1; transition: opacity 500ms linear 500ms; }
 
-form.file div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
-form.file div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
-form.file div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
+form.process div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
+form.process div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
+form.process div.original.name.shelved span.minilock.extension { opacity: 0; transition: opacity 250ms linear; }
 
-form.decrypted.file div.activated.name span.minilock.extension { opacity: 0; transition: opacity 150ms linear; }
-form.encrypted.file div.activated.name span.minilock.extension { color: white; transition: color 150ms linear; }
+form.process.decrypted div.activated.name span.minilock.extension { opacity: 0; transition: opacity 150ms linear; }
+form.process.encrypted div.activated.name span.minilock.extension { color: white; transition: color 150ms linear; }
 
 /* File size, status messages and controls to change the filename. */
 
-form.file div.infoContainer {
+form.process div.infoContainer {
 	position: absolute;
 	bottom: 0px;
 	left: 110px;
 	right: 110px;
 }
 
-form.file div.infoContainer a {
+form.process div.infoContainer a {
 	display: none;
 	color: inherit;
 }
 
-form.unprocessed.file                a.setRandomName          { display: inline; }
-form.unprocessed.file.withRandomName a.setRandomName          { display: none;   }
-form.unprocessed.file.withRandomName a.setOriginalName        { display: inline; }
-form.encrypting.file                 a.encrypting             { display: inline; }
-form.encrypted.file                  a.encryptedFileIsReady   { display: inline; }
-form.encrypted.file.withHintToSave   a.encryptedFileIsReady   { display: none;   }
-form.encrypted.file.withHintToSave   a.saveEncryptedFile      { display: inline; }
-form.decrypting.file                 a.decrypting             { display: inline; }
-form.decrypted.file                  a.decryptedFileIsReady   { display: inline; }
-form.decrypted.file.withHintToSave   a.decryptedFileIsReady   { display: none;   }
-form.decrypted.file.withHintToSave   a.saveDecryptedFile      { display: inline; }
-form.file.encrypt.failed             a.encryptOperationFailed { display: inline; }
-form.file.decrypt.failed             a.decryptOperationFailed { display: inline; }
+form.process.unprocessed                a.setRandomName          { display: inline; }
+form.process.unprocessed.withRandomName a.setRandomName          { display: none;   }
+form.process.unprocessed.withRandomName a.setOriginalName        { display: inline; }
+form.process.encrypting                 a.encrypting             { display: inline; }
+form.process.encrypted                  a.encryptedFileIsReady   { display: inline; }
+form.process.encrypted.withHintToSave   a.encryptedFileIsReady   { display: none;   }
+form.process.encrypted.withHintToSave   a.saveEncryptedFile      { display: inline; }
+form.process.decrypting                 a.decrypting             { display: inline; }
+form.process.decrypted                  a.decryptedFileIsReady   { display: inline; }
+form.process.decrypted.withHintToSave   a.decryptedFileIsReady   { display: none;   }
+form.process.decrypted.withHintToSave   a.saveDecryptedFile      { display: inline; }
+form.encrypt.process.failed             a.encryptOperationFailed { display: inline; }
+form.decrypt.process.failed             a.decryptOperationFailed { display: inline; }
 
-form.file div.infoContainer a.saveEncryptedFile,
-form.file div.infoContainer a.saveDecryptedFile {
+form.process div.infoContainer a.saveEncryptedFile,
+form.process div.infoContainer a.saveDecryptedFile {
 	color: white;
 }
 
-form.file span.fileSize {
+form.process span.fileSize {
 	margin: 0px 2px 0px 0px;
 }
 
-form.encrypted.file.withHintToSave span.fileSize,
-form.decrypted.file.withHintToSave span.fileSize {
+form.process.encrypted.withHintToSave span.fileSize,
+form.process.decrypted.withHintToSave span.fileSize {
 	color: white;
 }
 
-form.file.failed span.fileSize {
+form.process.failed span.fileSize {
 	display: none;
 }
 
 /* Link to save file (height is updated programatically in ui.js) */
 
-form.file a.fileSaveLink { 
+form.process a.fileSaveLink { 
 	display: block;
 	position: absolute;
 	height: 22px;
@@ -320,18 +320,18 @@ form.file a.fileSaveLink {
 	visibility: hidden;
 }
 
-form.encrypted.file a.fileSaveLink,
-form.decrypted.file a.fileSaveLink { 
+form.process.encrypted a.fileSaveLink,
+form.process.decrypted a.fileSaveLink { 
 	visibility: visible;
 }
 
-form.file a.fileSaveLink span.assistive { 
+form.process a.fileSaveLink span.assistive { 
 	opacity: 0;
 }
 
 /* ID of the person who encrypted the file on encrypted and decrypted screens */
 
-form.file div.senderID {
+form.process div.senderID {
 	position: absolute;
 	top: 345px;
 	left: 100px;
@@ -343,19 +343,19 @@ form.file div.senderID {
 	opacity: 0;
 }
 
-form.encrypted.file div.senderID,
-form.decrypted.file div.senderID {
+form.process.encrypted div.senderID,
+form.process.decrypted div.senderID {
 	opacity: 1;
 	transition: opacity 150ms linear;
 }
 
-form.file div.senderID h3 {
+form.process div.senderID h3 {
 	position: absolute;
 	top: -20px;
 	left: 10px;
 }
 
-form.file div.senderID code {
+form.process div.senderID code {
 	font-family: Menlo;
 	font-size: 13px;
 	display: block;
@@ -363,7 +363,7 @@ form.file div.senderID code {
 
 /* Summary of the audience for an encrypted file, or the input filename of a decrypted file  */
 
-form.file div.summary {
+form.process div.summary {
 	position: absolute;
 	top: 400px;
 	left: 100px;
@@ -372,14 +372,14 @@ form.file div.summary {
 	visibility: hidden;
 }
 
-form.encrypted.file div.summary,
-form.decrypted.file div.summary {
+form.process.encrypted div.summary,
+form.process.decrypted div.summary {
 	visibility: visible;
 }
 
 /* Notice when the filename of a decrypted file is suspect */
 
-form.file div.suspectFilenameNotice {
+form.process div.suspectFilenameNotice {
 	position: fixed;
 	top: 455px;
 	left: 100px;
@@ -389,13 +389,13 @@ form.file div.suspectFilenameNotice {
 	visibility: hidden;
 }
 
-form.decrypted.file.withSuspectFilename div.suspectFilenameNotice {
+form.process.decrypted.withSuspectFilename div.suspectFilenameNotice {
 	visibility: visible;
 }
 
 /* Notice when the operation failed */
 
-form.file div.failureNotice {
+form.process div.failureNotice {
 	position: fixed;
 	top: 300px;
 	left: 110px;
@@ -403,14 +403,14 @@ form.file div.failureNotice {
 	visibility: hidden;
 }
 
-form.failed.decrypt.file div.failureNotice,
-form.failed.encrypt.file div.failureNotice {
+form.decrypt.process.failed div.failureNotice,
+form.encrypt.process.failed file div.failureNotice {
 	visibility: visible;
 }
 
 /* Progress bar for encryption and decryption operations */
 
-form.file div.progressBar {
+form.process div.progressBar {
 	position: absolute;
 	top: 345px;
 	left: 60px;
@@ -424,28 +424,28 @@ form.file div.progressBar {
 	visibility: hidden;
 }
 
-form.file.encrypting div.progressBar,
-form.file.decrypting div.progressBar {
+form.process.encrypting div.progressBar,
+form.process.decrypting div.progressBar {
 	opacity: 1;
 	visibility: visible;
 	transition: opacity 150ms linear 250ms, visibility 0 linear;
 }
 
-form.file.encrypted div.progressBar,
-form.file.decrypted div.progressBar {
+form.process.encrypted div.progressBar,
+form.process.decrypted div.progressBar {
 	opacity: 0;
 	visibility: hidden;
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
 }
 
-form.file.encrypt.failed div.progressBar,
-form.file.decrypt.failed div.progressBar {
+form.encrypt.process.failed div.progressBar,
+form.decrypt.process.failed div.progressBar {
 	opacity: 1;
 	visibility: visible;
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
 }
 
-form.file div.progressBar div.progressBarFill {
+form.process div.progressBar div.progressBarFill {
 	width: 50%;
 	height: 100%;
 	background: white;
@@ -453,7 +453,7 @@ form.file div.progressBar div.progressBarFill {
 
 /* List of audience members for an unprocessed file */
 
-form.file div.audience {
+form.process div.audience {
 	position: relative;
 	top: 0;
 	margin-top: 60px;
@@ -462,18 +462,18 @@ form.file div.audience {
 	opacity: 1;
 }
 
-form.file.encrypting     div.audience,
-form.file.encrypted      div.audience,
-form.file.decrypting     div.audience,
-form.file.decrypted      div.audience,
-form.file.failed.encrypt div.audience,
-form.file.failed.decrypt div.audience {
+form.process.encrypting     div.audience,
+form.process.encrypted      div.audience,
+form.process.decrypting     div.audience,
+form.process.decrypted      div.audience,
+form.encrypt.process.failed div.audience,
+form.decrypt.process.failed div.audience {
 	top: 60px;
 	opacity: 0;
 	transition: top 250ms ease-out, opacity 250ms linear;
 }
 
-form.file div.audience > header {
+form.process div.audience > header {
 	position: absolute;
 	top: -30px;
 	left: 10px;
@@ -483,14 +483,14 @@ form.file div.audience > header {
 
 /* Identity elements  */
 
-form.file div.identity {
+form.process div.identity {
 	position: relative;
 	box-sizing: border-box;
 	height: 35px;
 	padding-bottom: 1px;
 }
 
-form.file div.identity input[type=text] {
+form.process div.identity input[type=text] {
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
@@ -502,15 +502,15 @@ form.file div.identity input[type=text] {
 	transition: background 100ms linear;
 }
 
-form.file div.identity input[type=text]:hover {
+form.process div.identity input[type=text]:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
 
-form.file div.identity input[type=text]:focus {
+form.process div.identity input[type=text]:focus {
 	background: rgba(255, 255, 255, 0.2);
 }
 
-form.file div.identity label {
+form.process div.identity label {
 	position: absolute;
 	right: 405px;
 	top: 7px;
@@ -525,20 +525,20 @@ form.file div.identity label {
 	white-space: nowrap;
 }
 
-form.file div.blank.identity label {
+form.process div.blank.identity label {
 	visibility: hidden;
 }
 
-form.file div.session.identity label,
-form.file div.invalid.identity label {
+form.process div.session.identity label,
+form.process div.invalid.identity label {
 	visibility: visible;
 }
 
-form.file div.invalid.identity label {
+form.process div.invalid.identity label {
 	background: hsl(50, 55%, 66%);
 }
 
-form.file div.identity label:after {
+form.process div.identity label:after {
 	left: 100%;
 	top: 50%;
 	margin-top: -9px;
@@ -550,15 +550,15 @@ form.file div.identity label:after {
 	border-left-color: #A3B6CC;
 }
 
-form.file div.invalid.identity label:after {
+form.process div.invalid.identity label:after {
 	border-left-color: hsl(50, 55%, 66%);
 }
 
-form.file div.invalid.identity input[type=text] {
+form.process div.invalid.identity input[type=text] {
 	color: hsl(50, 100%, 70%);
 }
 
-form.file div.identity input[type=button].remove {
+form.process div.identity input[type=button].remove {
 	position: absolute;
 	display: block;
 	top: 10px;
@@ -573,17 +573,17 @@ form.file div.identity input[type=button].remove {
 	background: none;
 }
 
-form.file div.identity input[type=button].remove:hover {
+form.process div.identity input[type=button].remove:hover {
 	color: white;
 }
 
-form.file div.blank.identity input[type=button].remove {
+form.process div.blank.identity input[type=button].remove {
 	display: none;
 }
 
 /* Notice when you are not in the list */
 
-form.file div.missingSessionIDnotice {
+form.process div.missingSessionIDnotice {
 	position: absolute;
 	box-sizing: border-box;
 	padding-top: 3px;
@@ -596,15 +596,15 @@ form.file div.missingSessionIDnotice {
 	transition: opacity 600ms linear;
 }
 
-form.file.withoutSessionID div.missingSessionIDnotice {
+form.process.withoutSessionID div.missingSessionIDnotice {
 	opacity: 1;
 }
 
-form.encrypted.file.withoutSessionID div.missingSessionIDnotice {
+form.process.encrypted.withoutSessionID div.missingSessionIDnotice {
 	opacity: 0;
 }
 
-form.file div.missingSessionIDnotice span.octicon {
+form.process div.missingSessionIDnotice span.octicon {
 	position: absolute;
 	display: block;
 	font-size: 23px;
@@ -615,13 +615,13 @@ form.file div.missingSessionIDnotice span.octicon {
 	color: rgba(255, 255, 255, 0.35);
 }
 
-form.file div.missingSessionIDnotice span.text {
+form.process div.missingSessionIDnotice span.text {
 	color: rgba(255, 255, 255, 0.5);
 }
 
 /* Encrypt file button */
 
-form.file input.encrypt.button {
+form.process input.encrypt.button {
 	position: fixed;
 	bottom: 40px;
 	left: 100px;
@@ -629,12 +629,12 @@ form.file input.encrypt.button {
 	opacity: 0;
 }
 
-form.unprocessed.file input.encrypt.button {
+form.process.unprocessed input.encrypt.button {
 	visibility: visible;
 	opacity: 1;
 }
 
-form.file.encrypting input.encrypt.button,
-form.file.encrypted  input.encrypt.button {
+form.process.encrypting input.encrypt.button,
+form.process.encrypted  input.encrypt.button {
 	transition: opacity 250ms linear, visibility 0 linear 250ms;
 }
