@@ -265,45 +265,97 @@ form.process.encrypted div.activated.name span.minilock.extension { color: white
 form.process div.infoContainer {
 	position: absolute;
 	bottom: 0px;
+	height: 15px;
 	left: 110px;
 	right: 110px;
+	overflow: hidden;
 }
 
-form.process div.infoContainer a {
-	display: none;
-	color: inherit;
-}
-
-form.process.unprocessed                a.setRandomName          { display: inline; }
-form.process.unprocessed.withRandomName a.setRandomName          { display: none;   }
-form.process.unprocessed.withRandomName a.setOriginalName        { display: inline; }
-form.process.encrypting                 a.encrypting             { display: inline; }
-form.process.encrypted                  a.encryptedFileIsReady   { display: inline; }
-form.process.encrypted.withHintToSave   a.encryptedFileIsReady   { display: none;   }
-form.process.encrypted.withHintToSave   a.saveEncryptedFile      { display: inline; }
-form.process.decrypting                 a.decrypting             { display: inline; }
-form.process.decrypted                  a.decryptedFileIsReady   { display: inline; }
-form.process.decrypted.withHintToSave   a.decryptedFileIsReady   { display: none;   }
-form.process.decrypted.withHintToSave   a.saveDecryptedFile      { display: inline; }
-form.encrypt.process.failed             a.encryptOperationFailed { display: inline; }
-form.decrypt.process.failed             a.decryptOperationFailed { display: inline; }
-
-form.process div.infoContainer a.saveEncryptedFile,
-form.process div.infoContainer a.saveDecryptedFile {
-	color: white;
-}
-
-form.process span.fileSize {
+form.process div.infoContainer a.fileSize {
 	margin: 0px 2px 0px 0px;
 }
 
-form.process.encrypted.withHintToSave span.fileSize,
-form.process.decrypted.withHintToSave span.fileSize {
+form.process div.infoContainer > div {
+	position: absolute;
+	display: none;
+	bottom: 0px;
+	transition: bottom 200ms ease-out;
+}
+
+/* Toggle random name and original name */
+
+form.process.unprocessed div.setRandomName,
+form.process.unprocessed div.setOriginalName,
+form.process.encrypting  div.setRandomName,
+form.process.encrypting  div.setOriginalName {
+	display: block;
+	bottom: -15px;
+}
+
+form.process.unprocessed div.setRandomName,
+form.process.unprocessed.withRandomName div.setOriginalName {
+	bottom:  0px;
+}
+
+form.process.encrypting div.setRandomName,
+form.process.encrypting.withRandomName div.setOriginalName {
+	bottom: 15px;
+}
+
+form.process.unprocessed.withRandomName div.setRandomName {
+	bottom: 15px;
+}
+
+/* Encrypting/Decrypting bit by bit ... */
+
+form.process.unprocessed div.encrypting,
+form.process.encrypting  div.encrypting,
+form.process.encrypted   div.encrypting,
+form.process.decrypting  div.decrypting,
+form.process.decrypted   div.decrypting {
+	display: block;
+	bottom: -15px;
+}
+form.process.encrypting div.encrypting,
+form.process.decrypting div.decrypting {
+	bottom:   0px;
+}
+form.process.encrypted  div.encrypting,
+form.process.decrypted  div.decrypting {
+	bottom:  15px;
+}
+
+/* Encrypted/Decrypted file is ready */
+
+form.process.encrypting div.encryptedFileIsReady,
+form.process.encrypted  div.encryptedFileIsReady,
+form.process.decrypting div.decryptedFileIsReady,
+form.process.decrypted  div.decryptedFileIsReady {
+	display: block;
+	bottom: -15px;
+}
+form.process.encrypted  div.encryptedFileIsReady,
+form.process.decrypted  div.decryptedFileIsReady { 
+	bottom:   0px;
+}
+form.process.encrypted.withHintToSave div.encryptedFileIsReady,
+form.process.decrypted.withHintToSave div.decryptedFileIsReady {
+	display: none;
+}
+
+/* Save your encrypted/decrypted file */
+
+form.process.encrypted.withHintToSave div.saveEncryptedFile,
+form.process.decrypted.withHintToSave div.saveDecryptedFile {
+	display: block;
 	color: white;
 }
 
-form.process.failed span.fileSize {
-	display: none;
+/* Encryption/Decryption failed */
+
+form.process.encrypt.failed div.encryptOperationFailed,
+form.process.decrypt.failed div.decryptOperationFailed {
+	display: block;
 }
 
 /* Link to save file (height is updated programatically in ui.js) */

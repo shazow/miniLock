@@ -221,7 +221,7 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	}
 
 	// Render the size of the input file. 
-	$('form.process span.fileSize').html(miniLock.UI.readableFileSize(file.size))
+	$('form.process a.fileSize').html(miniLock.UI.readableFileSize(file.size))
 	
 	// Insert the session ID if the audience list is empty.
 	if ($('form.process div.blank.identity').size() === $('form.process div.identity').size()) {
@@ -254,7 +254,7 @@ $('form.process').on('encrypt:complete', function(event, file, senderID) {
 	$('form.process').addClass('encrypted')
 	
 	// Render encrypted file size.
-	$('form.process span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+	$('form.process a.fileSize').text(miniLock.UI.readableFileSize(file.size))
 
 	// Render link to save encrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
@@ -283,7 +283,7 @@ $('form.process').on('encrypt:failed', function(event, errorMessage) {
 })
 
 // Set a random filename and put the original on the shelf.
-$('form.process').on('mousedown', 'a.setRandomName', function() {
+$('form.process').on('mousedown', 'div.setRandomName a.control', function() {
 	var randomName = miniLock.util.getRandomFilename()
 	$('form.process').addClass('withRandomName')
 	$('form.process div.original.name').addClass('shelved')	
@@ -294,7 +294,7 @@ $('form.process').on('mousedown', 'a.setRandomName', function() {
 })
 
 // Restore the original filename and deactivate the random one.
-$('form.process').on('mousedown', 'a.setOriginalName', function() {
+$('form.process').on('mousedown', 'div.setOriginalName a.control', function() {
 	var originalName = $('form.process div.original.name input').val()
 	$('form.process').removeClass('withRandomName')
 	$('form.process div.original.name').removeClass('shelved')
@@ -434,7 +434,7 @@ $('form.process').on('decrypt:complete', function(event, file, senderID) {
 	}
 	
 	// Render decrypted file size.
-	$('form.process span.fileSize').text(miniLock.UI.readableFileSize(file.size))
+	$('form.process a.fileSize').text(miniLock.UI.readableFileSize(file.size))
 
 	// Render link to save decrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
