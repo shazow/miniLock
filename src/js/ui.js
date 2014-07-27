@@ -306,7 +306,7 @@ $('form.process').on('input', 'div.identity', function() {
 			$(this).addClass('session')
 			$(this).find('label').text('Me')
 		}
-		if (! miniLock.util.validateID(inputID)) {
+		if (!miniLock.util.validateID(inputID)) {
 			$(this).addClass('invalid')
 			$(this).find('label').text('Invalid')
 			if (inputID.length < 44){ $(this).find('label').text('Too short') }
