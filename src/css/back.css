@@ -595,6 +595,7 @@ form.process div.identity label:after {
 	border-left-color: #A3B6CC;
 }
 
+form.process div.identity label,
 form.process div.blank.identity label,
 form.process div.expired.session.identity label,
 form.process div.expired.invalid.identity label {
