@@ -586,4 +586,22 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 // $('form.unlockForm').submit()
 
+// Temporarily add 'flip' to <div class="squareBack"> when you are working 
+// on the design of a screen on the back-side. That way you don’t need to go
+// through the time consuming process of selecting a file and setting input
+// before you see your code changes on screen.
+//
+// Change the class of <form class="process"> while your working on the 'flip' 
+// side see fast previews of every state of the file processing flow. 
+// 
+// For example:
+//   1. Open index.html
+//   2. Add class 'flip' to <div class="squareBack">
+//   3. Replace class 'unprocessed' with 'decrypting' on <form class="process">
+//   4. Save index.html
+//   5. Reload your browser to see the decrypting screen.
+//   6. Make CSS changes and save them.
+//   7. Reload your browser to see the decrypting screen.
+//   8. and on and on...
+
 })
