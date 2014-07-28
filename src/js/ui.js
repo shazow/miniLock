@@ -475,11 +475,10 @@ $('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){
 })
 
 // Remove these classes to reset the file processing <form>.
-miniLock.UI.resetProcessFormClasses = '' +
-	+ 'unprocessed withSuspectFilename '
-	+ 'encrypting decrypting '
-	+ 'encrypted decrypted ' 
-	+ 'encrypt decrypt failed '
+miniLock.UI.resetProcessFormClasses = 'unprocessed withSuspectFilename '
+																		+ 'encrypting decrypting '
+																		+ 'encrypted decrypted ' 
+																		+ 'encrypt decrypt failed '
 
 miniLock.UI.renderAllFilenameTags = function(filenames){
 	$('form.process div.name').removeClass('activated shelved expired')
