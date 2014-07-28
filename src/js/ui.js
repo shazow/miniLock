@@ -569,7 +569,7 @@ miniLock.UI.fileOperationIsComplete = function(file, operation, senderID) {
 // decrypt or encrypt operation has failed.
 // Operation argument is either 'encrypt' or 'decrypt'.
 miniLock.UI.fileOperationHasFailed = function(operation, errorMessage) {
-	$('form.process').trigger(operation+':failed', 'miniLock '+errorMessage+".")
+	$('form.process').trigger(operation+':failed', 'miniLock '+errorMessage+'.')
 }
 
 // Convert an integer from bytes into a readable file size.
