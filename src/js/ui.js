@@ -3,7 +3,7 @@
 
 miniLock.UI = {}
 
-// Automatically setup and start the onscreen interface when the 
+// Automatically setup and start the onscreen interface when the
 // 'startOnLoad' class is present on <body>. Guards against running
 // setup and start functions in the test kit.
 $(window).load(function() {
@@ -271,10 +271,6 @@ $('form.process').on('encrypt:complete', function(event, file) {
 	}).toArray()
 	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	var recipientsSummary = miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID)
-	// Output: {
-	//	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
-	//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
-	// }
 	if (
 		recipientsSummary.senderCanDecryptFile
 	) {
@@ -642,7 +638,7 @@ miniLock.UI.getBasenameAndExtensions = function(filename) {
 // Input: Recipient IDs (Array), sender's miniLock ID (String)
 // Output: {
 //	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
-//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
+//	totalRecipients: Number of total recipients, not including sender, if applicable (Number)
 // }
 miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 	var totalRecipients      = recipientIDs.length
@@ -675,7 +671,7 @@ miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 // $('form.process div.identity:first label').text('Me')
 // $('form.process div.identity:first input.code').val('8xC1iX3zKUcRn1yo2E2KyAoMvyFqE6dpecq4QHsqGVZH')
 // $('form.process').trigger(
-// 	'encrypt:setup', 
+// 	'encrypt:setup',
 // 	{ name: 'Alice Passport Scan.jpg', size: 98320 }
 // )
 
