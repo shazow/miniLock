@@ -1,16 +1,30 @@
+(function(){
+'use strict';
+
 miniLock.UI = {}
 
+// Automatically setup and start the onscreen interface when the 
+// 'startOnLoad' class is present on <body>. Guards against running
+// setup and start functions in the test kit.
 $(window).load(function() {
-'use strict';
-// -----------------------
-// UI Startup
-// -----------------------
+	if ($(document.body).hasClass('startOnLoad')) {
+		miniLock.UI.setup()
+		miniLock.UI.start()
+	}
+})
 
-$('[data-utip]').utip()
-$('input.miniLockEmail').focus()
-$('span.dragFileInfo').text(
-	$('span.dragFileInfo').data('select')
-)
+// UI Startup
+miniLock.UI.start = function() {
+	$('[data-utip]').utip()
+	$('input.miniLockEmail').focus()
+	$('span.dragFileInfo').text(
+		$('span.dragFileInfo').data('select')
+	)
+}
+
+// - - - - - - - - - - - -
+// Bind to Events
+miniLock.UI.setup = function() {
 
 // -----------------------
 // Unlock UI Bindings
@@ -256,7 +270,7 @@ $('form.process').on('encrypt:complete', function(event, file) {
 		return this.value.trim()
 	}).toArray()
 	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	var recipientsSummary = miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID)
+	var recipientsSummary = miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID)
 	// Output: {
 	//	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
 	//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
@@ -458,7 +472,7 @@ $('form.process').on('decrypt:complete', function(event, file) {
 	// Render name of the input file in the summary the bottom of the screen.
 	$('form.process div.summary').html('Decrypted from ' + Mustache.render(
 		miniLock.templates.filename,
-		miniLock.util.getBasenameAndExtensions(inputName)
+		miniLock.UI.getBasenameAndExtensions(inputName)
 	))
 	// Show the suspect filename notice when applicable.
 	if (miniLock.util.isFilenameSuspicious(outputName)) {
@@ -501,6 +515,10 @@ $('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){
 	$('form.process').toggleClass('withHintToSave')
 })
 
+}
+// - - - - - - - - - - - -
+// End of miniLock.UI.setup()
+
 // Remove these classes to reset the file processing <form>.
 miniLock.UI.resetProcessFormClasses = 'unprocessed withSuspectFilename withoutMyMiniLockID '
 	+ 'encrypting decrypting '
@@ -521,7 +539,7 @@ miniLock.UI.renderFilenameTag = function(className, filename){
 	$('form.process div.'+className+'.name input').val(filename)
 	$('form.process div.'+className+'.name h1').html(Mustache.render(
 		miniLock.templates.filename,
-		miniLock.util.getBasenameAndExtensions(filename)
+		miniLock.UI.getBasenameAndExtensions(filename)
 	))
 }
 
@@ -605,14 +623,51 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 	}, 1)
 }
 
+// Input: Filename (String), Offset (Number)
+// Output: Object consisting of basename and extensions.
+miniLock.UI.getBasenameAndExtensions = function(filename) {
+	var pattern = /\.\w+$/
+	var basename = filename + ''
+	var extensions = []
+	while (pattern.test(basename)) {
+		extensions.unshift(basename.match(pattern)[0])
+		basename = basename.replace(pattern, '')
+	}
+	return {
+		'basename': basename,
+		'extensions': extensions.join('')
+	}
+}
+
+// Input: Recipient IDs (Array), sender's miniLock ID (String)
+// Output: {
+//	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
+//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
+// }
+miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
+	var totalRecipients      = recipientIDs.length
+	var senderCanDecryptFile = recipientIDs.indexOf(myMiniLockID) === -1 ? false : true
+	if (senderCanDecryptFile) {
+		totalRecipients--
+	}
+	return {
+		senderCanDecryptFile: senderCanDecryptFile,
+		totalRecipients: totalRecipients
+	}
+}
+
 // -----------------------
 // Design & Developer Tools
 // -----------------------
 
 // Uncomment the following to unlock a demo session automatically.
-// $('input.miniLockEmail').val('manufacturing@minilock.io')
-// $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
-// $('form.unlockForm').submit()
+// $(window).load(function() {
+// 	if ($(document.body).hasClass('startOnLoad')) {
+// 		$('input.miniLockEmail').val('manufacturing@minilock.io')
+// 		$('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
+// 		$('form.unlockForm').submit()
+// 	}
+// })
 
 // Quickly setup the default encryption setup screen for design work:
 // $('div.squareContainer').addClass('flip')
@@ -633,4 +688,4 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // 	'decrypt:failed', 'could not validate sender ID'
 // )
 
-})
+})()
