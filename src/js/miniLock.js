@@ -77,6 +77,46 @@ miniLock.util.isFilenameSuspicious = function(filename) {
 	return (suspicious.indexOf(extension) >= 0)
 }
 
+// Input: Filename (String), Offset (Number)
+// Output: Object consisting of basename and extensions.
+miniLock.util.getBasenameAndExtensions = function(filename) {
+	var pattern = /\.\w+$/
+	var basename = filename + ''
+	var extensions = []
+	while (pattern.test(basename)) {
+		extensions.unshift(basename.match(pattern)[0])
+		basename = basename.replace(pattern, '')
+	}
+	return {
+		'basename': basename,
+		'extensions': extensions.join('')
+	}
+}
+
+// Input: Recipient IDs (Array), Session ID (String)
+// Output: String of text that describes who can decrypt a file
+miniLock.util.summarizeRecipients = function(recipientIDs, sessionID) {
+	var numberOfRecipients = recipientIDs.length
+	var recipientsIncludesSessionID = recipientIDs.indexOf(sessionID) === -1 ? false : true
+	var people = function(size) { return (size === 1) ? 'person' : 'people' }
+	if (recipientsIncludesSessionID) {
+		if (numberOfRecipients === 1) {
+			return 'Only you can decrypt this file.'
+		} else {
+			return 'You and '+(numberOfRecipients - 1)+' other '+people(numberOfRecipients - 1)+' '
+					 + 'can decrypt this file.'
+		}
+	} else {
+		if (numberOfRecipients === 1) {
+			return 'One person can decrypt this file. You can’t.'
+		} else {
+			return numberOfRecipients+' other '+people(numberOfRecipients)+' '
+					 + 'can decrypt this file. You can’t.'
+		}
+	}
+}
+
+
 // -----------------------
 // Cryptographic Functions
 // -----------------------
@@ -93,18 +133,7 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 // Process messages from the crypto worker.
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
-	if (message.error) {
-		if (message.operation === 'encrypt') {
-			console.log('Encryption error')
-			miniLock.UI.animateProgressBarToShowError(message.operation)
-		}
-		if (message.operation === 'decrypt') {
-			console.log('Decryption error')
-			miniLock.UI.animateProgressBarToShowError(message.operation)
-		}
-		return false
-	}
-	else {
+	if (!message.error) {
 		if (message.operation === 'encrypt') {
 			message.blob = new Blob([
 				'miniLockFileYes.',
@@ -129,9 +158,15 @@ miniLock.crypto.worker.onmessage = function(message) {
 	}
 }
 
+// Process errors thrown in the crypto worker.
+miniLock.crypto.worker.onerror = function(error){
+	var operation = /Decrypt/.test(error.message) ? 'decrypt' : 'encrypt'
+	miniLock.UI.fileOperationHasFailed(operation, error)
+}
+
 // Generic callback for use with the above function.
 miniLock.crypto.workerEncryptionCallback = function(message) {
-	miniLock.UI.save({
+	miniLock.UI.fileOperationIsComplete({
 		name: message.saveName,
 		size: message.blob.size,
 		data: message.blob,
@@ -141,7 +176,7 @@ miniLock.crypto.workerEncryptionCallback = function(message) {
 
 // Generic callback for use with the above function.
 miniLock.crypto.workerDecryptionCallback = function(message) {
-	miniLock.UI.save({
+	miniLock.UI.fileOperationIsComplete({
 		name: message.saveName,
 		size: message.blob.size,
 		data: message.blob,
@@ -331,7 +366,7 @@ miniLock.user.unlock = function(key, salt) {
 //	will take (in seconds), based on file size
 miniLock.user.progressBarEstimate = function(fileSize) {
 	var MBps = 18.3
-	return Math.ceil(fileSize / 1000000 / MBps)
+	return fileSize / 1000000 / MBps
 }
 
 })()

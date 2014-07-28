@@ -4,8 +4,10 @@
 	<title>miniLock</title>
 	<link rel="stylesheet" href="css/lib/reset.css" type="text/css" />
 	<link rel="stylesheet" href="css/lib/jquery.utip.css" type="text/css" />
-	<link rel="stylesheet" href="css/lib/switches.css" type="text/css" />
-	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/all.css" type="text/css" />
+	<link rel="stylesheet" href="css/front.css" type="text/css" />
+	<link rel="stylesheet" href="css/back.css" type="text/css" />
+	<link rel="stylesheet" href="css/typography.css" type="text/css" />
 	<link rel="icon" type="image/png" href="img/icon32.png" />
 	<script type="application/javascript" src="js/lib/mustache.js"></script>
 	<script type="application/javascript" src="js/lib/base58.js"></script>
@@ -21,12 +23,12 @@
 	<script type="application/javascript" src="js/lib/phrase.js"></script>
 	<script type="application/javascript" src="js/ui.js"></script>
 </head>
-<body>
+<body class="lucida-menlo">
 	<div class="squareContainer">
 		<div class="square">
 
 			<div class="squareFront">
-				<!-- File Unlock Screen -->
+				<!-- Unlock Screen -->
 				<div class="unlock screen">
 					<h1>Enter your email and passphrase</h1>
 					<p>
@@ -70,68 +72,116 @@
 			</div>
 
 			<div class="squareBack">
-				<!-- Recipient Select Screen -->
-				<div class="recipientSelect screen">
-					<input type="button" value="&#xf0a4;" class="flipBack" data-utip="Go back" data-utip-gravity="se" />
-					<!-- <input type="button" value="&#xf018;" class="contacts" data-utip="Saved contacts" data-utip-gravity="se" /> -->
-					<form class="recipientForm">
-						<h1>Enter miniLock ID(s) of recipient(s):</h1>
-						<div class="recipientScroller">
-							<input type="text" value="" placeholder="Recipient's miniLock ID" />
+				<!-- File Processing Form: unprocessed, encrypting, encrypted, encrypt failed, decrypting, decrypted, decrypt failed -->
+				<form class="process unprocessed">
+					<div class="scrollingsurface">
+						<header>
+							<div class="statusIcon">
+								<a class="ready octicon">&#xf03f;</a>
+								<a class="processing octicon">&#xf085;</a>
+								<a class="failed octicon">&#xf02d;</a>
+							</div>
+							<div class="nameContainer">
+								<div class="input name">
+									<h1><b class="basename">Alice’s Passport Scan</b><span class="extensions">.jpg</span><span class="miniLockExtension">.minilock</span></h1>
+									<input type="hidden" value="Alice’s Passport Scan.jpg">
+								</div>
+								<div class="activated output name">
+									<h1><b class="basename">Alice’s Passport Scan</b><span class="extensions">.jpg</span><span class="miniLockExtension">.minilock</span></h1>
+									<input type="hidden" value="Alice’s Passport Scan.jpg">
+								</div>
+								<div class="original name">
+									<h3>Original filename:</h3>
+									<h1><b class="basename">Alice’s Passport Scan</b><span class="extensions">.jpg</span><span class="miniLockExtension">.minilock</span></h1>
+									<input type="hidden" value="Alice’s Passport Scan.jpg">
+								</div>
+								<div class="random name">
+									<h1><b class="basename">jKv5Ra96</b><span class="miniLockExtension">.minilock</span></h1>
+									<input type="hidden" value="jKv5Ra96">
+								</div>
+							</div>
+							<div class="infoContainer">
+								<div class="setRandomName"><a class="fileSize">832KB</a> <a class="control">Save with random filename</a></div>
+								<div class="setOriginalName"><a class="fileSize">832KB</a> <a class="control">Save with original filename</a></div>
+								<div class="encrypting">Encrypting bit by bit of <a class="fileSize">832KB</a></div>
+								<div class="decrypting">Decrypting bit by bit of <a class="fileSize">832KB</a></div>
+								<div class="encryptedFileIsReady"><a class="fileSize">832KB</a> Your encrypted file is ready</div>
+								<div class="saveEncryptedFile"><a class="fileSize">832KB</a> Save your encrypted file</div>
+								<div class="decryptedFileIsReady"><a class="fileSize">832KB</a> Your decrypted file is ready</div>
+								<div class="saveDecryptedFile"><a class="fileSize">832KB</a> Save your decrypted file</div>
+								<div class="encryptOperationFailed">Encryption failed</div>
+								<div class="decryptOperationFailed">Decryption failed</div>
+							</div>
+							<a class="fileSaveLink dragout" draggable="true" href=""><span class="assistive text label">Save this file</span></a>
+						</header>
+						
+						<div class="progressBar">
+							<div class="progressBarFill"></div>
 						</div>
-						<br />
-						<label class="switch">
-							<input type="checkbox" class="ios-switch tinyswitch encryptToSelf" />
-							<div><div></div></div>
-							<span class="switchLabel">Encrypt to myself also</span>
-						</label>
-						<label class="switch lastSwitch">
-							<input type="checkbox" class="ios-switch tinyswitch randomizeFilename" />
-							<div><div></div></div>
-							<span class="switchLabel">Save with random file name</span>
-						</label>
-						<input type="button" value="&#xf05d;" class="addAnotherRecipient" data-utip="Add another recipient" data-utip-gravity="sw" />
-						<input type="submit" value="&#xf078;" class="encryptFile" data-utip="Encrypt file" data-utip-gravity="sw" />
-					</form>
-					<div class="contacts">
-					</div>
-				</div>
-				<!-- File Save Screen -->
-				<div class="fileSave screen">
-					<div class="progressBar">
-						<div class="progressBarFill">
-							<span class="progressBarPercentage"
-								data-encryptioncomplete="Encryption complete"
-								data-decryptioncomplete="Decryption complete"
-								data-encryptionerror="Encryption error"
-								data-decryptionerror="Decryption error"
-							></span>
+						
+						<div class="senderID">
+							<h3>Encrypted by</h3>
+							<code>8xC1iX3zKUcRn1yo2E2KyAoMvyFqE6dpecq4QHsqGVZH</code>
 						</div>
-					</div>
-					<div class="saveLink">
-						<div class="fileInfoIcon">
-							&#xf011;
+						
+						<div class="summary">
+							You and three other people can decrypt this file.
 						</div>
-						<div class="fileInfoData">
-							<h2 class="fileName"></h2>
-							<span class="fileSender"></span>
-							<a href="" class="dragout fileSaveLink" draggable="true">
-								<span class="saveButton">
-									<span class="octicon">&#xf0a3;</span>Save file (<span class="fileSize"></span>)
-								</span>
-							</a>
-							<div class="filenameSuspicious">
-								<span>
-									miniLock cannot guarantee the safety of this file.
-									<br />
-									Never open files from people you don't trust.
-								</span>
+
+						<div class="suspectFilenameNotice">
+							miniLock cannot guarantee the safety of this file.
+							<br />
+							Never open files from people you don't trust.
+						</div>
+
+						<div class="failureNotice">
+							miniLock could not parse file header.
+						</div>
+												
+						<div class="recipients">
+							<header>
+								<h2>Who is allowed to open this file?</h2>
+								<h3 class="help">Paste a miniLock ID for each person who needs access.</h3>
+								<h3 class="prompt" hidden>Please add at least one miniLock ID to the list.</h3>
+							</header>
+							<div class="miniLockIDList">
+								<div class="session identity">
+									<label>Me</label>
+									<input class="code" type="text" placeholder="Add another miniLock ID" value="8xC1iX3zKUcRn1yo2E2KyAoMvyFqE6dpecq4QHsqGVZH" spellcheck="false" />
+									<input class="remove" type="button" value="&#xf081;" tabindex="-1" />
+								</div>
+								<div class="blank identity">
+									<label></label>
+									<input class="code" type="text" placeholder="Add another miniLock ID" spellcheck="false" />
+									<input class="remove" type="button" value="&#xf081;" tabindex="-1" />
+								</div>
+								<div class="blank identity">
+									<label></label>
+									<input class="code" type="text" placeholder="Add another miniLock ID" spellcheck="false" />
+									<input class="remove" type="button" value="&#xf081;" tabindex="-1" />
+								</div>
+								<div class="blank identity">
+									<label></label>
+									<input class="code" type="text" placeholder="Add another miniLock ID" spellcheck="false" />
+									<input class="remove" type="button" value="&#xf081;" tabindex="-1" />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+					
+					<div class="missingSessionIDnotice">
+						<span class="octicon">&#xf08f;</span>
+						<span class="text">
+							You won’t be able to decrypt this file because your ID is not in the list.
+							<a class="control addSessionIDtoRecipientList">Add my miniLock ID to the list</a>.
+						</span>
+					</div>
+					
+					<input class="encrypt button" value="&#xf078;" type="submit" tabindex="-1" data-utip="Encrypt file" data-utip-gravity="s" />
+					<input class="flipBack button" value="&#xf0a4;" type="button" tabindex="-1" data-utip="Go back" data-utip-gravity="e" />
+				</form>
 			</div>
-
+			
 		</div>
 	</div>
 </body>
