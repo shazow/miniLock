@@ -1,16 +1,30 @@
+(function(){
+'use strict';
+
 miniLock.UI = {}
 
+// Automatically setup and start the onscreen interface when the 
+// 'startOnLoad' class is present on <body>. Guards against running
+// setup and start functions in the test kit.
 $(window).load(function() {
-'use strict';
-// -----------------------
-// UI Startup
-// -----------------------
+	if ($(document.body).hasClass('startOnLoad')) {
+		miniLock.UI.setup()
+		miniLock.UI.start()
+	}
+})
 
-$('[data-utip]').utip()
-$('input.miniLockEmail').focus()
-$('span.dragFileInfo').text(
-	$('span.dragFileInfo').data('select')
-)
+// UI Startup
+miniLock.UI.start = function() {
+	$('[data-utip]').utip()
+	$('input.miniLockEmail').focus()
+	$('span.dragFileInfo').text(
+		$('span.dragFileInfo').data('select')
+	)
+}
+
+// - - - - - - - - - - - -
+// Bind to Events
+miniLock.UI.setup = function() {
 
 // -----------------------
 // Unlock UI Bindings
@@ -501,6 +515,10 @@ $('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){
 	$('form.process').toggleClass('withHintToSave')
 })
 
+}
+// - - - - - - - - - - - -
+// End of miniLock.UI.setup()
+
 // Remove these classes to reset the file processing <form>.
 miniLock.UI.resetProcessFormClasses = 'unprocessed withSuspectFilename withoutMyMiniLockID '
 	+ 'encrypting decrypting '
@@ -608,10 +626,15 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // -----------------------
 // Design & Developer Tools
 // -----------------------
+
 // Uncomment the following to unlock a demo session automatically.
-// $('input.miniLockEmail').val('manufacturing@minilock.io')
-// $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
-// $('form.unlockForm').submit()
+// $(window).load(function() {
+// 	if ($(document.body).hasClass('startOnLoad')) {
+// 		$('input.miniLockEmail').val('manufacturing@minilock.io')
+// 		$('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
+// 		$('form.unlockForm').submit()
+// 	}
+// })
 
 // Temporarily add 'flip' to <div class="squareBack"> when you are working
 // on the design of a screen on the back-side. That way you don’t need to go
@@ -631,4 +654,4 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 //   7. Reload your browser to see the decrypting screen.
 //   8. and on and on...
 
-})
+})()
