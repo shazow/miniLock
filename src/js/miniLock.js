@@ -93,7 +93,10 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 // Process messages from the crypto worker.
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
-	if (message.error) {
+	if (
+		message.hasOwnProperty('error')
+		&& (typeof(message.error) === 'number')
+	) {
 		miniLock.UI.fileOperationHasFailed(message.operation, message.error)
 	}
 	else {

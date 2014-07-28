@@ -199,7 +199,7 @@ if (message.operation === 'encrypt') {
 		if (!encrypted) {
 			postMessage({
 				operation: 'encrypt',
-				error: 'general encryption error'
+				error: 1
 			})
 			throw new Error('miniLock: Encryption failed - general encryption error')
 			return false
@@ -211,7 +211,6 @@ if (message.operation === 'encrypt') {
 			saveName: message.saveName,
 			header: header,
 			senderID: Base58.encode(message.myPublicKey),
-			error: false,
 			callback: message.callback
 		})
 	})()
@@ -240,9 +239,9 @@ if (message.operation === 'decrypt') {
 		catch(error) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'could not parse file header'
+				error: 3
 			})
-			throw new Error('miniLock: Decryption failed - could not parse file header')
+			throw new Error('miniLock: Decryption failed - could not parse header')
 			return false
 		}
 		if (
@@ -251,7 +250,7 @@ if (message.operation === 'decrypt') {
 		) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 4
 			})
 			throw new Error('miniLock: Decryption failed - invalid header version')
 			return false
@@ -262,7 +261,7 @@ if (message.operation === 'decrypt') {
 		) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'could not validate sender ID'
+				error: 5
 			})
 			throw new Error('miniLock: Decryption failed - could not validate sender ID')
 			return false
@@ -282,9 +281,9 @@ if (message.operation === 'decrypt') {
 				catch(err) {
 					postMessage({
 						operation: 'decrypt',
-						error: 'could not parse file header'
+						error: 3
 					})
-					throw new Error('miniLock: Decryption failed - could not parse file header')
+					throw new Error('miniLock: Decryption failed - could not parse header')
 					return false
 				}
 				actualFileInfo = nacl.box.open(
@@ -302,18 +301,25 @@ if (message.operation === 'decrypt') {
 					catch(err) {
 						postMessage({
 							operation: 'decrypt',
-							error: 'could not parse file header'
+							error: 3
 						})
-						throw new Error('miniLock: Decryption failed - could not parse file header')
+						throw new Error('miniLock: Decryption failed - could not parse header')
 						return false
 					}
 					break
 				}
 			}
 		}
+		if (!actualFileInfo) {
+			postMessage({
+				operation: 'decrypt',
+				error: 6
+			})
+			throw new Error('miniLock: Decryption failed - File is not encrypted for this recipient')
+			return false
+		}
 		if (
-			!actualFileInfo
-			|| !({}).hasOwnProperty.call(actualFileInfo, 'fileKey')
+			!({}).hasOwnProperty.call(actualFileInfo, 'fileKey')
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileKey, 'data')
 			|| !actualFileInfo.fileKey.data.length
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileKey, 'nonce')
@@ -330,9 +336,9 @@ if (message.operation === 'decrypt') {
 		) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'could not parse file header'
+				error: 3
 			})
-			throw new Error('miniLock: Decryption failed - could not parse file header')
+			throw new Error('miniLock: Decryption failed - could not parse header')
 			return false
 		}
 		try {
@@ -353,17 +359,17 @@ if (message.operation === 'decrypt') {
 		catch(err) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'could not decrypt fileKey or fileName'
+				error: 3
 			})
-			throw new Error('miniLock: Decryption failed - could not decrypt fileKey or fileName')
+			throw new Error('miniLock: Decryption failed - could not parse header')
 			return false
 		}
 		if (!actualFileKey || !actualFileName) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'could not decrypt fileKey or fileName'
+				error: 3
 			})
-			throw new Error('miniLock: Decryption failed - could not decrypt fileKey or fileName')
+			throw new Error('miniLock: Decryption failed - could not parse header')
 			return false
 		}
 		while (
@@ -381,7 +387,7 @@ if (message.operation === 'decrypt') {
 		if (!decrypted) {
 			postMessage({
 				operation: 'decrypt',
-				error: 'general decryption error'
+				error: 2
 			})
 			throw new Error('miniLock: Decryption failed - general decryption error')
 			return false
@@ -392,7 +398,6 @@ if (message.operation === 'decrypt') {
 			name: actualFileName,
 			saveName: actualFileName,
 			senderID: actualFileInfo.senderID,
-			error: false,
 			callback: message.callback
 		})
 	})()

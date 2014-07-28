@@ -299,17 +299,19 @@ $('form.process').on('encrypt:complete', function(event, file) {
 })
 
 // Display encryption error message, reset progress bar, and then flip back.
-$('form.process').on('encrypt:failed', function(event, errorMessage) {
+$('form.process').on('encrypt:failed', function(event, errorCode) {
 	$('form.process').removeClass('encrypting')
 	$('form.process').addClass('encrypt failed')
-	$('form.process div.failureNotice').text(errorMessage)
+	$('form.process div.failureNotice').text(
+		$('form.process div.failureNotice').data('error-' + errorCode)
+	)
 	$('form.process div.progressBarFill').css({
 		'width': '0',
 		'transition': 'none'
 	})
 	setTimeout(function() {
 		miniLock.UI.flipToFront()
-	}, 5000)
+	}, 7500)
 })
 
 // Set a random filename and put the original on the shelf.
@@ -481,17 +483,20 @@ $('form.process').on('decrypt:complete', function(event, file) {
 })
 
 // Display decryption error message, reset progress bar, and then flip back.
-$('form.process').on('decrypt:failed', function(event, errorMessage) {
+$('form.process').on('decrypt:failed', function(event, errorCode) {
 	$('form.process').removeClass('decrypting')
 	$('form.process').addClass('decrypt failed')
-	$('form.process div.failureNotice').text(errorMessage)
+	console.log(errorCode)
+	$('form.process div.failureNotice').text(
+		$('form.process div.failureNotice').data('error' + errorCode)
+	)
 	$('form.process div.progressBarFill').css({
 		'width': '0%',
 		'transition': 'none'
 	})
 	setTimeout(function() {
 		miniLock.UI.flipToFront()
-	}, 5000)
+	}, 7500)
 })
 
 // -----------------------
@@ -586,8 +591,8 @@ miniLock.UI.fileOperationIsComplete = function(file, operation, senderID) {
 // The crypto worker calls this method when a
 // decrypt or encrypt operation has failed.
 // Operation argument is either 'encrypt' or 'decrypt'.
-miniLock.UI.fileOperationHasFailed = function(operation, errorMessage) {
-	$('form.process').trigger(operation+':failed', 'miniLock '+errorMessage+'.')
+miniLock.UI.fileOperationHasFailed = function(operation, errorCode) {
+	$('form.process').trigger(operation+':failed', errorCode)
 }
 
 // Convert an integer from bytes into a readable file size.

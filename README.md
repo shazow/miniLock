@@ -140,10 +140,23 @@ If the authenticated asymmetric decryption of any header object fails, or the au
 ###6. Key Identity Authentication
 In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.
 
-###7. Caveats
+###7. Error Codes
+miniLock will output these error codes when running into encryption or decryption errors. The user interface can then handle these errors in order to display information that is relevant to users:
+
+**Encryption errors**
+* `Error 1`: General encryption error
+
+**Decryption errors**
+* `Error 2`: General decryption error
+* `Error 3`: Could not parse header
+* `Error 4`: Invalid header version
+* `Error 5`: Could not validate sender ID
+* `Error 6`: File is not encrypted for this recipient
+
+###8. Caveats
 miniLock is not intended to protect against malicious files being sent and received. It is the user's responsibility to vet the safety of the files they send or receive over miniLock. miniLock cannot protect against malware being sent over it.
 
-###8. Thanks
+###9. Thanks
 Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback on an early draft of this document.
 
 Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock's design, which introduced sender ID anonymity in the ciphertext.
@@ -154,7 +167,7 @@ Sincere thanks are presented to Dr. Mario Heiderich and his team at [Cure53](htt
 
 Finally, sincere thanks are presented to the wonderful, constructive members of the miniLock community who have contributed many improvements and ideas to the miniLock design and codebase. You rock!
 
-###9. Credits
+###10. Credits
 **miniLock**
 * Copyright 2014 [Nadim Kobeissi](http://nadim.computer). Released under the AGPLv3 license.
 
