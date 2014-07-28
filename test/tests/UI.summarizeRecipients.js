@@ -1,13 +1,13 @@
 // Test for summarizing the recipients of an encrypted file.
-QUnit.test('summarizeRecipients', function(assert) {
+QUnit.test('UI.summarizeRecipients', function(assert) {
 	'use strict';
 	var recipientIDs
 	var myMiniLockID = '7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS'
 
 	recipientIDs = ['7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS']
-	console.log(miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID))
+	console.log(miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID))
 	assert.propEqual(
-		miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID),
+		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 0
@@ -19,7 +19,7 @@ QUnit.test('summarizeRecipients', function(assert) {
 		'6msgdRKNGxSmqrxsbUxFwawhRzcAns9PCumStmUtJFHv'
 	]
 	assert.propEqual(
-		miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID),
+		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 1
@@ -32,7 +32,7 @@ QUnit.test('summarizeRecipients', function(assert) {
 		'CEfTr4iKoh4C71EKXB3Fji6aFEhRvyBGqqpHRBzGsVCb'
 	]
 	assert.propEqual(
-		miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID),
+		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 2
@@ -41,7 +41,7 @@ QUnit.test('summarizeRecipients', function(assert) {
 
 	recipientIDs = ['6msgdRKNGxSmqrxsbUxFwawhRzcAns9PCumStmUtJFHv']
 	assert.propEqual(
-		miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID),
+		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
 			senderCanDecryptFile: false,
 			totalRecipients: 1
@@ -53,7 +53,7 @@ QUnit.test('summarizeRecipients', function(assert) {
 		'CEfTr4iKoh4C71EKXB3Fji6aFEhRvyBGqqpHRBzGsVCb'
 	]
 	assert.propEqual(
-		miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID),
+		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
 			senderCanDecryptFile: false,
 			totalRecipients: 2
