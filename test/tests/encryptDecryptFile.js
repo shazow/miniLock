@@ -20,6 +20,8 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 				Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
 				'miniLock.test.encryptFileCallback'
 			)
+		}, function() {
+			return false
 		})
 	}
 	xhr.send()
@@ -35,6 +37,8 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 				Base58.decode('B47Ez1ftjTPSL5Mu74YaQ33WAbDjNcBwYWnx7Fp6kvmr'),
 				'miniLock.test.decryptFileCallback'
 			)
+		}, function() {
+			return false
 		})
 	}
 	miniLock.test.decryptFileCallback = function(message) {

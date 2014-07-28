@@ -286,22 +286,18 @@ miniLock.file = {}
 //		size: File size (bytes),
 //		data: File data (ArrayBuffer)
 //	}
-miniLock.file.get = function(file, callback) {
+// Error callback which is called in case of error (no parameters)
+miniLock.file.get = function(file, callback, errorCallback) {
 	var reader = new FileReader()
 	reader.onload = function(readerEvent) {
-		if (
-			callback &&
-			(typeof(callback) === 'function')
-		) {
-			return callback({
-				name: file.name,
-				size: file.size,
-				data: readerEvent.target.result
-			})
-		}
-		else {
-			throw new Error('miniLock.file.get: Invalid callback')
-		}
+		return callback({
+			name: file.name,
+			size: file.size,
+			data: readerEvent.target.result
+		})
+	}
+	reader.onerror = function() {
+		return errorCallback()
 	}
 	reader.readAsArrayBuffer(file)
 }

@@ -122,8 +122,8 @@ div.fileSelector span.dragFileInfo {
 	border-radius: 6px;
 	padding: 1px 6px;
 	text-align: center;
-	margin: 40px auto;
-	width: 200px;
+	margin: 40px auto 0 auto;
+	width: 265px;
 	font-size: 0.8em;
 	font-weight: bold;
 	display: block;
@@ -143,9 +143,8 @@ div.myMiniLockID * {
 	vertical-align: top;
 	height: 25px;
 	margin: 0 -1px;
-	padding: 5px;
+	padding: 5px 10px;
 	border: 0;
-	font-weight: bold;
 }
 
 div.myMiniLockID span {
@@ -156,15 +155,14 @@ div.myMiniLockID span {
 	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
+	font-weight: bold;
 }
 
 div.myMiniLockID code {
 	border-radius: 0 5px 5px 0;
-	font-size: 0.75em;
+	font-size: 0.8em;
 	font-family: monospace;
 	background: rgba(255, 255, 255, 0.1);
 	-webkit-user-select: text;
-	margin-left: -2px;
+	margin-left: -4px;
 }
-
-
