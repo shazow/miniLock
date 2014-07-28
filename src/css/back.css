@@ -91,20 +91,30 @@ form.process > div.scrollingsurface {
 form.process > div.scrollingsurface > header {
 	position: relative;
 	height: 270px;
-	background-image: url('../img/backSideBackground.png');
-	background-position: 55px 218px;
-	background-repeat: no-repeat;
-	background-size: 45px; auto;
 }
 
-/* File status icon */
+/* File icon */
+
+form.process div.fileIcon {
+	position: absolute;
+	left: 55px;
+	width: 45px;
+	bottom: 0px;
+	height: 50px;
+	line-height: 51px;
+	font-size: 57px;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+/* Status icon (processing pulse, download arrow or alert triangle) */
 
 form.process div.statusIcon {
 	position: absolute;
-	left: 60px;
+	left: 55px;
 	bottom: 0px;
-	height: 40px;
-	width: 40px;
+	height: 45px;
+	width: 45px;
 }
 
 form.process div.statusIcon a.octicon {
@@ -117,10 +127,11 @@ form.process div.statusIcon a.octicon {
 form.process div.statusIcon a.ready.octicon,
 form.process div.statusIcon a.processing.octicon {
 	position: absolute;
-	bottom: -12px;
-	margin: 2px;
-	height: 28px;
-	width: 28px;
+	bottom: -10px;
+	left: 5px;
+	right: 5px;
+	height: 27px;
+	width: 27px;
 	overflow: hidden;
 	color: white;
 	border: 4px solid white;
