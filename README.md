@@ -57,7 +57,7 @@ The user's `miniLock ID` is a Base58 representation of their public key, meant t
 ###3. File format
 miniLock saves encrypted files as binary blobs with the following format:
 
-```
+```javascript
 Bytes signaling beginning of header
 Header bytes
 Bytes signaling ending of header
@@ -66,7 +66,7 @@ Ciphertext bytes
 
 The beginning of the header is signaled with the following 16 bytes:
 
-```
+```javascript
 0x6d, 0x69, 0x6e, 0x69,
 0x4c, 0x6f, 0x63, 0x6b,
 0x46, 0x69, 0x6c, 0x65,
@@ -75,7 +75,7 @@ The beginning of the header is signaled with the following 16 bytes:
 
 The end of the header is signaled with the following 16 bytes:
 
-```
+```javascript
 0x6d, 0x69, 0x6e, 0x69,
 0x4c, 0x6f, 0x63, 0x6b,
 0x45, 0x6e, 0x64, 0x49,
@@ -84,28 +84,28 @@ The end of the header is signaled with the following 16 bytes:
 
 The header itself is a stringified JSON object which contains information necessary for the recipients to decrypt the file. The JSON object has the following format:
 
-```
+```json
 {
-	version: Version of the miniLock protocol used for this file (Currently 1) (Number)
-	ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
-	fileInfo: {
-		(One copy of the below object for every recipient)
-		Unique nonce for decrypting this object (Base64): {
-			fileKey: {
-				data: Key for file decryption, encrypted using long-term secret key to recipient's long-term public key (Base64),
-				nonce: Unique nonce for the above (Base64)
-			}
-			fileName: {
-				data: The file's original filename, encrypted using long-term secret key to recipient's long-term public key (Base64),
-				nonce: Unique nonce for the above (Base64)
-			}
-			fileNonce: Nonce for file decryption (Base64),
-			senderID: Sender's miniLock ID (Base58)
+version: Version of the miniLock protocol used for this file (Currently 1) (Number)
+ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
+fileInfo: {
+	(One copy of the below object for every recipient)
+	Unique nonce for decrypting this object (Base64): {
+		fileKey: {
+			data: Key for file decryption, encrypted using long-term secret key to recipient's long-term public key (Base64),
+			nonce: Unique nonce for the above (Base64)
 		}
-		(Encrypted with shared secret derived from the sender’s
-		 private ephemeral key and recipient's long-term public key.
-		 Stored as Base64 string.)
+		fileName: {
+			data: Original filname, encrypted using long-term secret key to recipient's long-term public key (Base64),
+			nonce: Unique nonce for the above (Base64)
+		}
+		fileNonce: Nonce for file decryption (Base64),
+		senderID: Sender's miniLock ID (Base58)
 	}
+	(Encrypted with shared secret derived from the sender’s
+	 private ephemeral key and recipient's long-term public key.
+	 Stored as Base64 string.)
+}
 }
 ```
 
