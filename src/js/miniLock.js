@@ -93,29 +93,22 @@ miniLock.util.getBasenameAndExtensions = function(filename) {
 	}
 }
 
-// Input: Recipient IDs (Array), Session ID (String)
-// Output: String of text that describes who can decrypt a file
-miniLock.util.summarizeRecipients = function(recipientIDs, sessionID) {
-	var numberOfRecipients = recipientIDs.length
-	var recipientsIncludesSessionID = recipientIDs.indexOf(sessionID) === -1 ? false : true
-	var people = function(size) { return (size === 1) ? 'person' : 'people' }
-	if (recipientsIncludesSessionID) {
-		if (numberOfRecipients === 1) {
-			return 'Only you can decrypt this file.'
-		} else {
-			return 'You and '+(numberOfRecipients - 1)+' other '+people(numberOfRecipients - 1)+' '
-					 + 'can decrypt this file.'
-		}
-	} else {
-		if (numberOfRecipients === 1) {
-			return 'One person can decrypt this file. You can’t.'
-		} else {
-			return numberOfRecipients+' other '+people(numberOfRecipients)+' '
-					 + 'can decrypt this file. You can’t.'
-		}
+// Input: Recipient IDs (Array), sender's miniLock ID (String)
+// Output: {
+//	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
+//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
+// }
+miniLock.util.summarizeRecipients = function(recipientIDs, myMiniLockID) {
+	var totalRecipients      = recipientIDs.length
+	var senderCanDecryptFile = recipientIDs.indexOf(myMiniLockID) === -1 ? false : true
+	if (senderCanDecryptFile) {
+		totalRecipients--
+	}
+	return {
+		senderCanDecryptFile: senderCanDecryptFile,
+		totalRecipients: totalRecipients
 	}
 }
-
 
 // -----------------------
 // Cryptographic Functions
@@ -133,7 +126,10 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 // Process messages from the crypto worker.
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
-	if (!message.error) {
+	if (message.error) {
+		miniLock.UI.fileOperationHasFailed(message.operation)
+	}
+	else {
 		if (message.operation === 'encrypt') {
 			message.blob = new Blob([
 				'miniLockFileYes.',
@@ -156,12 +152,6 @@ miniLock.crypto.worker.onmessage = function(message) {
 		}
 		return context[func].apply(context, [message])
 	}
-}
-
-// Process errors thrown in the crypto worker.
-miniLock.crypto.worker.onerror = function(error){
-	var operation = /Decrypt/.test(error.message) ? 'decrypt' : 'encrypt'
-	miniLock.UI.fileOperationHasFailed(operation, error)
 }
 
 // Generic callback for use with the above function.

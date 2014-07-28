@@ -118,9 +118,9 @@ $('input.fileSelectDialog').change(function(e) {
 		$('span.dragFileInfo').data('read')
 	)
 	var file = this.files[0]
-	// Pause to give the operating system a moment to close its 
-	// file selection dialog box so that the transition to the 
-	// next screen will be smoother like butter.
+	// Pause to give the operating system a moment to close its
+	// file selection dialog box so that the transition to the
+	// next screen will be smoother.
 	setTimeout(function(){
 		miniLock.UI.handleFileSelection(file)
 	}, 600)
@@ -128,7 +128,7 @@ $('input.fileSelectDialog').change(function(e) {
 })
 
 // Click to select user's miniLock ID for easy copy-n-paste.
-$('div.myMiniLockID').click(function() {
+$('div.myMiniLockID,div.senderID').click(function() {
 	var range = document.createRange()
 	range.selectNodeContents($(this).find('code').get(0))
 	var selection = window.getSelection()
@@ -196,7 +196,7 @@ miniLock.UI.flipToBack = function() {
 // Encrypting a File
 // -----------------------
 
-// Setup the screen for a new unencrypted file. 
+// Setup the screen for a new unencrypted file.
 $('form.process').on('encrypt:setup', function(event, file) {
 	$('form.process').removeClass(miniLock.UI.resetProcessFormClasses)
 	$('form.process').addClass('unprocessed')
@@ -217,19 +217,19 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	else {
 		$('form.process div.output.name').addClass('activated')
 	}
-	// Render the size of the input file. 
+	// Render the size of the input file.
 	$('form.process a.fileSize').html(miniLock.UI.readableFileSize(file.size))
-	// Insert the session ID if the list is empty.
+	// Insert the sender's miniLock ID if the list is empty.
 	if ($('form.process div.blank.identity').size() === $('form.process div.identity').size()) {
-		var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+		var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 		$('form.process div.blank.identity:first-child').replaceWith(Mustache.render(
-			miniLock.templates.recipientListIdentity, 
-			{'className': 'session', 'id': sessionID, 'label': 'Me'}
+			miniLock.templates.recipientListIdentity,
+			{'className': 'session', 'id': myMiniLockID, 'label': 'Me'}
 		))
 	}
 	$('form.process div.blank.identity input[type=text]').first().focus()
-	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
-	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
+	var withoutMyMiniLockID = $('form.process div.session.identity:not(.expired)').size() === 0
+	$('form.process').toggleClass('withoutMyMiniLockID', withoutMyMiniLockID)
 	$('form.process input.encrypt').prop('disabled', false)
 })
 
@@ -242,7 +242,7 @@ $('form.process').on('encrypt:start', function(event, file) {
 })
 
 // Set the screen to save an encrypted file.
-$('form.process').on('encrypt:complete', function(event, file, senderID) {
+$('form.process').on('encrypt:complete', function(event, file) {
 	$('form.process').removeClass('encrypting')
 	$('form.process').addClass('encrypted')
 	// Render encrypted file size.
@@ -250,20 +250,47 @@ $('form.process').on('encrypt:complete', function(event, file, senderID) {
 	// Render link to save encrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
 	// Render identity of the sender.
-	$('form.process div.senderID code').text(senderID)
+	$('form.process div.senderID code').text(file.senderID)
 	// Summarize who can access the file.
-	var recipientIDs = $('form.process div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
-	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	$('form.process div.summary').text(miniLock.util.summarizeRecipients(recipientIDs, sessionID))
+	var recipientIDs = $('form.process div.identity:not(.blank) input[type=text]').map(function() {
+		return this.value.trim()
+	}).toArray()
+	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	var recipientsSummary = miniLock.util.summarizeRecipients(recipientIDs, myMiniLockID)
+	// Output: {
+	//	senderCanDecryptFile: Whether sender can decrypt file (Boolean),
+	//  totalRecipients: Number of total recipients, not including sender, if applicable (Number)
+	// }
+	if (
+		recipientsSummary.senderCanDecryptFile
+	) {
+		if (recipientsSummary.totalRecipients > 0) {
+			$('form.process div.summary').text(
+				'File can be decrypted by its sender and '
+				+ recipientsSummary.totalRecipients + ' recipient(s).'
+			)
+		}
+		else {
+			$('form.process div.summary').text(
+				'File can be decrypted by its sender only.'
+			)
+		}
+	}
+	else if (recipientsSummary.totalRecipients > 0) {
+		$('form.process div.summary').text(
+			'File can be decrypted by '
+			+ recipientsSummary.totalRecipients + ' recipient(s).'
+		)
+	}
 })
 
-// Display encryption error message, reset progress bar, and then flip back.
+// Display encryption error message, reset p342rogress bar, and then flip back.
 $('form.process').on('encrypt:failed', function(event, errorMessage) {
 	$('form.process').removeClass('encrypting')
 	$('form.process').addClass('encrypt failed')
 	$('form.process div.failureNotice').text(errorMessage)
 	$('form.process div.progressBarFill').css({
-		'width': '0', 
+		'width': '0',
 		'transition': 'none'
 	})
 	setTimeout(function() {
@@ -275,7 +302,7 @@ $('form.process').on('encrypt:failed', function(event, errorMessage) {
 $('form.process').on('mousedown', 'div.setRandomName a.control', function() {
 	var randomName = miniLock.util.getRandomFilename()
 	$('form.process').addClass('withRandomName')
-	$('form.process div.original.name').addClass('shelved')	
+	$('form.process div.original.name').addClass('shelved')
 	$('form.process div.random.name').addClass('activated')
 	miniLock.UI.renderFilenameTag('random', randomName)
 	$('form.process div.output.name').removeClass('activated')
@@ -296,28 +323,26 @@ $('form.process').on('mousedown', 'div.setOriginalName a.control', function() {
 $('form.process').on('input', 'div.identity', function() {
 	$(this).removeClass('blank invalid session')
 	$(this).find('label').empty()
-	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	var inputID   = $(this).find('input[type=text]').val().trim()
 	if (inputID.length === 0) {
 		$(this).addClass('blank')
 	}
 	else {
-		if (inputID === sessionID) {
+		if (inputID === myMiniLockID) {
 			$(this).addClass('session')
 			$(this).find('label').text('Me')
 		}
 		if (!miniLock.util.validateID(inputID)) {
 			$(this).addClass('invalid')
 			$(this).find('label').text('Invalid')
-			if (inputID.length < 44){ $(this).find('label').text('Too short') }
-			if (inputID.length > 44){ $(this).find('label').text('Too long')  }
 		}
 	}
-	var withoutSessionID = $('form.process div.session.identity:not(.expired)').size() === 0
-	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
+	var withoutMyMiniLockID = $('form.process div.session.identity:not(.expired)').size() === 0
+	$('form.process').toggleClass('withoutMyMiniLockID', withoutMyMiniLockID)
 	if ($('form.process div.blank.identity').size() === 0) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
-			miniLock.templates.recipientListIdentity, 
+			miniLock.templates.recipientListIdentity,
 			{'className': 'blank'}
 		))
 		$('form.process > div').first().stop().animate({
@@ -340,18 +365,18 @@ $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	})
 	if ($('form.process div.identity:not(.expired)').size() < 4) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
-			miniLock.templates.recipientListIdentity, 
+			miniLock.templates.recipientListIdentity,
 			{'className': 'blank'}
 		))
 	}
 })
 
 // Add the session identity to the list.
-$('form.process').on('mousedown', 'a.addSessionIDtoRecipientList', function() {
-	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
+$('form.process').on('mousedown', 'a.addMyMiniLockIDtoRecipientList', function() {
+	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	$('form.process div.blank.identity').first().replaceWith(Mustache.render(
-		miniLock.templates.recipientListIdentity, 
-		{'className': 'session', 'id': sessionID, 'label': 'Me'}
+		miniLock.templates.recipientListIdentity,
+		{'className': 'session', 'id': myMiniLockID, 'label': 'Me'}
 	))
 	$('form.process div.session.identity input.code').trigger('input')
 	setTimeout(function(){
@@ -374,7 +399,9 @@ $('form.process').on('submit', function(event) {
 			var scrollDuration = 33 * Math.sqrt($('form.process > div').prop('scrollTop'))
 			$('form.process div.scrollingsurface').first().animate({scrollTop: 0}, scrollDuration)
 		}
-		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
+		var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function() {
+			return this.value.trim()
+		}).toArray()
 		var outputName = $('form.process div.output.name input').val().trim()
 		miniLock.crypto.encryptFile(
 			miniLock.UI.readFile,
@@ -411,7 +438,7 @@ $('form.process').on('decrypt:start', function(event, file) {
 })
 
 // Set the screen to save a decrypted file.
-$('form.process').on('decrypt:complete', function(event, file, senderID) {
+$('form.process').on('decrypt:complete', function(event, file) {
 	$('form.process').removeClass('decrypting')
 	$('form.process').addClass('decrypted')
 	var outputName = file.name
@@ -427,10 +454,10 @@ $('form.process').on('decrypt:complete', function(event, file, senderID) {
 	// Render link to save decrypted file.
 	miniLock.UI.renderLinkToSaveFile(file)
 	// Render identity of the sender.
-	$('form.process div.senderID code').text(senderID)
+	$('form.process div.senderID code').text(file.senderID)
 	// Render name of the input file in the summary the bottom of the screen.
 	$('form.process div.summary').html('Decrypted from ' + Mustache.render(
-		miniLock.templates.filename, 
+		miniLock.templates.filename,
 		miniLock.util.getBasenameAndExtensions(inputName)
 	))
 	// Show the suspect filename notice when applicable.
@@ -445,7 +472,7 @@ $('form.process').on('decrypt:failed', function(event, errorMessage) {
 	$('form.process').addClass('decrypt failed')
 	$('form.process div.failureNotice').text(errorMessage)
 	$('form.process div.progressBarFill').css({
-		'width': '0%', 
+		'width': '0%',
 		'transition': 'none'
 	})
 	setTimeout(function() {
@@ -468,17 +495,17 @@ $('form.process').on('click', 'a.fileSaveLink', function() {
 })
 
 // Toggle `withHintToSave` class on the file construction form
-// when you mouse in-and-out so that a helpfull status message 
+// when you mouse in-and-out so that a helpfull status message
 // can be displayed in the form header.
-$('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){ 
+$('form.process').on('mouseover mouseout', 'a.fileSaveLink', function(){
 	$('form.process').toggleClass('withHintToSave')
 })
 
 // Remove these classes to reset the file processing <form>.
-miniLock.UI.resetProcessFormClasses = 'unprocessed withSuspectFilename withoutSessionID '
-																		+ 'encrypting decrypting '
-																		+ 'encrypted decrypted ' 
-																		+ 'encrypt decrypt failed '
+miniLock.UI.resetProcessFormClasses = 'unprocessed withSuspectFilename withoutMyMiniLockID '
+	+ 'encrypting decrypting '
+	+ 'encrypted decrypted '
+	+ 'encrypt decrypt failed '
 
 miniLock.UI.renderAllFilenameTags = function(filenames){
 	$('form.process div.name').removeClass('activated shelved expired')
@@ -493,7 +520,7 @@ miniLock.UI.renderAllFilenameTags = function(filenames){
 miniLock.UI.renderFilenameTag = function(className, filename){
 	$('form.process div.'+className+'.name input').val(filename)
 	$('form.process div.'+className+'.name h1').html(Mustache.render(
-		miniLock.templates.filename, 
+		miniLock.templates.filename,
 		miniLock.util.getBasenameAndExtensions(filename)
 	))
 }
@@ -521,7 +548,7 @@ miniLock.UI.expireLinkToSaveFile = function() {
 	$('a.fileSaveLink').css('visibility', 'hidden')
 }
 
-// The crypto worker calls this method when a 
+// The crypto worker calls this method when a
 // decrypt or encrypt operation is complete.
 // Input: Object:
 //	{
@@ -533,15 +560,16 @@ miniLock.UI.expireLinkToSaveFile = function() {
 //	operation: 'encrypt' or 'decrypt'
 //	senderID: Sender's miniLock ID (Base58)
 miniLock.UI.fileOperationIsComplete = function(file, operation, senderID) {
-	$('form.process').trigger(operation + ':complete', file, senderID)
+	// It seems we're limited with the number of arguments we can pass here.
+	file.senderID = senderID
+	$('form.process').trigger(operation + ':complete', file)
 }
 
-// The crypto worker calls this method when a 
+// The crypto worker calls this method when a
 // decrypt or encrypt operation has failed.
 // Operation argument is either 'encrypt' or 'decrypt'.
-miniLock.UI.fileOperationHasFailed = function(operation, error) {
-	var details = error.message.match(/Encryption|Decryption failed - (.*)/)[1]
-	$('form.process').trigger(operation+':failed', 'miniLock '+details+'.')
+miniLock.UI.fileOperationHasFailed = function(operation) {
+	$('form.process').trigger(operation+':failed')
 }
 
 // Convert an integer from bytes into a readable file size.
@@ -585,14 +613,14 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 // $('form.unlockForm').submit()
 
-// Temporarily add 'flip' to <div class="squareBack"> when you are working 
+// Temporarily add 'flip' to <div class="squareBack"> when you are working
 // on the design of a screen on the back-side. That way you don’t need to go
 // through the time consuming process of selecting a file and setting input
 // before you see your code changes on screen.
 //
-// Change the class of <form class="process"> while your working on the 'flip' 
-// side see fast previews of every state of the file processing flow. 
-// 
+// Change the class of <form class="process"> while your working on the 'flip'
+// side see fast previews of every state of the file processing flow.
+//
 // For example:
 //   1. Open index.html
 //   2. Add class 'flip' to <div class="squareBack">

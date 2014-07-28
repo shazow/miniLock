@@ -90,8 +90,11 @@ form.process > div.scrollingsurface {
 
 form.process > div.scrollingsurface > header {
 	position: relative;
-	height: 300px;
-	background: 0px 0px url('../img/backside-background.png');
+	height: 270px;
+	background-image: url('../img/backSideBackground.png');
+	background-position: 55px 218px;
+	background-repeat: no-repeat;
+	background-size: 45px; auto;
 }
 
 /* File status icon */
@@ -150,7 +153,7 @@ form.decrypt.process.failed div.statusIcon a.failed.octicon {
 
 /* Filename styles */
 
-form.process div.nameContainer { 
+form.process div.nameContainer {
 	position: absolute;
 	top: 15px;
 	right: 50px;
@@ -159,7 +162,7 @@ form.process div.nameContainer {
 	overflow: hidden;
 }
 
-form.process div.name { 
+form.process div.name {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -167,21 +170,21 @@ form.process div.name {
 	bottom: -60px;
 }
 
-form.process div.name.activated { 
+form.process div.name.activated {
 	bottom: 0px;
 }
 
 form.process.unprocessed div.input.name,
 form.process.encrypting  div.input.name,
-form.process.encrypted   div.input.name { 
+form.process.encrypted   div.input.name {
 	visibility: hidden;
 }
 
-form.process.decrypting div.input.name { 
+form.process.decrypting div.input.name {
 	visibility: visible;
 }
 
-form.process.decrypted div.input.name.expired { 
+form.process.decrypted div.input.name.expired {
 	opacity: 0;
 	bottom: 60px;
 	transition: bottom 250ms ease-out, opacity 250ms linear;
@@ -198,7 +201,7 @@ form.process.unprocessed div.output.name.activated {
 	transition: visibility 0ms linear 250ms;
 }
 
-form.process.decrypted div.output.name.activated { 
+form.process.decrypted div.output.name.activated {
 	bottom: 0px;
 	transition: bottom 250ms ease-out;
 }
@@ -242,7 +245,7 @@ form.process.failed div.activated.name h1 span.extensions {
 	color: rgba(255, 255, 255, 0.4);
 }
 
-form.process div.name span.miniLockExtension { 
+form.process div.name span.miniLockExtension {
 	color: inherit;
 }
 
@@ -306,7 +309,7 @@ form.process.unprocessed.withRandomName div.setRandomName {
 	bottom: 15px;
 }
 
-/* Encrypting/Decrypting bit by bit ... */
+/* Encryption/Decryption in progress */
 
 form.process.unprocessed div.encrypting,
 form.process.encrypting  div.encrypting,
@@ -335,7 +338,7 @@ form.process.decrypted  div.decryptedFileIsReady {
 	bottom: -15px;
 }
 form.process.encrypted  div.encryptedFileIsReady,
-form.process.decrypted  div.decryptedFileIsReady { 
+form.process.decrypted  div.decryptedFileIsReady {
 	bottom:   0px;
 }
 form.process.encrypted.withHintToSave div.encryptedFileIsReady,
@@ -360,7 +363,7 @@ form.process.decrypt.failed div.decryptOperationFailed {
 
 /* Link to save file (height is updated programatically in ui.js) */
 
-form.process a.fileSaveLink { 
+form.process a.fileSaveLink {
 	display: block;
 	position: absolute;
 	height: 22px;
@@ -373,11 +376,11 @@ form.process a.fileSaveLink {
 }
 
 form.process.encrypted a.fileSaveLink,
-form.process.decrypted a.fileSaveLink { 
+form.process.decrypted a.fileSaveLink {
 	visibility: visible;
 }
 
-form.process a.fileSaveLink span.assistive { 
+form.process a.fileSaveLink span.assistive {
 	opacity: 0;
 }
 
@@ -420,12 +423,14 @@ form.process div.senderID code {
 	font-size: 13px;
 	display: block;
 	opacity: 0;
+	-webkit-user-select: text;
 }
 
 form.process.encrypted div.senderID code,
 form.process.decrypted div.senderID code {
 	opacity: 1;
 	transition: opacity 250ms linear;
+	-webkit-user-select: text;
 }
 
 /* Summary of the recipients for an encrypted file, or the input filename of a decrypted file  */
@@ -620,13 +625,13 @@ form.process div.invalid.identity label {
 	visibility: visible;
 }
 form.process div.invalid.identity label {
-	background: hsl(50, 55%, 66%);
+	background: #FF8387;
 }
 form.process div.invalid.identity label:after {
-	border-left-color: hsl(50, 55%, 66%);
+	border-left-color: #FF8387;
 }
 form.process div.invalid.identity input[type=text] {
-	color: hsl(50, 100%, 70%);
+	color: #FF8387;
 }
 
 form.process div.identity input[type=button].remove {
@@ -653,28 +658,24 @@ form.process div.blank.identity input[type=button].remove {
 
 /* Notice when you are not in the list */
 
-form.process div.missingSessionIDnotice {
+form.process div.missingMyMiniLockIDNotice {
 	position: absolute;
 	box-sizing: border-box;
 	padding-top: 3px;
 	height: 35px;
-	bottom: 40px;
 	left: 200px;
 	right: 100px;
 	overflow: visible;
 	opacity: 0;
-	transition: opacity 600ms linear;
+	bottom: 40px;
+	transition: opacity 600ms linear, bottom 0ms linear 600ms;
 }
 
-form.process.withoutSessionID div.missingSessionIDnotice {
+form.process.withoutMyMiniLockID div.missingMyMiniLockIDNotice {
 	opacity: 1;
 }
 
-form.process.encrypted.withoutSessionID div.missingSessionIDnotice {
-	opacity: 0;
-}
-
-form.process div.missingSessionIDnotice span.octicon {
+form.process div.missingMyMiniLockIDNotice span.octicon {
 	position: absolute;
 	display: block;
 	font-size: 23px;
@@ -685,7 +686,7 @@ form.process div.missingSessionIDnotice span.octicon {
 	color: rgba(255, 255, 255, 0.35);
 }
 
-form.process div.missingSessionIDnotice span.text {
+form.process div.missingMyMiniLockIDNotice span.text {
 	color: rgba(255, 255, 255, 0.5);
 }
 
