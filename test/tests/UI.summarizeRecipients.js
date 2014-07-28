@@ -5,7 +5,6 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 	var myMiniLockID = '7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS'
 
 	recipientIDs = ['7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS']
-	console.log(miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID))
 	assert.propEqual(
 		miniLock.UI.summarizeRecipients(recipientIDs, myMiniLockID),
 		{
