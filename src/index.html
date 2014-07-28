@@ -39,8 +39,12 @@
 						Your email is only used to derive your miniLock ID — it remains completely secret and anonymous.
 					</p>
 					<form class="unlockForm">
-						<input type="text" class="miniLockEmail" maxlength="1024" placeholder="Enter your email address (used for your miniLock ID)" />
-						<input type="password" class="miniLockKey" maxlength="1024" placeholder="Enter your passphrase (make it unique, it keeps you secure)" />
+						<input type="text" class="miniLockEmail" maxlength="1024" spellcheck="false"
+							placeholder="Enter your email address (used for your miniLock ID)"
+						/>
+						<input type="password" class="miniLockKey" maxlength="1024"
+							placeholder="Enter your passphrase (make it unique, it keeps you secure)"
+						/>
 						<input type="submit" value="&#xf078;" />
 						<div class="unlockInfo"
 							data-keyok="Key OK. Unlocking..."
@@ -85,26 +89,30 @@
 							<div class="nameContainer">
 								<div class="input name">
 									<h1>
-										<b class="basename"></b><span class="extensions"></span><span class="miniLockExtension">.minilock</span>
+										<b class="basename"></b><span class="extensions"></span>
+										<span class="miniLockExtension">.minilock</span>
 									</h1>
 									<input type="hidden" value="">
 								</div>
 								<div class="output name">
 									<h1>
-										<b class="basename"></b><span class="extensions"></span><span class="miniLockExtension">.minilock</span>
+										<b class="basename"></b><span class="extensions"></span>
+										<span class="miniLockExtension">.minilock</span>
 									</h1>
 									<input type="hidden" value="">
 								</div>
 								<div class="original name">
 									<h3>Original filename:</h3>
 									<h1>
-										<b class="basename"></b><span class="extensions"></span><span class="miniLockExtension">.minilock</span>
+										<b class="basename"></b><span class="extensions"></span>
+										<span class="miniLockExtension">.minilock</span>
 									</h1>
 									<input type="hidden" value="">
 								</div>
 								<div class="random name">
 									<h1>
-										<b class="basename"></b><span class="extensions"></span><span class="miniLockExtension">.minilock</span>
+										<b class="basename"></b><span class="extensions"></span>
+										<span class="miniLockExtension">.minilock</span>
 									</h1>
 									<input type="hidden" value="">
 								</div>
@@ -121,7 +129,9 @@
 								<div class="encryptOperationFailed">Encryption failed</div>
 								<div class="decryptOperationFailed">Decryption failed</div>
 							</div>
-							<a class="fileSaveLink dragout" draggable="true" href=""><span class="assistive text label">Save this file</span></a>
+							<a class="fileSaveLink dragout" draggable="true" href="">
+								<span class="assistive text label">Save this file</span>
+							</a>
 						</header>
 
 						<div class="progressBar">
