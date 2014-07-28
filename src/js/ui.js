@@ -486,7 +486,6 @@ $('form.process').on('decrypt:complete', function(event, file) {
 $('form.process').on('decrypt:failed', function(event, errorCode) {
 	$('form.process').removeClass('decrypting')
 	$('form.process').addClass('decrypt failed')
-	console.log(errorCode)
 	$('form.process div.failureNotice').text(
 		$('form.process div.failureNotice').data('error' + errorCode)
 	)
