@@ -85,7 +85,7 @@ form.process > div.scrollingsurface {
 	top: 0;
 	bottom: 100px;
 	color: rgba(255, 255, 255, 0.4);
-	overflow: scroll;
+	overflow: auto;
 }
 
 form.process > div.scrollingsurface > header {
@@ -198,23 +198,23 @@ form.process.decrypting div.input.name {
 form.process.decrypted div.input.name.expired {
 	opacity: 0;
 	bottom: 60px;
-	transition: bottom 250ms ease-out, opacity 250ms linear;
+	transition: bottom 200ms ease-out, opacity 200ms linear;
 }
 
 form.process.unprocessed div.output.name {
 	visibility: hidden;
-	transition: visibility 0ms linear 500ms;
+	transition: visibility 0ms linear 400ms;
 }
 
 form.process.unprocessed div.output.name.activated {
 	bottom: 0px;
 	visibility: visible;
-	transition: visibility 0ms linear 250ms;
+	transition: visibility 0ms linear 200ms;
 }
 
 form.process.decrypted div.output.name.activated {
 	bottom: 0px;
-	transition: bottom 250ms ease-out;
+	transition: bottom 200ms ease-out;
 }
 
 form.process div.original.name {
@@ -224,7 +224,7 @@ form.process div.original.name {
 form.process.unprocessed div.original.name {
 	visibility: hidden;
 	bottom: 0px;
-	transition: bottom 250ms ease-out, visibility 0ms linear 250ms;
+	transition: bottom 200ms ease-out, visibility 0ms linear 200ms;
 }
 
 form.process div.original.name.shelved {
@@ -235,11 +235,11 @@ form.process div.original.name.shelved {
 form.process.unprocessed div.original.name.shelved {
 	visibility: visible;
 	bottom: 60px;
-	transition: bottom 250ms ease-out;
+	transition: bottom 200ms ease-out;
 }
 
 form.process.unprocessed div.random.name {
-	transition: bottom 250ms ease-out;
+	transition: bottom 200ms ease-out;
 }
 
 form.process.unprocessed div.random.name.activated {
@@ -261,15 +261,15 @@ form.process div.name span.miniLockExtension {
 }
 
 form.process div.output.name span.miniLockExtension { opacity: 0; transition: opacity 0ms linear; }
-form.process div.output.name.activated span.miniLockExtension { opacity: 1; transition: opacity 250ms linear 500ms; }
+form.process div.output.name.activated span.miniLockExtension { opacity: 1; transition: opacity 200ms linear 400ms; }
 
 form.process div.original.name h3 { opacity: 0; transition: opacity 150ms linear; }
-form.process div.original.name h1 { opacity: 1.0; transition: opacity 250ms linear; }
-form.process div.original.name span.miniLockExtension { opacity: 1; transition: opacity 500ms linear 500ms; }
+form.process div.original.name h1 { opacity: 1.0; transition: opacity 200ms linear; }
+form.process div.original.name span.miniLockExtension { opacity: 1; transition: opacity 400ms linear 400ms; }
 
-form.process div.original.name.shelved h3 { opacity: 1; transition: opacity 250ms linear 100ms; }
-form.process div.original.name.shelved h1 { opacity: 0.4; transition: opacity 250ms linear; }
-form.process div.original.name.shelved span.miniLockExtension { opacity: 0; transition: opacity 250ms linear; }
+form.process div.original.name.shelved h3 { opacity: 1; transition: opacity 200ms linear 100ms; }
+form.process div.original.name.shelved h1 { opacity: 0.4; transition: opacity 200ms linear; }
+form.process div.original.name.shelved span.miniLockExtension { opacity: 0; transition: opacity 200ms linear; }
 
 form.process.decrypted div.activated.name span.miniLockExtension { opacity: 0; transition: opacity 150ms linear; }
 form.process.encrypted div.activated.name span.miniLockExtension { color: white; transition: color 150ms linear; }
@@ -426,7 +426,7 @@ form.process div.senderID h3 {
 form.process.encrypted div.senderID h3,
 form.process.decrypted div.senderID h3 {
 	opacity: 1;
-	transition: opacity 250ms linear;
+	transition: opacity 200ms linear;
 }
 
 form.process div.senderID code {
@@ -440,7 +440,7 @@ form.process div.senderID code {
 form.process.encrypted div.senderID code,
 form.process.decrypted div.senderID code {
 	opacity: 1;
-	transition: opacity 250ms linear;
+	transition: opacity 200ms linear;
 	-webkit-user-select: text;
 }
 
@@ -510,21 +510,21 @@ form.process.encrypting div.progressBar,
 form.process.decrypting div.progressBar {
 	opacity: 1;
 	visibility: visible;
-	transition: opacity 150ms linear 250ms, visibility 0 linear;
+	transition: opacity 150ms linear 200ms, visibility 0 linear;
 }
 
 form.process.encrypted div.progressBar,
 form.process.decrypted div.progressBar {
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 500ms linear 250ms, visibility 0 linear 750ms;
+	transition: opacity 400ms linear 200ms, visibility 0 linear 750ms;
 }
 
 form.encrypt.process.failed div.progressBar,
 form.decrypt.process.failed div.progressBar {
 	opacity: 1;
 	visibility: visible;
-	transition: opacity 250ms linear, visibility 0 linear 250ms;
+	transition: opacity 200ms linear, visibility 0 linear 200ms;
 }
 
 form.process div.progressBar div.progressBarFill {
@@ -552,7 +552,7 @@ form.encrypt.process.failed div.recipients,
 form.decrypt.process.failed div.recipients {
 	top: 60px;
 	opacity: 0;
-	transition: top 250ms ease-out, opacity 250ms linear;
+	transition: top 200ms ease-out, opacity 200ms linear;
 }
 
 form.process div.recipients > header {
@@ -676,7 +676,7 @@ form.process div.missingMyMiniLockIDNotice {
 	height: 35px;
 	left: 200px;
 	right: 100px;
-	overflow: visible;
+	overflow: auto;
 	opacity: 0;
 	bottom: 40px;
 	transition: opacity 600ms linear, bottom 0ms linear 600ms;
@@ -718,5 +718,5 @@ form.process.unprocessed input.encrypt.button {
 
 form.process.encrypting input.encrypt.button,
 form.process.encrypted  input.encrypt.button {
-	transition: opacity 250ms linear, visibility 0 linear 250ms;
+	transition: opacity 200ms linear, visibility 0 linear 200ms;
 }
