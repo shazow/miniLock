@@ -670,7 +670,8 @@ form.process.withoutSessionID div.missingSessionIDnotice {
 	opacity: 1;
 }
 
-form.process.encrypted.withoutSessionID div.missingSessionIDnotice {
+form.process.encrypted.withoutSessionID div.missingSessionIDnotice,
+form.process.decrypted.withoutSessionID div.missingSessionIDnotice {
 	opacity: 0;
 }
 
