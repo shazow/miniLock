@@ -284,7 +284,7 @@ $('form.process').on('encrypt:complete', function(event, file) {
 	}
 })
 
-// Display encryption error message, reset p342rogress bar, and then flip back.
+// Display encryption error message, reset progress bar, and then flip back.
 $('form.process').on('encrypt:failed', function(event, errorMessage) {
 	$('form.process').removeClass('encrypting')
 	$('form.process').addClass('encrypt failed')
