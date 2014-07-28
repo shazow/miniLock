@@ -30,6 +30,14 @@ miniLock.UI.setup = function() {
 // Unlock UI Bindings
 // -----------------------
 
+$('input.showMiniLockKey').on('mouseenter', function() {
+	$('input.miniLockKey').attr('type', 'text')
+})
+
+$('input.showMiniLockKey').on('mouseleave', function() {
+	$('input.miniLockKey').attr('type', 'password')
+})
+
 $('form.unlockForm').on('submit', function() {
 	var emailMatch = new RegExp(
 		'[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\\.[a-zA-Z]{2,20}'
