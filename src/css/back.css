@@ -469,7 +469,7 @@ form.process.decrypted.withSuspectFilename div.suspectFilenameNotice {
 
 form.process div.failureNotice {
 	position: fixed;
-	top: 300px;
+	top: 270px;
 	left: 110px;
 	right: 110px;
 	visibility: hidden;
