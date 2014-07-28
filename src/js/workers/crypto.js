@@ -112,6 +112,7 @@ var validateEphemeral = validateKey
 //	0x59, 0x65, 0x73, 0x2e
 //	Those 16 bytes are then followed by the following JSON object (binary-encoded):
 //	{
+//		version: Version of the miniLock protocol used for this file (Currently 1) (Number)
 //		ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
 //		fileInfo: {
 //			(One copy of the below object for every recipient)
@@ -146,6 +147,7 @@ message = message.data
 if (message.operation === 'encrypt') {
 	(function() {
 		var header = {
+			version: 1,
 			ephemeral: nacl.util.encodeBase64(message.ephemeral.publicKey),
 			fileInfo: {}
 		}
@@ -241,6 +243,17 @@ if (message.operation === 'decrypt') {
 				error: true
 			})
 			throw new Error('miniLock: Decryption failed - could not parse file header')
+			return false
+		}
+		if (
+			!header.hasOwnProperty('version')
+			|| header.version !== 1
+		) {
+			postMessage({
+				operation: 'decrypt',
+				error: true
+			})
+			throw new Error('miniLock: Decryption failed - invalid header version')
 			return false
 		}
 		if (

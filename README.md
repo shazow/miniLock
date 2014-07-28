@@ -86,6 +86,7 @@ The header itself is a stringified JSON object which contains information necess
 
 ```
 {
+	version: Version of the miniLock protocol used for this file (Currently 1) (Number)
 	ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
 	fileInfo: {
 		(One copy of the below object for every recipient)
