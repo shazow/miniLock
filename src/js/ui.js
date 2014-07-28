@@ -608,27 +608,29 @@ miniLock.UI.animateProgressBar = function(fileSize) {
 // -----------------------
 // Design & Developer Tools
 // -----------------------
+
 // Uncomment the following to unlock a demo session automatically.
 // $('input.miniLockEmail').val('manufacturing@minilock.io')
 // $('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 // $('form.unlockForm').submit()
 
-// Temporarily add 'flip' to <div class="squareBack"> when you are working
-// on the design of a screen on the back-side. That way you don’t need to go
-// through the time consuming process of selecting a file and setting input
-// before you see your code changes on screen.
-//
-// Change the class of <form class="process"> while your working on the 'flip'
-// side see fast previews of every state of the file processing flow.
-//
-// For example:
-//   1. Open index.html
-//   2. Add class 'flip' to <div class="squareBack">
-//   3. Replace class 'unprocessed' with 'decrypting' on <form class="process">
-//   4. Save index.html
-//   5. Reload your browser to see the decrypting screen.
-//   6. Make CSS changes and save them.
-//   7. Reload your browser to see the decrypting screen.
-//   8. and on and on...
+// Quickly setup the default encryption setup screen for design work:
+// $('div.squareContainer').addClass('flip')
+// $('form.process div.identity:first').addClass('session').removeClass('blank')
+// $('form.process div.identity:first label').text('Me')
+// $('form.process div.identity:first input.code').val('8xC1iX3zKUcRn1yo2E2KyAoMvyFqE6dpecq4QHsqGVZH')
+// $('form.process').trigger(
+// 	'encrypt:setup', 
+// 	{ name: 'Alice Passport Scan.jpg', size: 98320 }
+// )
+
+// Quickly setup the decrypt failure screen for design work:
+// $('div.squareContainer').addClass('flip')
+// $('form.process').addClass('decryping')
+// $('form.process div.input.name').addClass('activated')
+// $('form.process div.input.name b.basename').text('Alice Passport Scan.jpg')
+// $('form.process').trigger(
+// 	'decrypt:failed', 'could not validate sender ID'
+// )
 
 })
