@@ -219,11 +219,11 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	}
 	// Render the size of the input file. 
 	$('form.process a.fileSize').html(miniLock.UI.readableFileSize(file.size))
-	// Insert the session ID if the audience list is empty.
+	// Insert the session ID if the list is empty.
 	if ($('form.process div.blank.identity').size() === $('form.process div.identity').size()) {
 		var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 		$('form.process div.blank.identity:first-child').replaceWith(Mustache.render(
-			miniLock.templates.audienceListIdentity, 
+			miniLock.templates.recipientListIdentity, 
 			{'className': 'session', 'id': sessionID, 'label': 'Me'}
 		))
 	}
@@ -252,9 +252,9 @@ $('form.process').on('encrypt:complete', function(event, file, senderID) {
 	// Render identity of the sender.
 	$('form.process div.senderID code').text(senderID)
 	// Summarize who can access the file.
-	var audienceIDs = $('form.process div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
+	var recipientIDs = $('form.process div.identity:not(.blank) input[type=text]').map(function(){ return this.value.trim() }).toArray()
 	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	$('form.process div.summary').text(miniLock.util.summarizeAudience(audienceIDs, sessionID))
+	$('form.process div.summary').text(miniLock.util.summarizeRecipients(recipientIDs, sessionID))
 })
 
 // Display encryption error message, reset progress bar, and then flip back.
@@ -317,7 +317,7 @@ $('form.process').on('input', 'div.identity', function() {
 	$('form.process').toggleClass('withoutSessionID', withoutSessionID)
 	if ($('form.process div.blank.identity').size() === 0) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
-			miniLock.templates.audienceListIdentity, 
+			miniLock.templates.recipientListIdentity, 
 			{'className': 'blank'}
 		))
 		$('form.process > div').first().stop().animate({
@@ -326,7 +326,7 @@ $('form.process').on('input', 'div.identity', function() {
 	}
 })
 
-// Remove an identity from from the audience list.
+// Remove an identity from from the list.
 $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	var identity = $(this).closest('div.identity')
 	identity.find('input.code').blur()
@@ -340,17 +340,17 @@ $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	})
 	if ($('form.process div.identity:not(.expired)').size() < 4) {
 		$('form.process div.miniLockIDList').append(Mustache.render(
-			miniLock.templates.audienceListIdentity, 
+			miniLock.templates.recipientListIdentity, 
 			{'className': 'blank'}
 		))
 	}
 })
 
-// Add the session identity to the audience list.
-$('form.process').on('mousedown', 'a.addSessionIDtoAudienceList', function() {
+// Add the session identity to the list.
+$('form.process').on('mousedown', 'a.addSessionIDtoRecipientList', function() {
 	var sessionID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 	$('form.process div.blank.identity').first().replaceWith(Mustache.render(
-		miniLock.templates.audienceListIdentity, 
+		miniLock.templates.recipientListIdentity, 
 		{'className': 'session', 'id': sessionID, 'label': 'Me'}
 	))
 	$('form.process div.session.identity input.code').trigger('input')

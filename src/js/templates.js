@@ -7,7 +7,7 @@ miniLock.templates.keyStrengthMoreInfo = 'The key you have entered is too weak.'
 	+ '<input type="text" value="{{phrase}}" spellcheck="false" readonly="readonly" />'
 	+ '<input type="button" value="Get another phrase" /></p>'
 
-miniLock.templates.audienceListIdentity = ''
+miniLock.templates.recipientListIdentity = ''
 	+ '<div class="{{className}} identity">'
 	+ 	'<label>{{label}}</label>'
 	+ 	'<input class="code" type="text" placeholder="Add another miniLock ID" value="{{id}}" spellcheck="false" />'

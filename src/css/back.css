@@ -413,7 +413,7 @@ form.process div.senderID code {
 	display: block;
 }
 
-/* Summary of the audience for an encrypted file, or the input filename of a decrypted file  */
+/* Summary of the recipients for an encrypted file, or the input filename of a decrypted file  */
 
 form.process div.summary {
 	position: absolute;
@@ -503,9 +503,9 @@ form.process div.progressBar div.progressBarFill {
 	background: white;
 }
 
-/* List of audience members for an unprocessed file */
+/* List of recipients for an unprocessed file */
 
-form.process div.audience {
+form.process div.recipients {
 	position: relative;
 	top: 0;
 	margin-top: 60px;
@@ -514,18 +514,18 @@ form.process div.audience {
 	opacity: 1;
 }
 
-form.process.encrypting     div.audience,
-form.process.encrypted      div.audience,
-form.process.decrypting     div.audience,
-form.process.decrypted      div.audience,
-form.encrypt.process.failed div.audience,
-form.decrypt.process.failed div.audience {
+form.process.encrypting     div.recipients,
+form.process.encrypted      div.recipients,
+form.process.decrypting     div.recipients,
+form.process.decrypted      div.recipients,
+form.encrypt.process.failed div.recipients,
+form.decrypt.process.failed div.recipients {
 	top: 60px;
 	opacity: 0;
 	transition: top 250ms ease-out, opacity 250ms linear;
 }
 
-form.process div.audience > header {
+form.process div.recipients > header {
 	position: absolute;
 	top: -30px;
 	left: 10px;
