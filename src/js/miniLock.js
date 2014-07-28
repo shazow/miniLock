@@ -94,7 +94,7 @@ miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
 	if (message.error) {
-		miniLock.UI.fileOperationHasFailed(message.operation)
+		miniLock.UI.fileOperationHasFailed(message.operation, message.error)
 	}
 	else {
 		if (message.operation === 'encrypt') {

@@ -199,7 +199,7 @@ if (message.operation === 'encrypt') {
 		if (!encrypted) {
 			postMessage({
 				operation: 'encrypt',
-				error: true
+				error: 'general encryption error'
 			})
 			throw new Error('miniLock: Encryption failed - general encryption error')
 			return false
@@ -240,7 +240,7 @@ if (message.operation === 'decrypt') {
 		catch(error) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'could not parse file header'
 			})
 			throw new Error('miniLock: Decryption failed - could not parse file header')
 			return false
@@ -262,7 +262,7 @@ if (message.operation === 'decrypt') {
 		) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'could not validate sender ID'
 			})
 			throw new Error('miniLock: Decryption failed - could not validate sender ID')
 			return false
@@ -282,7 +282,7 @@ if (message.operation === 'decrypt') {
 				catch(err) {
 					postMessage({
 						operation: 'decrypt',
-						error: true
+						error: 'could not parse file header'
 					})
 					throw new Error('miniLock: Decryption failed - could not parse file header')
 					return false
@@ -302,7 +302,7 @@ if (message.operation === 'decrypt') {
 					catch(err) {
 						postMessage({
 							operation: 'decrypt',
-							error: true
+							error: 'could not parse file header'
 						})
 						throw new Error('miniLock: Decryption failed - could not parse file header')
 						return false
@@ -330,7 +330,7 @@ if (message.operation === 'decrypt') {
 		) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'could not parse file header'
 			})
 			throw new Error('miniLock: Decryption failed - could not parse file header')
 			return false
@@ -353,7 +353,7 @@ if (message.operation === 'decrypt') {
 		catch(err) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'could not decrypt fileKey or fileName'
 			})
 			throw new Error('miniLock: Decryption failed - could not decrypt fileKey or fileName')
 			return false
@@ -361,7 +361,7 @@ if (message.operation === 'decrypt') {
 		if (!actualFileKey || !actualFileName) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'could not decrypt fileKey or fileName'
 			})
 			throw new Error('miniLock: Decryption failed - could not decrypt fileKey or fileName')
 			return false
@@ -381,7 +381,7 @@ if (message.operation === 'decrypt') {
 		if (!decrypted) {
 			postMessage({
 				operation: 'decrypt',
-				error: true
+				error: 'general decryption error'
 			})
 			throw new Error('miniLock: Decryption failed - general decryption error')
 			return false
