@@ -71,7 +71,7 @@ $('form.unlockForm').on('submit', function() {
 				$('div.unlock').delay(200).fadeOut(200, function() {
 					$('div.selectFile').fadeIn(200)
 					$('div.squareFront').animate({
-						backgroundColor: '#49698D'
+						backgroundColor: '#7090ad'
 					})
 				})
 			}
