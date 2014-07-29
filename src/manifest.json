@@ -26,7 +26,10 @@
 		"fileSystem"
 	],
 	"file_handlers": {
-		"minilock": {
+		"any": {
+			"types": [
+				"*"
+			],
 			"extensions": [
 				"minilock"
 			],
