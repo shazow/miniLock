@@ -34,16 +34,23 @@ miniLock.util.validateID = function(id) {
 		'^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$'
 	)
 	if (
-		(id.length > 50) ||
+		(id.length > 55) ||
 		(id.length < 40)
 	) {
 		return false
 	}
-	if (base58Match.test(id)) {
-		var bytes = Base58.decode(id)
-		return bytes.length === 32
+	if (!base58Match.test(id)) {
+		return false
 	}
-	return false
+	var bytes = Base58.decode(id)
+	if (bytes.length !== 33) {
+		return false
+	}
+	var hash = nacl.hash(bytes.subarray(0, 32))
+	if (hash[0] !== bytes[32]) {
+		return false
+	}
+	return true
 }
 
 // Input: none
@@ -191,7 +198,16 @@ miniLock.crypto.getFileKey = function() {
 // Input: Public encryption key (Uint8Array)
 // Output: miniLock ID (Base58)
 miniLock.crypto.getMiniLockID = function(publicKey) {
-	return Base58.encode(publicKey)
+	if (publicKey.length !== 32) {
+		throw new Error('miniLock.crypto.getMiniLockID: invalid public key size')
+		return false
+	}
+	var id = new Uint8Array(33)
+	for (var i = 0; i < publicKey.length; i++) {
+		id[i] = publicKey[i]
+	}
+	id[32] = nacl.hash(publicKey)[0]
+	return Base58.encode(id)
 }
 
 // Input: Object:
@@ -202,7 +218,7 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 //	}
 // saveName: Name to use when saving resulting file. '.minilock' extension will be added.
 // miniLockIDs: Array of (Base58) public IDs to encrypt for
-// myPublicKey: My public key (Uint8Array)
+// myMiniLockID: Sender's miniLock ID (String)
 // mySecretKey: My secret key (Uint8Array)
 // callback: Name of the callback function to which encrypted result is passed.
 // Result: Sends file to be encrypted, with the result picked up
@@ -211,7 +227,7 @@ miniLock.crypto.encryptFile = function(
 	file,
 	saveName,
 	miniLockIDs,
-	myPublicKey,
+	myMiniLockID,
 	mySecretKey,
 	callback
 ) {
@@ -244,7 +260,7 @@ miniLock.crypto.encryptFile = function(
 		fileNameNonces: fileNameNonces,
 		ephemeral: nacl.box.keyPair(),
 		miniLockIDs: miniLockIDs,
-		myPublicKey: myPublicKey,
+		myMiniLockID: myMiniLockID,
 		mySecretKey: mySecretKey,
 		callback: callback
 	})
@@ -256,21 +272,21 @@ miniLock.crypto.encryptFile = function(
 //		size: File size,
 //		data: Encrypted file (ArrayBuffer),
 //	}
-// myPublicKey: My public key (Uint8Array)
-// mySecretKey: My secret key (Uint8Array)
+// myMiniLockID: Sender's miniLock ID (String)
+// mySecretKey: Sender's secret key (Uint8Array)
 // callback: Name of the callback function to which decrypted result is passed.
 // Result: Sends file to be decrypted, with the result picked up
 //	by miniLock.crypto.worker.onmessage() and sent to the specified callback.
 miniLock.crypto.decryptFile = function(
 	file,
-	myPublicKey,
+	myMiniLockID,
 	mySecretKey,
 	callback
 ) {
 	miniLock.crypto.worker.postMessage({
 		operation: 'decrypt',
 		data: new Uint8Array(file.data),
-		myPublicKey: myPublicKey,
+		myMiniLockID: myMiniLockID,
 		mySecretKey: mySecretKey,
 		callback: callback
 	})

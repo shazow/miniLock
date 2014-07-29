@@ -31,7 +31,7 @@ This section outlines an example user flow in order to help demonstrate how mini
 Alice wants to send a scan of her passport to Bob. Sending it over email would compromise personal information, so Alice decided to first encrypt the scan using miniLock.
 
 Bob opens miniLock and enters his email address and passphrase. miniLock displays his miniLock ID, which is tied to his passphrase and is persistent. He sends Alice his miniLock ID, which looks something like this:
-`7L11mb4hrRZoBC6TUKidzpmRrytxpPaR7Q2ks6JwaCQS`
+`Uvs4PoMMK9Rkoyy5qbcnJDq6jc8MNAeVREekc6SBsXLSH`
 
 Alice drags and drops her passport scan into miniLock and enters Bob's miniLock ID as the recipient. She clicks the encrypt button and sends the resulting `.minilock` file to Bob. Once Bob drags the encrypted file into miniLock, it automatically detects it as a miniLock-encrypted file destined to Bob, and decrypts and saves the passport scan on his computer.
 
@@ -51,7 +51,7 @@ miniLock uses the email address entered by the user as the `scrypt` key derivati
 
 Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL `curve25519-xsalsa20-poly1305` construction.
 
-The user's `miniLock ID` is a Base58 representation of their public key, meant to be easily communicable via email or instant messaging.
+The user's `miniLock ID` consists of 33 bytes. The first 32 bytes are the user's `curve25519` public key. The last byte acts as a checksum: it is derived by hashing the first 32 bytes with `SHA-512` and truncating the resulting hash to its first byte. After constructing the 33 bytes of the miniLock ID, it is encoded into a Base58 representation, meant to be easily communicable via email or instant messaging.
 
 
 ###3. File format
@@ -138,7 +138,7 @@ If there are multiple properties within `fileInfo`, the recipient must iterate t
 If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.
 
 ###6. Key Identity Authentication
-In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 44 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.
+In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 45 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.
 
 ###7. Error Codes
 miniLock will output these error codes when running into encryption or decryption errors. The user interface can then handle these errors in order to display information that is relevant to users:

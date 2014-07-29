@@ -85,8 +85,12 @@ form.process > div.scrollingsurface {
 	top: 0;
 	bottom: 100px;
 	color: rgba(255, 255, 255, 0.4);
+	overflow: hidden;
+	width: 100%;
+}
+
+form.process.unprocessed > div.scrollingsurface {
 	overflow: auto;
-	width: 103%;
 }
 
 form.process > div.scrollingsurface > header {

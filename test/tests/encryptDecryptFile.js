@@ -13,10 +13,10 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 				result,
 				result.name,
 				[
-					'9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe',
-					'63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'
+					'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95db',
+					'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7XdzT'
 				],
-				Base58.decode('9E3EcYNuD7KwjxDTLP4qc5LD26M4KXvCJiMECGuwmDFe'),
+				'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95db',
 				Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
 				'miniLock.test.encryptFileCallback'
 			)
@@ -33,7 +33,7 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 			result.name = 'userHasChangedTheName.minilock'
 			miniLock.crypto.decryptFile(
 				result,
-				Base58.decode('63mRPY9snLiY9XoX55iMoK6S4Ai9wkPS1J1qS7uEPn1E'),
+				'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7XdzT',
 				Base58.decode('B47Ez1ftjTPSL5Mu74YaQ33WAbDjNcBwYWnx7Fp6kvmr'),
 				'miniLock.test.decryptFileCallback'
 			)

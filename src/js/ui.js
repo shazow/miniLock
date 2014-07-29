@@ -184,7 +184,9 @@ miniLock.UI.handleFileSelection = function(file) {
 		if (operation === 'decrypt') {
 			miniLock.crypto.decryptFile(
 				result,
-				miniLock.session.keys.publicKey,
+				miniLock.crypto.getMiniLockID(
+					miniLock.session.keys.publicKey
+				),
 				miniLock.session.keys.secretKey,
 				'miniLock.crypto.workerDecryptionCallback'
 			)
@@ -431,7 +433,9 @@ $('form.process').on('submit', function(event) {
 			miniLock.UI.readFile,
 			outputName,
 			miniLockIDs,
-			miniLock.session.keys.publicKey,
+			miniLock.crypto.getMiniLockID(
+				miniLock.session.keys.publicKey
+			),
 			miniLock.session.keys.secretKey,
 			'miniLock.crypto.workerEncryptionCallback'
 		)

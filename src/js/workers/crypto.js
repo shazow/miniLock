@@ -29,16 +29,23 @@ var base58Match = new RegExp(
 // Notes: Validates if string is a proper miniLock ID.
 var validateID = function(id) {
 	if (
-		(id.length > 50) ||
+		(id.length > 55) ||
 		(id.length < 40)
 	) {
 		return false
 	}
-	if (base58Match.test(id)) {
-		var bytes = Base58.decode(id)
-		return bytes.length === 32
+	if (!base58Match.test(id)) {
+		return false
 	}
-	return false
+	var bytes = Base58.decode(id)
+	if (bytes.length !== 33) {
+		return false
+	}
+	var hash = nacl.hash(bytes.subarray(0, 32))
+	if (hash[0] !== bytes[32]) {
+		return false
+	}
+	return true
 }
 
 // Input: String
@@ -98,8 +105,8 @@ var validateEphemeral = validateKey
 //			secretKey: Ephemeral Curve25519 secret key (Uint8Array)
 //		} (Only used for encryption)
 //		miniLockIDs: Array of (Base58) miniLock IDs to encrypt to (not used for 'decrypt' operation),
-//		myPublicKey: My public key (Uint8Array),
-//		mySecretKey: My secret key (Uint8Array)
+//		myMiniLockID: Sender's miniLock ID (String),
+//		mySecretKey: Sender's secret key (Uint8Array)
 //	}
 // Result: When finished, the worker will return the result
 // 	which is supposed to be caught and processed by
@@ -159,17 +166,17 @@ if (message.operation === 'encrypt') {
 			var encryptedFileKey = nacl.box(
 				message.fileKey,
 				message.fileKeyNonces[i],
-				Base58.decode(message.miniLockIDs[i]),
+				Base58.decode(message.miniLockIDs[i]).subarray(0, 32),
 				message.mySecretKey
 			)
 			var encryptedFileName = nacl.box(
 				nacl.util.decodeUTF8(paddedFileName),
 				message.fileNameNonces[i],
-				Base58.decode(message.miniLockIDs[i]),
+				Base58.decode(message.miniLockIDs[i]).subarray(0, 32),
 				message.mySecretKey
 			)
 			var fileInfo = {
-				senderID: Base58.encode(message.myPublicKey),
+				senderID: message.myMiniLockID,
 				fileKey: {
 					data: nacl.util.encodeBase64(encryptedFileKey),
 					nonce: nacl.util.encodeBase64(message.fileKeyNonces[i])
@@ -184,7 +191,7 @@ if (message.operation === 'encrypt') {
 			var encryptedFileInfo = nacl.box(
 				nacl.util.decodeUTF8(fileInfo),
 				message.fileInfoNonces[i],
-				Base58.decode(message.miniLockIDs[i]),
+				Base58.decode(message.miniLockIDs[i]).subarray(0, 32),
 				message.ephemeral.secretKey
 			)
 			header.fileInfo[
@@ -210,7 +217,7 @@ if (message.operation === 'encrypt') {
 			name: message.name,
 			saveName: message.saveName,
 			header: header,
-			senderID: Base58.encode(message.myPublicKey),
+			senderID: message.myMiniLockID,
 			callback: message.callback
 		})
 	})()
@@ -345,13 +352,13 @@ if (message.operation === 'decrypt') {
 			actualFileKey = nacl.box.open(
 				nacl.util.decodeBase64(actualFileInfo.fileKey.data),
 				nacl.util.decodeBase64(actualFileInfo.fileKey.nonce),
-				Base58.decode(actualFileInfo.senderID),
+				Base58.decode(actualFileInfo.senderID).subarray(0, 32),
 				message.mySecretKey
 			)
 			actualFileName = nacl.box.open(
 				nacl.util.decodeBase64(actualFileInfo.fileName.data),
 				nacl.util.decodeBase64(actualFileInfo.fileName.nonce),
-				Base58.decode(actualFileInfo.senderID),
+				Base58.decode(actualFileInfo.senderID).subarray(0, 32),
 				message.mySecretKey
 			)
 			actualFileName = nacl.util.encodeUTF8(actualFileName)

@@ -6,8 +6,7 @@ QUnit.test('checkPassphrase', function(assert) {
 		'Not bad but not good either',
 		'What is the meaning of love?',
 		'Estoy usando el Internet!',
-		miniLock.phrase.get(2),
-		miniLock.phrase.get(3)
+		miniLock.phrase.get(2)
 	]
 	var good = [
 		'This passphrase is supposed to be good enough for miniLock. :-)',
