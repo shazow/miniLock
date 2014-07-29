@@ -30,12 +30,13 @@ miniLock.UI.setup = function() {
 // Unlock UI Bindings
 // -----------------------
 
-$('input.showMiniLockKey').on('mouseenter', function() {
-	$('input.miniLockKey').attr('type', 'text')
-})
-
-$('input.showMiniLockKey').on('mouseleave', function() {
-	$('input.miniLockKey').attr('type', 'password')
+$('input.showMiniLockKey').on('click', function() {
+	if ($('input.miniLockKey').attr('type') === 'password') {
+		$('input.miniLockKey').attr('type', 'text')
+	}
+	else {
+		$('input.miniLockKey').attr('type', 'password')
+	}
 })
 
 $('form.unlockForm').on('submit', function() {
