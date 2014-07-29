@@ -22,5 +22,13 @@
 		"storage",
 		"fileBrowserHandler",
 		"fileSystem"
-	]
+	],
+	"file_handlers": {
+		"minilock": {
+			"extensions": [
+				"minilock"
+			],
+			"title": "miniLock"
+		}
+	}
 }
