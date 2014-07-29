@@ -59,13 +59,13 @@ div.squareBack input[type=button].button.activated,
 div.squareBack input[type=submit].button:active,
 div.squareBack input[type=submit].button.activated {
 	background: rgba(255, 255, 255, 1);
-	color: #49698D;
+	color: #7090AD;
 }
 
 div.squareBack input[type=button].button:disabled,
 div.squareBack input[type=submit].button:disabled {
 	background: rgba(255, 255, 255, 1);
-	color: #49698D;
+	color: #7090AD;
 }
 
 /* Go back-to-front button */
@@ -84,7 +84,7 @@ form.process > div.scrollingsurface {
 	right: 0;
 	top: 0;
 	bottom: 100px;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.5);
 	overflow: hidden;
 	width: 100%;
 }
@@ -109,7 +109,7 @@ form.process div.fileIcon {
 	line-height: 51px;
 	font-size: 57px;
 	text-align: center;
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.5);
 }
 
 /* Status icon (processing pulse, download arrow or alert triangle) */
@@ -141,7 +141,7 @@ form.process div.statusIcon a.processing.octicon {
 	color: white;
 	border: 4px solid white;
 	border-radius: 25px;
-	background: #49698D;
+	background: #7090AD;
 }
 
 form.process.encrypting div.statusIcon a.processing,
@@ -258,7 +258,7 @@ form.process div.name h1 span.extensions {
 
 form.process.failed div.activated.name h1 b.basename,
 form.process.failed div.activated.name h1 span.extensions {
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.5);
 }
 
 form.process div.name span.miniLockExtension {
@@ -573,7 +573,7 @@ form.process div.recipients > header {
 form.process div.identity {
 	position: relative;
 	box-sizing: border-box;
-	background: #49698D;
+	background: #4c7193;
 	z-index: 0;
 	height: 35px;
 	opacity: 1;
@@ -613,7 +613,7 @@ form.process div.identity label {
 	height: 18px;
 	line-height: 18px;
 	padding-left: 4px;
-	color: #49698D;
+	color: #7090AD;
 	background: #A3B6CC;
 	text-align: right;
 	white-space: nowrap;
@@ -660,7 +660,7 @@ form.process div.identity input[type=button].remove {
 	line-height: 15px;
 	font-family: 'Octicons';
 	font-size: 18px;
-	color: #49698D;
+	color: #7090AD;
 	padding: 0;
 	background: none;
 }
@@ -699,11 +699,11 @@ form.process div.missingMyMiniLockIDNotice span.octicon {
 	text-align: center;
 	left: -30px;
 	top: 5px;
-	color: rgba(255, 255, 255, 0.35);
+	color: rgba(255, 255, 255, 0.45);
 }
 
 form.process div.missingMyMiniLockIDNotice span.text {
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.6);
 }
 
 /* Encrypt file button */
