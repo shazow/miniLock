@@ -238,7 +238,6 @@ if (message.operation === 'encrypt') {
 			senderID: message.myMiniLockID,
 			callback: message.callback
 		})
-		delete encrypted
 	})()
 }
 
@@ -439,7 +438,6 @@ if (message.operation === 'decrypt') {
 			senderID: actualFileInfo.senderID,
 			callback: message.callback
 		})
-		delete decrypted
 	})()
 }
 

@@ -98,7 +98,7 @@ miniLock.crypto = {}
 miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 
 // Process messages from the crypto worker.
-miniLock.crypto.worker.onmessage = function(message, encrypted) {
+miniLock.crypto.worker.onmessage = function(message) {
 	message = message.data
 	if (
 		message.hasOwnProperty('error')
