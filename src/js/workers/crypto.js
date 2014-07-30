@@ -141,7 +141,7 @@ var byteArrayToNumber = function(byteArray) {
 // Notes: A miniLock-encrypted file's first 8 bytes are always the following:
 //	0x6d, 0x69, 0x6e, 0x69,
 //	0x4c, 0x6f, 0x63, 0x6b,
-//	Those 8 bytes are then followed by an 4-byte value indicating the byte length
+//	Those 8 bytes are then followed by an 4-byte little-endian value indicating the byte length
 //	of the file header, which is the following JSON object (binary-encoded):
 //	{
 //		version: Version of the miniLock protocol used for this file (Currently 1) (Number)

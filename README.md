@@ -59,7 +59,7 @@ miniLock saves encrypted files as binary blobs with the following format:
 
 ```javascript
 miniLock magic bytes (8 bytes)
-Header length in bytes (4 bytes)
+Header length in bytes (4 bytes, little-endian)
 Header bytes
 Ciphertext bytes
 ```
