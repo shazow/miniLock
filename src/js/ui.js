@@ -163,16 +163,16 @@ $('div.myMiniLockID,div.senderID').click(function() {
 miniLock.UI.handleFileSelection = function(file) {
 	miniLock.file.get(file, function(result) {
 		miniLock.UI.readFile = result
-		var miniLockFileYes = [
+		var miniLockFileYes = new Uint8Array([
 			0x6d, 0x69, 0x6e, 0x69,
-			0x4c, 0x6f, 0x63, 0x6b,
-			0x46, 0x69, 0x6c, 0x65,
-			0x59, 0x65, 0x73, 0x2e
-		]
-		var operation = 'encrypt'
-		var first16Bytes = (new Uint8Array(result.data)).subarray(0, 16)
-		if (first16Bytes.indexOfMulti(miniLockFileYes) === 0) {
-			operation = 'decrypt'
+			0x4c, 0x6f, 0x63, 0x6b
+		])
+		var operation = 'decrypt'
+		var first8Bytes = (new Uint8Array(result.data)).subarray(0, 8)
+		for (var i = 0; i < first8Bytes.length; i++) {
+			if (first8Bytes[i] !== miniLockFileYes[i]) {
+				operation = 'encrypt'
+			}
 		}
 		setTimeout(function() {
 			$('span.dragFileInfo').text(

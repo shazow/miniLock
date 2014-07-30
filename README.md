@@ -58,28 +58,17 @@ The user's `miniLock ID` consists of 33 bytes. The first 32 bytes are the user's
 miniLock saves encrypted files as binary blobs with the following format:
 
 ```javascript
-Bytes signaling beginning of header
+miniLock magic bytes (8 bytes)
+Header length in bytes (4 bytes)
 Header bytes
-Bytes signaling ending of header
 Ciphertext bytes
 ```
 
-The beginning of the header is signaled with the following 16 bytes:
+miniLock magic bytes identify that this is a miniLock-encrypted file:
 
 ```javascript
 0x6d, 0x69, 0x6e, 0x69,
-0x4c, 0x6f, 0x63, 0x6b,
-0x46, 0x69, 0x6c, 0x65,
-0x59, 0x65, 0x73, 0x2e
-```
-
-The end of the header is signaled with the following 16 bytes:
-
-```javascript
-0x6d, 0x69, 0x6e, 0x69,
-0x4c, 0x6f, 0x63, 0x6b,
-0x45, 0x6e, 0x64, 0x49,
-0x6e, 0x66, 0x6f, 0x2e
+0x4c, 0x6f, 0x63, 0x6b
 ```
 
 The header itself is a stringified JSON object which contains information necessary for the recipients to decrypt the file. The JSON object has the following format:

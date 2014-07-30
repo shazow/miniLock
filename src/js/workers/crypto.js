@@ -11,7 +11,6 @@ importScripts(
 var nacl = window.nacl
 importScripts(
 	'../lib/crypto/nacl-stream.js',
-	'../lib/indexOfMulti.js',
 	'../lib/base58.js'
 )
 
@@ -87,6 +86,30 @@ var validateKey = function(key) {
 
 var validateEphemeral = validateKey
 
+// Input: Number
+// Output: Number as 4-byte Uint8Array
+var numberToByteArray = function(n) {
+    var byteArray = [0, 0, 0, 0]
+    for (var i = byteArray.length - 1; i >= 0; i--) {
+        byteArray[i] = n & 255
+		n = n >> 8
+    }
+    return new Uint8Array(byteArray)
+}
+
+// Input: 4-byte Uint8Array
+// Output: ByteArray converter to number
+var byteArrayToNumber = function(byteArray) {
+	var n = 0
+	for (var i = 0; i < byteArray.length; i++) {
+		n += byteArray[i]
+		if (i < byteArray.length-1) {
+			n = n << 8
+		}
+	}
+	return n
+}
+
 // -----------------------
 // Cryptographic functions
 // -----------------------
@@ -115,12 +138,11 @@ var validateEphemeral = validateKey
 // 	which is supposed to be caught and processed by
 //	the miniLock.crypto.worker.onmessage() function
 //	in miniLock.js.
-// Notes: A miniLock-encrypted file's first 16 bytes are always the following:
+// Notes: A miniLock-encrypted file's first 8 bytes are always the following:
 //	0x6d, 0x69, 0x6e, 0x69,
 //	0x4c, 0x6f, 0x63, 0x6b,
-//	0x46, 0x69, 0x6c, 0x65,
-//	0x59, 0x65, 0x73, 0x2e
-//	Those 16 bytes are then followed by the following JSON object (binary-encoded):
+//	Those 8 bytes are then followed by an 4-byte value indicating the byte length
+//	of the file header, which is the following JSON object (binary-encoded):
 //	{
 //		version: Version of the miniLock protocol used for this file (Currently 1) (Number)
 //		ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
@@ -141,13 +163,8 @@ var validateEphemeral = validateKey
 //			(Encrypted with recipient's public key using ephemeral key pair and stored as Base64 string)
 //		}
 //	}
-// Note that the file name is padded with 0x00 bytes until it reaches 256 bytes in length.
-//	The JSON object's end is then signaled by the following 16-byte delimiter:
-//		0x6d, 0x69, 0x6e, 0x69,
-//		0x4c, 0x6f, 0x63, 0x6b,
-//		0x45, 0x6e, 0x64, 0x49,
-//		0x6e, 0x66, 0x6f, 0x2e
-//	...after which we have the ciphertext in binary format.
+//	Note that the file name is padded with 0x00 bytes until it reaches 256 bytes in length.
+//	The ciphertext in binary format is appended after the header.
 //	Note that we cannot ensure the integrity of senderID unless it can be used to carry out a
 //	successful, authenticated decryption of both fileInfo and consequently the ciphertext.
 onmessage = function(message) {
@@ -206,9 +223,9 @@ if (message.operation === 'encrypt') {
 			message.fileNonce
 		)
 		var encrypted = [
-			'miniLockFileYes.',
+			'miniLock',
+			numberToByteArray(JSON.stringify(header).length),
 			JSON.stringify(header),
-			'miniLockEndInfo.',
 		]
 		for (var c = 0; c < message.data.length; c += 65535) {
 			var isLast = false
@@ -245,19 +262,17 @@ if (message.operation === 'encrypt') {
 // We have received a request to decrypt
 if (message.operation === 'decrypt') {
 	(function() {
-		var miniLockInfoEnd = [
-			0x6d, 0x69, 0x6e, 0x69,
-			0x4c, 0x6f, 0x63, 0x6b,
-			0x45, 0x6e, 0x64, 0x49,
-			0x6e, 0x66, 0x6f, 0x2e
-		]
-		var miniLockInfoEndIndex, header
+		var header, headerLength
 		try {
-			miniLockInfoEndIndex = message.data.indexOfMulti(miniLockInfoEnd)
-			header = nacl.util.encodeUTF8(message.data.subarray(16, miniLockInfoEndIndex))
+			headerLength = byteArrayToNumber(
+				new Uint8Array(message.data.subarray(8, 12))
+			)
+			header = nacl.util.encodeUTF8(
+				message.data.subarray(12, headerLength + 12)
+			)
 			header = JSON.parse(header)
 			message.data = message.data.subarray(
-				miniLockInfoEndIndex + miniLockInfoEnd.length,
+				12 + headerLength,
 				message.data.length
 			)
 		}
