@@ -14,6 +14,9 @@ importScripts(
 	'../lib/base58.js'
 )
 
+// Chunk size (in bytes)
+var chunkSize = 1024 * 1024 * 8
+
 // -----------------------
 // Utility functions
 // -----------------------
@@ -220,22 +223,28 @@ if (message.operation === 'encrypt') {
 		}
 		var streamEncryptor = nacl.stream.createEncryptor(
 			message.fileKey,
-			message.fileNonce
+			message.fileNonce,
+			chunkSize
 		)
+		header = JSON.stringify(header)
 		var encrypted = [
 			'miniLock',
-			numberToByteArray(JSON.stringify(header).length),
-			JSON.stringify(header),
+			numberToByteArray(header.length),
+			header,
 		]
-		for (var c = 0; c < message.data.length; c += 65535) {
-			var isLast = false
-			if (c >= (message.data.length - 65535)) {
-				isLast = true
+		for (var c = 0; c < message.data.length; c += chunkSize) {
+			if (c >= (message.data.length - chunkSize)) {
+				var encryptedChunk = streamEncryptor.encryptChunk(
+					message.data.subarray(c),
+					true
+				)
 			}
-			var encryptedChunk = streamEncryptor.encryptChunk(
-				message.data.subarray(c, c + 65535),
-				isLast
-			)
+			else {
+				var encryptedChunk = streamEncryptor.encryptChunk(
+					message.data.subarray(c, c + chunkSize),
+					false
+				)
+			}
 			if (!encryptedChunk) {
 				postMessage({
 					operation: 'encrypt',
@@ -423,18 +432,23 @@ if (message.operation === 'decrypt') {
 		}
 		var streamDecryptor = nacl.stream.createDecryptor(
 			actualFileKey,
-			actualFileNonce
+			actualFileNonce,
+			chunkSize
 		)
 		var decrypted = []
-		for (var c = 0; c < message.data.length; c += (2 + 16 + 65535)) {
-			var isLast = false
-			if (c >= (message.data.length - (2 + 16 + 65535))) {
-				isLast = true
+		for (var c = 0; c < message.data.length; c += (4 + 16 + chunkSize)) {
+			if (c >= (message.data.length - (4 + 16 + chunkSize))) {
+				var decryptedChunk = streamDecryptor.decryptChunk(
+					message.data.subarray(c),
+					true
+				)
 			}
-			var decryptedChunk = streamDecryptor.decryptChunk(
-				message.data.subarray(c, c + (2 + 16 + 65535)),
-				isLast
-			)
+			else {
+				var decryptedChunk = streamDecryptor.decryptChunk(
+					message.data.subarray(c, c + (4 + 16 + chunkSize)),
+					false
+				)
+			}
 			if (!decryptedChunk) {
 				postMessage({
 					operation: 'decrypt',

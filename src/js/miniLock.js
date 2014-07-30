@@ -325,7 +325,7 @@ miniLock.user.unlock = function(key, salt) {
 // Output: Estimate of how long encryption/decryption
 //	will take (in seconds), based on file size
 miniLock.user.progressBarEstimate = function(fileSize) {
-	var MBps = 14.5
+	var MBps = 15
 	return fileSize / 1000000 / MBps
 }
 

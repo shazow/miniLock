@@ -109,7 +109,7 @@ A recipient `a`'s long-term keys are denoted as `recipientSecret[a]` and `recipi
 
 The sender appends the bytes signalling the beginning of the header to the final encrypted file.
 
-A random 32-byte `fileKey` and a random 16-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction. We encrypt the plaintext bytes by splitting the plaintext into 65535-byte chunks. Each chunk is then encrypted using the following model:
+A random 32-byte `fileKey` and a random 16-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction. We encrypt the plaintext bytes by splitting the plaintext into 8388608-byte chunks. Each chunk is then encrypted using the following model:
 
 ```javascript
 fullNonce0 = fileNonce || 0
@@ -119,7 +119,7 @@ encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
 ...
 ```
 
-In the above example, the 24-byte `fullNonce` is acquired by concatenating the 16-byte `fileNonce` and 8-byte little-endian chunk number. Also,`length(chunk)` is a 2-byte little-endian plaintext chunk length.
+In the above example, the 24-byte `fullNonce` is acquired by concatenating the 16-byte `fileNonce` and 8-byte little-endian chunk number. Also,`length(chunk)` is a 4-byte little-endian plaintext chunk length.
 
 The last chunk is encrypted as follows:
 ```javascript
@@ -140,7 +140,7 @@ In order to decrypt the file, the recipient needs the information stored within 
 
 If there are multiple properties within `fileInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `fileInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes.
 
-In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 65553 bytes: the original 65535 bytes of the plaintext chunk, plus the 2 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
+In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 8388628 bytes: the original 8388608 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
 
 ```javascript
 fullNonce0 = fileNonce || 0
