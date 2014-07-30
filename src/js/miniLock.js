@@ -106,6 +106,11 @@ miniLock.crypto.worker.onmessage = function(message) {
 	) {
 		miniLock.UI.fileOperationHasFailed(message.operation, message.error)
 	}
+	else if (
+		message.hasOwnProperty('progress')
+	) {
+		miniLock.UI.animateProgressBar(message.progress, message.total)
+	}
 	else {
 		message.blob = new Blob(message.data)
 		// Execute callback function from function name
@@ -319,14 +324,6 @@ miniLock.user = {}
 // Result: Unlock
 miniLock.user.unlock = function(key, salt) {
 	miniLock.crypto.getKeyPair(key, salt)
-}
-
-// Input: File size
-// Output: Estimate of how long encryption/decryption
-//	will take (in seconds), based on file size
-miniLock.user.progressBarEstimate = function(fileSize) {
-	var MBps = 15
-	return fileSize / 1000000 / MBps
 }
 
 })()

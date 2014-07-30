@@ -255,6 +255,11 @@ if (message.operation === 'encrypt') {
 				return false
 			}
 			encrypted.push(encryptedChunk)
+			postMessage({
+				operation: 'encrypt',
+				progress: c,
+				total: message.data.length
+			})
 		}
 		streamEncryptor.clean()
 		postMessage({
@@ -461,6 +466,11 @@ if (message.operation === 'decrypt') {
 				return false
 			}
 			decrypted.push(decryptedChunk)
+			postMessage({
+				operation: 'decrypt',
+				progress: c,
+				total: message.data.length
+			})
 		}
 		streamDecryptor.clean()
 		postMessage({
