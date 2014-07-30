@@ -112,7 +112,6 @@ miniLock.crypto.worker.onmessage = function(message) {
 		miniLock.UI.animateProgressBar(message.progress, message.total)
 	}
 	else {
-		message.blob = new Blob(message.data)
 		// Execute callback function from function name
 		var context = window
 		var namespaces = message.callback.split('.')

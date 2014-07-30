@@ -264,7 +264,7 @@ if (message.operation === 'encrypt') {
 		streamEncryptor.clean()
 		postMessage({
 			operation: 'encrypt',
-			data: encrypted,
+			blob: new Blob(encrypted),
 			name: message.name,
 			saveName: message.saveName,
 			senderID: message.myMiniLockID,
@@ -475,7 +475,7 @@ if (message.operation === 'decrypt') {
 		streamDecryptor.clean()
 		postMessage({
 			operation: 'decrypt',
-			data: decrypted,
+			blob: new Blob(decrypted),
 			name: actualFileName,
 			saveName: actualFileName,
 			senderID: actualFileInfo.senderID,
