@@ -123,9 +123,9 @@ The sender appends the bytes signalling the beginning of the header to the final
 A random 32-byte `fileKey` and a random 16-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction. We encrypt the plaintext bytes by splitting the plaintext into 65535-byte chunks. Each chunk is then encrypted using the following model:
 
 ```javascript
-fullNonce0 = fileNonce || 0x00
+fullNonce0 = fileNonce || 0
 encryptedChunk0 = length(chunk0) || nacl.secretbox(chunk0, fullNonce0, fileKey)
-fullNonce1 = fileNonce || 0x01
+fullNonce1 = fileNonce || 1
 encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
 ...
 ```
@@ -154,9 +154,9 @@ If there are multiple properties within `fileInfo`, the recipient must iterate t
 In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 65553 bytes: the original 65535 bytes of the plaintext chunk, plus the 2 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
 
 ```javascript
-fullNonce0 = fileNonce || 0x00
+fullNonce0 = fileNonce || 0
 decryptedChunk0 = nacl.secretbox.open(chunk0, fullNonce0, fileKey)
-fullNonce1 = fileNonce || 0x01
+fullNonce1 = fileNonce || 1
 decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 ...
 ```
