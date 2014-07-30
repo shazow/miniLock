@@ -95,7 +95,7 @@ form.process.unprocessed > div.scrollingsurface {
 
 form.process > div.scrollingsurface > header {
 	position: relative;
-	height: 270px;
+	height: 170px;
 }
 
 /* File icon */
@@ -404,13 +404,14 @@ form.process a.fileSaveLink span.assistive {
 
 form.process div.senderID {
 	position: absolute;
-	top: 345px;
+	top: 255px;
 	left: 100px;
 	right: 100px;
 	border: 1px solid rgba(255, 255, 255, 0.4);
 	padding: 9px;
 	box-sizing:border-box;
 	height: 35px;
+	width: 380px;
 	display: none;
 }
 
@@ -424,7 +425,7 @@ form.process.decrypted  div.senderID {
 form.process div.senderID h3 {
 	position: absolute;
 	top: -20px;
-	left: 10px;
+	left :0;
 	opacity: 0;
 }
 
@@ -453,7 +454,7 @@ form.process.decrypted div.senderID code {
 
 form.process div.summary {
 	position: absolute;
-	top: 400px;
+	top: 300px;
 	left: 100px;
 	right: 100px;
 	margin: 10px;
@@ -469,11 +470,13 @@ form.process.decrypted div.summary {
 
 form.process div.suspectFilenameNotice {
 	position: fixed;
-	top: 455px;
+	top: 355px;
 	left: 100px;
 	right: 100px;
 	padding: 10px;
-	background: rgba(0, 0, 0, 0.1);
+	background: #FF8387;
+	color: rgba(255, 255, 255, 0.7);
+	width: 360px;
 	visibility: hidden;
 }
 
@@ -500,7 +503,7 @@ form.encrypt.process.failed file div.failureNotice {
 
 form.process div.progressBar {
 	position: absolute;
-	top: 350px;
+	top: 260px;
 	left: 105px;
 	right: 105px;
 	height: 25px;
@@ -573,7 +576,8 @@ form.process div.recipients > header {
 form.process div.identity {
 	position: relative;
 	box-sizing: border-box;
-	background: #4c7193;
+	background: #597ea0;
+	width: 400px;
 	z-index: 0;
 	height: 35px;
 	opacity: 1;
@@ -660,7 +664,7 @@ form.process div.identity input[type=button].remove {
 	line-height: 15px;
 	font-family: 'Octicons';
 	font-size: 18px;
-	color: #7090AD;
+	color: rgba(255, 255, 255, 0.4);
 	padding: 0;
 	background: none;
 }
@@ -678,7 +682,7 @@ form.process div.missingMyMiniLockIDNotice {
 	position: absolute;
 	box-sizing: border-box;
 	padding-top: 3px;
-	height: 65px;
+	height: 85px;
 	left: 200px;
 	right: 100px;
 	overflow: auto;
@@ -710,7 +714,7 @@ form.process div.missingMyMiniLockIDNotice span.text {
 
 form.process input.encrypt.button {
 	position: fixed;
-	bottom: 40px;
+	bottom: 60px;
 	left: 100px;
 	visibility: hidden;
 	opacity: 0;

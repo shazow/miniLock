@@ -87,7 +87,7 @@ $('form.unlockForm').on('submit', function() {
 				}
 			)
 		)
-		$('div.unlockInfo').animate({height: 185})
+		$('div.unlockInfo').animate({height: 175})
 		$('div.unlockInfo input[type=text]').unbind().click(function() {
 			$(this).select()
 		})

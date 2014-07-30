@@ -121,8 +121,8 @@ div.squareContainer.flip div.square {
 }
 
 div.squareContainer, div.squareFront, div.squareBack {
-	width: 600px;
-	height: 600px;
+	width: 550px;
+	height: 550px;
 }
 
 div.square {
