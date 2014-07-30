@@ -120,7 +120,23 @@ A recipient `a`'s long-term keys are denoted as `recipientSecret[a]` and `recipi
 
 The sender appends the bytes signalling the beginning of the header to the final encrypted file.
 
-A random 32-byte `fileKey` and a random 24-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction.
+A random 32-byte `fileKey` and a random 16-byte `fileNonce` are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL's `xsalsa20-poly1305` construction. We encrypt the plaintext bytes by splitting the plaintext into 65535-byte chunks. Each chunk is then encrypted using the following model:
+
+```javascript
+fullNonce0 = fileNonce || 0x00
+encryptedChunk0 = length(chunk0) || nacl.secretbox(chunk0, fullNonce0, fileKey)
+fullNonce1 = fileNonce || 0x01
+encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
+...
+```
+
+In the above example, the 24-byte `fullNonce` is acquired by concatenating the 16-byte `fileNonce` and 8-byte little-endian chunk number. Also,`length(chunk)` is a 2-byte little-endian plaintext chunk length.
+
+The last chunk is encrypted as follows:
+```javascript
+fullNonceN = fileNonce || setMostSignificantBit(N)
+encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
+```
 
 For every recipient `n`, the sender encrypts `fileKey` and `fileName` (the file's intended name upon decryption) using `senderSecret` and `recipientPublic[n]` and stores them within a `fileInfo` object inside the JSON header along with `fileNonce` and `senderID`, as described in §3.
 
@@ -133,7 +149,19 @@ TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated e
 ###5. File decryption
 In order to decrypt the file, the recipient needs the information stored within the `fileInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `fileInfo` header object.
 
-If there are multiple properties within `fileInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `fileInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes. The recipient then decrypts `fileName` (again using `senderID`), and removes the padding of `0x00` bytes from the decrypted `fileName` in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.
+If there are multiple properties within `fileInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `fileInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes.
+
+In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 65553 bytes: the original 65535 bytes of the plaintext chunk, plus the 2 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
+
+```javascript
+fullNonce0 = fileNonce || 0x00
+decryptedChunk0 = nacl.secretbox.open(chunk0, fullNonce0, fileKey)
+fullNonce1 = fileNonce || 0x01
+decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
+...
+```
+
+The recipient then decrypts `fileName` (again using `senderID`), and removes the padding of `0x00` bytes from the decrypted `fileName` in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.
 
 If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.
 

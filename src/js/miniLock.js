@@ -98,7 +98,7 @@ miniLock.crypto = {}
 miniLock.crypto.worker = new Worker('js/workers/crypto.js')
 
 // Process messages from the crypto worker.
-miniLock.crypto.worker.onmessage = function(message) {
+miniLock.crypto.worker.onmessage = function(message, encrypted) {
 	message = message.data
 	if (
 		message.hasOwnProperty('error')
@@ -107,19 +107,7 @@ miniLock.crypto.worker.onmessage = function(message) {
 		miniLock.UI.fileOperationHasFailed(message.operation, message.error)
 	}
 	else {
-		if (message.operation === 'encrypt') {
-			message.blob = new Blob([
-				'miniLockFileYes.',
-				JSON.stringify(message.header),
-				'miniLockEndInfo.',
-				new Uint8Array(message.data)
-			], {type: 'application/minilock'})
-		}
-		if (message.operation === 'decrypt') {
-			message.blob = new Blob([
-				new Uint8Array(message.data)
-			])
-		}
+		message.blob = new Blob(message.data)
 		// Execute callback function from function name
 		var context = window
 		var namespaces = message.callback.split('.')
@@ -254,7 +242,7 @@ miniLock.crypto.encryptFile = function(
 		name: file.name,
 		saveName: saveName,
 		fileKey: miniLock.crypto.getFileKey(),
-		fileNonce: miniLock.crypto.getNonce(),
+		fileNonce: miniLock.crypto.getNonce().subarray(0, 16),
 		fileInfoNonces: fileInfoNonces,
 		fileKeyNonces: fileKeyNonces,
 		fileNameNonces: fileNameNonces,
@@ -337,7 +325,7 @@ miniLock.user.unlock = function(key, salt) {
 // Output: Estimate of how long encryption/decryption
 //	will take (in seconds), based on file size
 miniLock.user.progressBarEstimate = function(fileSize) {
-	var MBps = 18.3
+	var MBps = 15
 	return fileSize / 1000000 / MBps
 }
 

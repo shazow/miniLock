@@ -6,11 +6,14 @@
 var window = {}
 /*jshint +W079 */
 importScripts(
-	'../lib/crypto/nacl.js',
+	'../lib/crypto/nacl.js'
+)
+var nacl = window.nacl
+importScripts(
+	'../lib/crypto/nacl-stream.js',
 	'../lib/indexOfMulti.js',
 	'../lib/base58.js'
 )
-var nacl = window.nacl
 
 // -----------------------
 // Utility functions
@@ -48,10 +51,10 @@ var validateID = function(id) {
 	return true
 }
 
-// Input: String
+// Input: Nonce (Base64) (String), Expected nonce length in bytes (Number)
 // Output: Boolean
 // Notes: Validates if string is a proper nonce.
-var validateNonce = function(nonce) {
+var validateNonce = function(nonce, expectedLength) {
 	if (
 		(nonce.length > 40) ||
 		(nonce.length < 10)
@@ -60,7 +63,7 @@ var validateNonce = function(nonce) {
 	}
 	if (base64Match.test(nonce)) {
 		var bytes = nacl.util.decodeBase64(nonce)
-		return bytes.length === 24
+		return bytes.length === expectedLength
 	}
 	return false
 }
@@ -96,7 +99,7 @@ var validateEphemeral = validateKey
 //		name: File name (String),
 //		saveName: Name to use for saving resulting file (String),
 //		fileKey: 32-byte key used for file encryption (Uint8Array),
-//		fileNonce: 24-byte nonce used for file encryption/decryption (Uint8Array),
+//		fileNonce: 16-byte nonce used for file encryption/decryption (Uint8Array),
 //		fileInfoNonces: Array of 24-byte nonces (Uint8Array) to be used to encrypt fileInfo objects (one for each recipient),
 //		fileKeyNonces: Array of 24-byte nonces (Uint8Array) to be used to encrypt fileKey to recipients (one for each recipient),
 //		fileNameNonces: Array of 24-byte nonces (Uint8Array) to be used to encrypt fileName to recipients (one for each recipient),
@@ -198,28 +201,44 @@ if (message.operation === 'encrypt') {
 				nacl.util.encodeBase64(message.fileInfoNonces[i])
 			] = nacl.util.encodeBase64(encryptedFileInfo)
 		}
-		var encrypted = nacl.secretbox(
-			message.data,
-			message.fileNonce,
-			message.fileKey
+		var streamEncryptor = nacl.stream.createEncryptor(
+			message.fileKey,
+			message.fileNonce
 		)
-		if (!encrypted) {
-			postMessage({
-				operation: 'encrypt',
-				error: 1
-			})
-			throw new Error('miniLock: Encryption failed - general encryption error')
-			return false
+		var encrypted = [
+			'miniLockFileYes.',
+			JSON.stringify(header),
+			'miniLockEndInfo.',
+		]
+		for (var c = 0; c < message.data.length; c += 65535) {
+			var isLast = false
+			if (c >= (message.data.length - 65535)) {
+				isLast = true
+			}
+			var encryptedChunk = streamEncryptor.encryptChunk(
+				message.data.subarray(c, c + 65535),
+				isLast
+			)
+			if (!encryptedChunk) {
+				postMessage({
+					operation: 'encrypt',
+					error: 1
+				})
+				throw new Error('miniLock: Encryption failed - general encryption error')
+				return false
+			}
+			encrypted.push(encryptedChunk)
 		}
+		streamEncryptor.clean()
 		postMessage({
 			operation: 'encrypt',
 			data: encrypted,
 			name: message.name,
 			saveName: message.saveName,
-			header: header,
 			senderID: message.myMiniLockID,
 			callback: message.callback
 		})
+		delete encrypted
 	})()
 }
 
@@ -274,13 +293,14 @@ if (message.operation === 'decrypt') {
 			return false
 		}
 		// Attempt fileInfo decryptions until one succeeds
-		var actualFileInfo = false
-		var actualFileKey  = false
-		var actualFileName = false
+		var actualFileInfo  = null
+		var actualFileKey   = null
+		var actualFileName  = null
+		var actualFileNonce = null
 		for (var i in header.fileInfo) {
 			if (
 				({}).hasOwnProperty.call(header.fileInfo, i)
-				&& validateNonce(i)
+				&& validateNonce(i, 24)
 			) {
 				try {
 					nacl.util.decodeBase64(header.fileInfo[i])
@@ -330,14 +350,14 @@ if (message.operation === 'decrypt') {
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileKey, 'data')
 			|| !actualFileInfo.fileKey.data.length
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileKey, 'nonce')
-			|| !validateNonce(actualFileInfo.fileKey.nonce)
+			|| !validateNonce(actualFileInfo.fileKey.nonce, 24)
 			|| !({}).hasOwnProperty.call(actualFileInfo, 'fileName')
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileName, 'data')
 			|| !actualFileInfo.fileName.data.length
 			|| !({}).hasOwnProperty.call(actualFileInfo.fileName, 'nonce')
-			|| !validateNonce(actualFileInfo.fileName.nonce)
+			|| !validateNonce(actualFileInfo.fileName.nonce, 24)
 			|| !({}).hasOwnProperty.call(actualFileInfo, 'fileNonce')
-			|| !validateNonce(actualFileInfo.fileNonce)
+			|| !validateNonce(actualFileInfo.fileNonce, 16)
 			|| !({}).hasOwnProperty.call(actualFileInfo, 'senderID')
 			|| !validateID(actualFileInfo.senderID)
 		) {
@@ -361,7 +381,8 @@ if (message.operation === 'decrypt') {
 				Base58.decode(actualFileInfo.senderID).subarray(0, 32),
 				message.mySecretKey
 			)
-			actualFileName = nacl.util.encodeUTF8(actualFileName)
+			actualFileName  = nacl.util.encodeUTF8(actualFileName)
+			actualFileNonce = nacl.util.decodeBase64(actualFileInfo.fileNonce)
 		}
 		catch(err) {
 			postMessage({
@@ -386,18 +407,29 @@ if (message.operation === 'decrypt') {
 		) {
 			actualFileName = actualFileName.slice(0, -1)
 		}
-		var decrypted = nacl.secretbox.open(
-			message.data,
-			nacl.util.decodeBase64(actualFileInfo.fileNonce),
-			actualFileKey
+		var streamDecryptor = nacl.stream.createDecryptor(
+			actualFileKey,
+			actualFileNonce
 		)
-		if (!decrypted) {
-			postMessage({
-				operation: 'decrypt',
-				error: 2
-			})
-			throw new Error('miniLock: Decryption failed - general decryption error')
-			return false
+		var decrypted = []
+		for (var c = 0; c < message.data.length; c += (2 + 16 + 65535)) {
+			var isLast = false
+			if (c >= (message.data.length - (2 + 16 + 65535))) {
+				isLast = true
+			}
+			var decryptedChunk = streamDecryptor.decryptChunk(
+				message.data.subarray(c, c + (2 + 16 + 65535)),
+				isLast
+			)
+			if (!decryptedChunk) {
+				postMessage({
+					operation: 'decrypt',
+					error: 2
+				})
+				throw new Error('miniLock: Decryption failed - general decryption error')
+				return false
+			}
+			decrypted.push(decryptedChunk)
 		}
 		postMessage({
 			operation: 'decrypt',
@@ -407,6 +439,7 @@ if (message.operation === 'decrypt') {
 			senderID: actualFileInfo.senderID,
 			callback: message.callback
 		})
+		delete decrypted
 	})()
 }
 
