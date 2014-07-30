@@ -214,13 +214,11 @@ miniLock.UI.flipToFront = function() {
 	$('form.fileSelectForm input[type=reset]').click()
 	$('#utip').hide()
 	$('div.squareContainer').removeClass('flip')
-	$('div.squareFront').show()
 }
 
 miniLock.UI.flipToBack = function() {
 	$('#utip').hide()
 	$('div.squareContainer').addClass('flip')
-	$('div.squareFront').hide()
 }
 
 // -----------------------
