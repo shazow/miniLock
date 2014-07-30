@@ -233,14 +233,15 @@ if (message.operation === 'encrypt') {
 			header,
 		]
 		for (var c = 0; c < message.data.length; c += chunkSize) {
+			var encryptedChunk
 			if (c >= (message.data.length - chunkSize)) {
-				var encryptedChunk = streamEncryptor.encryptChunk(
+				encryptedChunk = streamEncryptor.encryptChunk(
 					message.data.subarray(c),
 					true
 				)
 			}
 			else {
-				var encryptedChunk = streamEncryptor.encryptChunk(
+				encryptedChunk = streamEncryptor.encryptChunk(
 					message.data.subarray(c, c + chunkSize),
 					false
 				)
@@ -437,14 +438,15 @@ if (message.operation === 'decrypt') {
 		)
 		var decrypted = []
 		for (var c = 0; c < message.data.length; c += (4 + 16 + chunkSize)) {
+			var decryptedChunk
 			if (c >= (message.data.length - (4 + 16 + chunkSize))) {
-				var decryptedChunk = streamDecryptor.decryptChunk(
+				decryptedChunk = streamDecryptor.decryptChunk(
 					message.data.subarray(c),
 					true
 				)
 			}
 			else {
-				var decryptedChunk = streamDecryptor.decryptChunk(
+				decryptedChunk = streamDecryptor.decryptChunk(
 					message.data.subarray(c, c + (4 + 16 + chunkSize)),
 					false
 				)
