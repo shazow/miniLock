@@ -492,6 +492,7 @@ form.process div.failureNotice {
 	left: 110px;
 	right: 110px;
 	visibility: hidden;
+	color: rgba(255, 255, 255, 0.8);
 }
 
 form.decrypt.process.failed div.failureNotice,
@@ -507,7 +508,7 @@ form.process div.progressBar {
 	left: 105px;
 	right: 105px;
 	height: 25px;
-	width: auto;
+	width: 370px;
 	box-sizing: border-box;
 	padding: 0;
 	opacity: 0;
@@ -536,7 +537,7 @@ form.decrypt.process.failed div.progressBar {
 }
 
 form.process div.progressBar div.progressBarFill {
-	width: 50%;
+	width: 0;
 	height: 100%;
 	background: white;
 }
