@@ -628,7 +628,22 @@ fileInfo: {
 
 <p>The sender appends the bytes signalling the beginning of the header to the final encrypted file.</p>
 
-<p>A random 32-byte <code>fileKey</code> and a random 24-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction.</p>
+<p>A random 32-byte <code>fileKey</code> and a random 16-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction. We encrypt the plaintext bytes by splitting the plaintext into 65535-byte chunks. Each chunk is then encrypted using the following model:</p>
+
+<pre><code class="language-javascript">fullNonce0 = fileNonce || 0
+encryptedChunk0 = length(chunk0) || nacl.secretbox(chunk0, fullNonce0, fileKey)
+fullNonce1 = fileNonce || 1
+encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
+...
+</code></pre>
+
+<p>In the above example, the 24-byte <code>fullNonce</code> is acquired by concatenating the 16-byte <code>fileNonce</code> and 8-byte little-endian chunk number. Also,<code>length(chunk)</code> is a 2-byte little-endian plaintext chunk length.</p>
+
+<p>The last chunk is encrypted as follows:</p>
+
+<pre><code class="language-javascript">fullNonceN = fileNonce || setMostSignificantBit(N)
+encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
+</code></pre>
 
 <p>For every recipient <code>n</code>, the sender encrypts <code>fileKey</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores them within a <code>fileInfo</code> object inside the JSON header along with <code>fileNonce</code> and <code>senderID</code>, as described in §3.</p>
 
@@ -642,7 +657,18 @@ fileInfo: {
 
 <p>In order to decrypt the file, the recipient needs the information stored within the <code>fileInfo</code> section of the header. They also will need the <code>ephemeral</code> property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the <code>fileInfo</code> header object.</p>
 
-<p>If there are multiple properties within <code>fileInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>fileInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes. The recipient then decrypts <code>fileName</code> (again using <code>senderID</code>), and removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
+<p>If there are multiple properties within <code>fileInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>fileInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes.</p>
+
+<p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 65553 bytes: the original 65535 bytes of the plaintext chunk, plus the 2 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
+
+<pre><code class="language-javascript">fullNonce0 = fileNonce || 0
+decryptedChunk0 = nacl.secretbox.open(chunk0, fullNonce0, fileKey)
+fullNonce1 = fileNonce || 1
+decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
+...
+</code></pre>
+
+<p>The recipient then decrypts <code>fileName</code> (again using <code>senderID</code>), and removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
 
 <p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
 
