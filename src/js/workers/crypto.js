@@ -255,11 +255,16 @@ if (message.operation === 'encrypt') {
 				return false
 			}
 			encrypted.push(encryptedChunk)
+			postMessage({
+				operation: 'encrypt',
+				progress: c,
+				total: message.data.length
+			})
 		}
 		streamEncryptor.clean()
 		postMessage({
 			operation: 'encrypt',
-			data: encrypted,
+			blob: new Blob(encrypted),
 			name: message.name,
 			saveName: message.saveName,
 			senderID: message.myMiniLockID,
@@ -461,11 +466,16 @@ if (message.operation === 'decrypt') {
 				return false
 			}
 			decrypted.push(decryptedChunk)
+			postMessage({
+				operation: 'decrypt',
+				progress: c,
+				total: message.data.length
+			})
 		}
 		streamDecryptor.clean()
 		postMessage({
 			operation: 'decrypt',
-			data: decrypted,
+			blob: new Blob(decrypted),
 			name: actualFileName,
 			saveName: actualFileName,
 			senderID: actualFileInfo.senderID,
