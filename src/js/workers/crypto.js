@@ -265,6 +265,7 @@ if (message.operation === 'encrypt') {
 			senderID: message.myMiniLockID,
 			callback: message.callback
 		})
+		encrypted = null
 	})()
 }
 
@@ -461,6 +462,7 @@ if (message.operation === 'decrypt') {
 			}
 			decrypted.push(decryptedChunk)
 		}
+		streamDecryptor.clean()
 		postMessage({
 			operation: 'decrypt',
 			data: decrypted,
@@ -469,6 +471,7 @@ if (message.operation === 'decrypt') {
 			senderID: actualFileInfo.senderID,
 			callback: message.callback
 		})
+		decrypted = null
 	})()
 }
 
