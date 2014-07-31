@@ -681,7 +681,7 @@ decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 <li><code>Error 4</code>: Invalid header version</li>
 <li><code>Error 5</code>: Could not validate sender ID</li>
 <li><code>Error 6</code>: File is not encrypted for this recipient</li>
-<li><code>Error 7</code>: Could not validate file contents after decryption</li>
+<li><code>Error 7</code>: Could not validate ciphertext hash</li>
 </ul>
 
 <h3>8. Caveats</h3>
