@@ -549,7 +549,7 @@ pre[class*="language-"]:after {
 
 <p>Users are encouraged to use passphrases which are easier to remember but harder to guess. If a user fails to enter a sufficiently entropic passphrase, miniLock will use a built-in dictionary of the 58,110 most common words in the English language to suggest a seven-word passphrase. This gives us a passphrase with approximately 111 bits of entropy, since 58110<sup>7</sup> ~= 2<sup>111</sup>.</p>
 
-<p>Once we obtain a suitable passphrase, we hash it using <code>SHA-512</code> and then derive the user&rsquo;s 32-byte private key by applying <code>scrypt</code> onto the obtained hash using the following parameters:</p>
+<p>Once we obtain a suitable passphrase, we hash it using <code>BLAKE2</code> and pass the resulting 32 bytes through <code>scrypt</code> in order to obtain the user&rsquo;s private <code>curve25519</code> key. <code>scrypt</code> is invoked using the following parameters::</p>
 
 <ul>
 <li>N = 2<sup>17</sup></li>
@@ -562,7 +562,7 @@ pre[class*="language-"]:after {
 
 <p>Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL <code>curve25519-xsalsa20-poly1305</code> construction.</p>
 
-<p>The user&rsquo;s <code>miniLock ID</code> consists of 33 bytes. The first 32 bytes are the user&rsquo;s <code>curve25519</code> public key. The last byte acts as a checksum: it is derived by hashing the first 32 bytes with <code>SHA-512</code> and truncating the resulting hash to its first byte. After constructing the 33 bytes of the miniLock ID, it is encoded into a Base58 representation, meant to be easily communicable via email or instant messaging.</p>
+<p>The user&rsquo;s <code>miniLock ID</code> consists of 33 bytes. The first 32 bytes are the user&rsquo;s <code>curve25519</code> public key. The last byte acts as a checksum: it is derived by hashing the first 32 bytes with <code>BLAKE2</code> set to a 1-byte output. After constructing the 33 bytes of the miniLock ID, it is encoded into a Base58 representation, meant to be easily communicable via email or instant messaging.</p>
 
 <h3>3. File format</h3>
 
@@ -588,25 +588,20 @@ ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (B
 fileInfo: {
     (One copy of the below object for every recipient)
     Unique nonce for decrypting this object (Base64): {
-        fileKey: {
-            data: Key for file decryption, encrypted using long-term secret key to recipient&#39;s long-term public key (Base64),
-            nonce: Unique nonce for the above (Base64)
-        }
-        fileName: {
-            data: Original filname, encrypted using long-term secret key to recipient&#39;s long-term public key (Base64),
-            nonce: Unique nonce for the above (Base64)
-        }
-        fileNonce: Nonce for file decryption (Base64),
-        senderID: Sender&#39;s miniLock ID (Base58)
-    }
-    (Encrypted with shared secret derived from the sender’s
-     private ephemeral key and recipient&#39;s long-term public key.
-     Stored as Base64 string.)
-}
+        senderID: Sender&#39;s miniLock ID (Base58),
+        decryptInfo: {
+            fileKey: Key for file decryption (Base64),
+            fileNonce: Nonce for file decryption (Base64),
+            fileName: File&#39;s original filename (padded, see notes) (String),
+            fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
+        } (decryptInfo is encrypted to recipient&#39;s public key using long-term key pair) (Base64),
+} (fileInfo is encrypted to recipient&#39;s public key using ephemeral key pair) (Base64)
 }
 </code></pre>
 
-<p>Note that in the above header, <code>fileName</code> is padded with the <code>0x00</code> byte until it reaches 256 bytes in length. This is done in order to prevent the discovery of the <code>fileName</code> length purely by analyzing an encrypted miniLock file&rsquo;s header.</p>
+<p>Note that in the above header, <code>fileName</code> is padded with the <code>0x00</code> byte until it reaches 256 bytes in length.</p>
+
+<p>Note that the nonce used to encrypt <code>fileInfo</code> is the same as the one used to encrypt <code>decryptInfo</code>. Nonce reuse in this scenario is permitted since we are encrypting using different keys.</p>
 
 <h3>4. File encryption</h3>
 
@@ -618,7 +613,7 @@ fileInfo: {
 
 <p>The sender appends the bytes signalling the beginning of the header to the final encrypted file.</p>
 
-<p>A random 32-byte <code>fileKey</code> and a random 16-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction. We encrypt the plaintext bytes by splitting the plaintext into 65535-byte chunks. Each chunk is then encrypted using the following model:</p>
+<p>A random 32-byte <code>fileKey</code> and a random 16-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction. We encrypt the plaintext bytes by splitting the plaintext into 1048576-byte chunks. Each chunk is then encrypted using the following model:</p>
 
 <pre><code class="language-javascript">fullNonce0 = fileNonce || 0
 encryptedChunk0 = length(chunk0) || nacl.secretbox(chunk0, fullNonce0, fileKey)
@@ -627,7 +622,7 @@ encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
 ...
 </code></pre>
 
-<p>In the above example, the 24-byte <code>fullNonce</code> is acquired by concatenating the 16-byte <code>fileNonce</code> and 8-byte little-endian chunk number. Also,<code>length(chunk)</code> is a 2-byte little-endian plaintext chunk length.</p>
+<p>In the above example, the 24-byte <code>fullNonce</code> is acquired by concatenating the 16-byte <code>fileNonce</code> and 8-byte little-endian chunk number. Also,<code>length(chunk)</code> is a 4-byte little-endian plaintext chunk length.</p>
 
 <p>The last chunk is encrypted as follows:</p>
 
@@ -635,9 +630,9 @@ encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
 encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 </code></pre>
 
-<p>For every recipient <code>n</code>, the sender encrypts <code>fileKey</code> and <code>fileName</code> (the file&rsquo;s intended name upon decryption) using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores them within a <code>fileInfo</code> object inside the JSON header along with <code>fileNonce</code> and <code>senderID</code>, as described in §3.</p>
+<p>The sender generates a <code>decryptInfo</code> JSON object containing <code>fileKey</code>, <code>fileNonce</code>, <code>fileName</code> and <code>fileHash</code>. For every recipient <code>n</code>, the sender encrypts <code>decryptInfo</code> using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores it within a <code>fileInfo</code> object inside the JSON header along with <code>senderID</code>, as described in §3.</p>
 
-<p>The name of the <code>fileInfo</code> property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with <code>senderEphemeralSecret</code>, to encrypt the underlying JSON object asymmetrically to <code>senderPublic</code>, using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. Note that this is done once for every recipient, creating a different <code>fileInfo</code> object for every recipient, each labeled by their unique nonces.</p>
+<p>The name of the <code>fileInfo</code> property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with <code>senderEphemeralSecret</code>, to encrypt the underlying JSON object asymmetrically to <code>recipientPublic[n]</code>, using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. Note that this is done once for every recipient, creating a different <code>fileInfo</code> object for every recipient, each labeled by their unique nonces.</p>
 
 <p>Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.</p>
 
@@ -649,7 +644,7 @@ encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 
 <p>If there are multiple properties within <code>fileInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>fileInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes.</p>
 
-<p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks of 65553 bytes: the original 65535 bytes of the plaintext chunk, plus the 2 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
+<p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
 
 <pre><code class="language-javascript">fullNonce0 = fileNonce || 0
 decryptedChunk0 = nacl.secretbox.open(chunk0, fullNonce0, fileKey)
@@ -658,7 +653,9 @@ decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 ...
 </code></pre>
 
-<p>The recipient then decrypts <code>fileName</code> (again using <code>senderID</code>), and removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
+<p>Before any file decryption, we compare the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>.</p>
+
+<p>The recipient then removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
 
 <p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
 
@@ -684,6 +681,7 @@ decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 <li><code>Error 4</code>: Invalid header version</li>
 <li><code>Error 5</code>: Could not validate sender ID</li>
 <li><code>Error 6</code>: File is not encrypted for this recipient</li>
+<li><code>Error 7</code>: Could not validate file contents after decryption</li>
 </ul>
 
 <h3>8. Caveats</h3>
