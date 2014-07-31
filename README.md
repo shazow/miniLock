@@ -76,24 +76,24 @@ The header itself is a stringified JSON object which contains information necess
 ```json
 {
 version: Version of the miniLock protocol used for this file (Currently 1) (Number)
-ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
-fileInfo: {
+ephemeral: Public key from ephemeral key pair used to encrypt decryptInfo object (Base64),
+decryptInfo: {
 	(One copy of the below object for every recipient)
 	Unique nonce for decrypting this object (Base64): {
 		senderID: Sender's miniLock ID (Base58),
-		decryptInfo: {
+		fileInfo: {
 			fileKey: Key for file decryption (Base64),
 			fileNonce: Nonce for file decryption (Base64),
 			fileName: File's original filename (padded, see notes) (String),
 			fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
-		} (decryptInfo is encrypted to recipient's public key using long-term key pair) (Base64),
-} (fileInfo is encrypted to recipient's public key using ephemeral key pair) (Base64)
+		} (fileInfo is encrypted to recipient's public key using long-term key pair) (Base64),
+} (decryptInfo is encrypted to recipient's public key using ephemeral key pair) (Base64)
 }
 ```
 
 Note that in the above header, `fileName` is padded with the `0x00` byte until it reaches 256 bytes in length.
 
-Note that the nonce used to encrypt `fileInfo` is the same as the one used to encrypt `decryptInfo`. Nonce reuse in this scenario is permitted since we are encrypting using different keys.
+Note that the nonce used to encrypt `decryptInfo` is the same as the one used to encrypt `fileInfo`. Nonce reuse in this scenario is permitted since we are encrypting using different keys.
 
 ###4. File encryption
 The sender begins by generating a new ephemeral `curve25519` key pair, `senderEphemeralSecret` and `senderEphemeralPublic`.
@@ -122,18 +122,18 @@ fullNonceN = fileNonce || setMostSignificantBit(N)
 encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 ```
 
-The sender generates a `decryptInfo` JSON object containing `fileKey`, `fileNonce`, `fileName` and `fileHash`. For every recipient `n`, the sender encrypts `decryptInfo` using `senderSecret` and `recipientPublic[n]` and stores it within a `fileInfo` object inside the JSON header along with `senderID`, as described in §3.
+The sender generates a `fileInfo` JSON object containing `fileKey`, `fileNonce`, `fileName` and `fileHash`. For every recipient `n`, the sender encrypts `fileInfo` using `senderSecret` and `recipientPublic[n]` and stores it within a `decryptInfo` object inside the JSON header along with `senderID`, as described in §3.
 
-The name of the `fileInfo` property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with `senderEphemeralSecret`, to encrypt the underlying JSON object asymmetrically to `recipientPublic[n]`, using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. Note that this is done once for every recipient, creating a different `fileInfo` object for every recipient, each labeled by their unique nonces.
+The name of the `decryptInfo` property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with `senderEphemeralSecret`, to encrypt the underlying JSON object asymmetrically to `recipientPublic[n]`, using TweetNaCL's `curve25519-xsalsa20-poly1305` construction. Note that this is done once for every recipient, creating a different `decryptInfo` object for every recipient, each labeled by their unique nonces.
 
 Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.
 
 TweetNaCL's `curve25519-xsalsa20-poly1305` construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.
 
 ###5. File decryption
-In order to decrypt the file, the recipient needs the information stored within the `fileInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `fileInfo` header object.
+In order to decrypt the file, the recipient needs the information stored within the `decryptInfo` section of the header. They also will need the `ephemeral` property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the `decryptInfo` header object.
 
-If there are multiple properties within `fileInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `fileInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes.
+If there are multiple properties within `decryptInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `decryptInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes.
 
 In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
 

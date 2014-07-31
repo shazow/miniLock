@@ -129,8 +129,8 @@ var byteArrayToNumber = function(byteArray) {
 //		saveName: Name to use for saving resulting file (String),
 //		fileKey: 32-byte key used for file encryption (Uint8Array),
 //		fileNonce: 16-byte nonce used for file encryption/decryption (Uint8Array),
-//		fileInfoNonces: Array of 24-byte nonces (Uint8Array) to be used to encrypt
-//			fileInfo and decryptInfo objects (one for each recipient)
+//		decryptInfoNonces: Array of 24-byte nonces (Uint8Array) to be used to encrypt
+//			decryptInfo and fileInfo objects (one for each recipient)
 //		ephemeral: {
 //			publicKey: Ephemeral Curve25519 public key (Uint8Array),
 //			secretKey: Ephemeral Curve25519 secret key (Uint8Array)
@@ -150,23 +150,23 @@ var byteArrayToNumber = function(byteArray) {
 //	of the file header, which is the following JSON object (binary-encoded):
 //	{
 //		version: Version of the miniLock protocol used for this file (Currently 1) (Number)
-//		ephemeral: Public key from ephemeral key pair used to encrypt fileInfo object (Base64),
-//		fileInfo: {
+//		ephemeral: Public key from ephemeral key pair used to encrypt decryptInfo object (Base64),
+//		decryptInfo: {
 //			(One copy of the below object for every recipient)
 //			Unique nonce for decrypting this object (Base64): {
 //				senderID: Sender's miniLock ID (Base58),
-//				decryptInfo: {
+//				fileInfo: {
 //					fileKey: Key for file decryption (Base64),
 //					fileNonce: Nonce for file decryption (Base64),
 //					fileName: File's original filename (padded, see notes) (String),
 //					fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
-//				} (decryptInfo is encrypted to recipient's public key using long-term key pair) (Base64),
-//			} (fileInfo is encrypted to recipient's public key using ephemeral key pair) (Base64)
+//				} (fileInfo is encrypted to recipient's public key using long-term key pair) (Base64),
+//			} (decryptInfo is encrypted to recipient's public key using ephemeral key pair) (Base64)
 //
 //		}
 //	}
 //	Note that the file name is padded with 0x00 bytes until it reaches 256 bytes in length.
-//	Note that the nonce used to encrypt fileInfo is the same as the one used to encrypt decryptInfo.
+//	Note that the nonce used to encrypt decryptInfo is the same as the one used to encrypt fileInfo.
 //	Nonce reuse in this scenario is permitted since we are encrypting using different keys.
 //	The ciphertext in binary format is appended after the header.
 onmessage = function(message) {
@@ -178,7 +178,7 @@ if (message.operation === 'encrypt') {
 		var header = {
 			version: 1,
 			ephemeral: nacl.util.encodeBase64(message.ephemeral.publicKey),
-			fileInfo: {}
+			decryptInfo: {}
 		}
 		var streamEncryptor = nacl.stream.createEncryptor(
 			message.fileKey,
@@ -223,30 +223,30 @@ if (message.operation === 'encrypt') {
 			paddedFileName += String.fromCharCode(0x00)
 		}
 		for (var i = 0; i < message.miniLockIDs.length; i++) {
-			var fileInfo = {
+			var decryptInfo = {
 				senderID: message.myMiniLockID,
-				decryptInfo: {
+				fileInfo: {
 					fileKey: nacl.util.encodeBase64(message.fileKey),
 					fileNonce: nacl.util.encodeBase64(message.fileNonce),
 					fileName: paddedFileName,
 					fileHash: nacl.util.encodeBase64(fileHash.digest())
 				}
 			}
-			fileInfo.decryptInfo = nacl.util.encodeBase64(nacl.box(
-				nacl.util.decodeUTF8(JSON.stringify(fileInfo.decryptInfo)),
-				message.fileInfoNonces[i],
+			decryptInfo.fileInfo = nacl.util.encodeBase64(nacl.box(
+				nacl.util.decodeUTF8(JSON.stringify(decryptInfo.fileInfo)),
+				message.decryptInfoNonces[i],
 				Base58.decode(message.miniLockIDs[i]).subarray(0, 32),
 				message.mySecretKey
 			))
-			fileInfo = nacl.util.encodeBase64(nacl.box(
-				nacl.util.decodeUTF8(JSON.stringify(fileInfo)),
-				message.fileInfoNonces[i],
+			decryptInfo = nacl.util.encodeBase64(nacl.box(
+				nacl.util.decodeUTF8(JSON.stringify(decryptInfo)),
+				message.decryptInfoNonces[i],
 				Base58.decode(message.miniLockIDs[i]).subarray(0, 32),
 				message.ephemeral.secretKey
 			))
-			header.fileInfo[
-				nacl.util.encodeBase64(message.fileInfoNonces[i])
-			] = fileInfo
+			header.decryptInfo[
+				nacl.util.encodeBase64(message.decryptInfoNonces[i])
+			] = decryptInfo
 		}
 		header = JSON.stringify(header)
 		encrypted.unshift(
@@ -315,17 +315,17 @@ if (message.operation === 'decrypt') {
 			throw new Error('miniLock: Decryption failed - could not validate sender ID')
 			return false
 		}
-		// Attempt fileInfo decryptions until one succeeds
-		var actualFileInfo      = null
-		var actualFileInfoNonce = null
-		var actualDecryptInfo   = null
-		for (var i in header.fileInfo) {
+		// Attempt decryptInfo decryptions until one succeeds
+		var actualDecryptInfo      = null
+		var actualDecryptInfoNonce = null
+		var actualFileInfo         = null
+		for (var i in header.decryptInfo) {
 			if (
-				({}).hasOwnProperty.call(header.fileInfo, i)
+				({}).hasOwnProperty.call(header.decryptInfo, i)
 				&& validateNonce(i, 24)
 			) {
 				try {
-					nacl.util.decodeBase64(header.fileInfo[i])
+					nacl.util.decodeBase64(header.decryptInfo[i])
 				}
 				catch(err) {
 					postMessage({
@@ -335,18 +335,18 @@ if (message.operation === 'decrypt') {
 					throw new Error('miniLock: Decryption failed - could not parse header')
 					return false
 				}
-				actualFileInfo = nacl.box.open(
-					nacl.util.decodeBase64(header.fileInfo[i]),
+				actualDecryptInfo = nacl.box.open(
+					nacl.util.decodeBase64(header.decryptInfo[i]),
 					nacl.util.decodeBase64(i),
 					nacl.util.decodeBase64(header.ephemeral),
 					message.mySecretKey
 				)
-				if (actualFileInfo) {
+				if (actualDecryptInfo) {
 					try {
-						actualFileInfo = JSON.parse(
-							nacl.util.encodeUTF8(actualFileInfo)
+						actualDecryptInfo = JSON.parse(
+							nacl.util.encodeUTF8(actualDecryptInfo)
 						)
-						actualFileInfoNonce = nacl.util.decodeBase64(i)
+						actualDecryptInfoNonce = nacl.util.decodeBase64(i)
 					}
 					catch(err) {
 						postMessage({
@@ -360,7 +360,7 @@ if (message.operation === 'decrypt') {
 				}
 			}
 		}
-		if (!actualFileInfo) {
+		if (!actualDecryptInfo) {
 			postMessage({
 				operation: 'decrypt',
 				error: 6
@@ -369,7 +369,9 @@ if (message.operation === 'decrypt') {
 			return false
 		}
 		if (
-			!({}).hasOwnProperty.call(actualFileInfo, 'decryptInfo')
+			!({}).hasOwnProperty.call(actualDecryptInfo, 'fileInfo')
+			|| !({}).hasOwnProperty.call(actualDecryptInfo, 'senderID')
+			|| !validateID(actualDecryptInfo.senderID)
 		) {
 			postMessage({
 				operation: 'decrypt',
@@ -379,24 +381,24 @@ if (message.operation === 'decrypt') {
 			return false
 		}
 		try {
-			actualDecryptInfo = nacl.box.open(
-				nacl.util.decodeBase64(actualFileInfo.decryptInfo),
-				actualFileInfoNonce,
-				Base58.decode(actualFileInfo.senderID).subarray(0, 32),
+			actualFileInfo = nacl.box.open(
+				nacl.util.decodeBase64(actualDecryptInfo.fileInfo),
+				actualDecryptInfoNonce,
+				Base58.decode(actualDecryptInfo.senderID).subarray(0, 32),
 				message.mySecretKey
 			)
-			actualDecryptInfo = JSON.parse(
-				nacl.util.encodeUTF8(actualDecryptInfo)
+			actualFileInfo = JSON.parse(
+				nacl.util.encodeUTF8(actualFileInfo)
 			)
-			actualDecryptInfo.fileKey   = nacl.util.decodeBase64(actualDecryptInfo.fileKey)
-			actualDecryptInfo.fileNonce = nacl.util.decodeBase64(actualDecryptInfo.fileNonce)
-			actualDecryptInfo.fileHash  = nacl.util.decodeBase64(actualDecryptInfo.fileHash)
+			actualFileInfo.fileKey   = nacl.util.decodeBase64(actualFileInfo.fileKey)
+			actualFileInfo.fileNonce = nacl.util.decodeBase64(actualFileInfo.fileNonce)
+			actualFileInfo.fileHash  = nacl.util.decodeBase64(actualFileInfo.fileHash)
 			while (
-				actualDecryptInfo.fileName[
-					actualDecryptInfo.fileName.length - 1
+				actualFileInfo.fileName[
+					actualFileInfo.fileName.length - 1
 				] === String.fromCharCode(0x00)
 			) {
-				actualDecryptInfo.fileName = actualDecryptInfo.fileName.slice(0, -1)
+				actualFileInfo.fileName = actualFileInfo.fileName.slice(0, -1)
 			}
 		}
 		catch(err) {
@@ -407,20 +409,9 @@ if (message.operation === 'decrypt') {
 			throw new Error('miniLock: Decryption failed - could not parse header')
 			return false
 		}
-		if (
-			!({}).hasOwnProperty.call(actualFileInfo, 'senderID')
-			|| !validateID(actualFileInfo.senderID)
-		) {
-			postMessage({
-				operation: 'decrypt',
-				error: 3
-			})
-			throw new Error('miniLock: Decryption failed - could not parse header')
-			return false
-		}
 		var streamDecryptor = nacl.stream.createDecryptor(
-			actualDecryptInfo.fileKey,
-			actualDecryptInfo.fileNonce,
+			actualFileInfo.fileKey,
+			actualFileInfo.fileNonce,
 			chunkSize
 		)
 		var fileHash = new BLAKE2s(32)
@@ -462,7 +453,7 @@ if (message.operation === 'decrypt') {
 		if (
 			!nacl.verify(
 				new Uint8Array(fileHash.digest()),
-				actualDecryptInfo.fileHash
+				actualFileInfo.fileHash
 			)
 		) {
 			postMessage({
@@ -475,9 +466,9 @@ if (message.operation === 'decrypt') {
 		postMessage({
 			operation: 'decrypt',
 			blob: decrypted,
-			name: actualDecryptInfo.fileName,
-			saveName: actualDecryptInfo.fileName,
-			senderID: actualFileInfo.senderID,
+			name: actualFileInfo.fileName,
+			saveName: actualFileInfo.fileName,
+			senderID: actualDecryptInfo.senderID,
 			callback: message.callback
 		}, [decrypted])
 		decrypted = null
