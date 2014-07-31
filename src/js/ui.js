@@ -10,6 +10,17 @@ $(window).load(function() {
 	if ($(document.body).hasClass('startOnLoad')) {
 		miniLock.UI.setup()
 		miniLock.UI.start()
+		// Pickup input file from the background page and save it
+		// for the moment when miniLock is unlocked.
+		if (window.chrome.runtime) {
+			window.chrome.runtime.getBackgroundPage(function(page){
+				if (page.inputFileEntry) {
+					page.inputFileEntry.file(function(file){
+						miniLock.UI.readFile = file
+					})
+				}
+			})
+		}
 	}
 })
 
@@ -69,12 +80,25 @@ $('form.unlockForm').on('submit', function() {
 						miniLock.session.keys.publicKey
 					)
 				)
-				$('div.unlock').delay(200).fadeOut(200, function() {
-					$('div.selectFile').fadeIn(200)
-					$('div.squareFront').animate({
-						backgroundColor: '#7090ad'
+				if (miniLock.UI.readFile) {
+					miniLock.UI.handleFileSelection(miniLock.UI.readFile)
+					delete miniLock.UI.readFile
+					setTimeout(function(){
+						$('div.unlock').hide()
+						$('div.selectFile').show()
+						$('div.squareFront').css({
+							backgroundColor: '#7090ad'
+						})
+					}, 1000)
+				}
+				else {
+					$('div.unlock').delay(200).fadeOut(200, function() {
+						$('div.selectFile').fadeIn(200)
+						$('div.squareFront').animate({
+							backgroundColor: '#7090ad'
+						})
 					})
-				})
+				}
 			}
 		}, 100)
 	}
@@ -161,14 +185,16 @@ $('div.myMiniLockID,div.senderID').click(function() {
 
 // Accept and decrypt miniLock files sent to the application
 // from the operating system (usually from a double-click).
-window.chrome.app.runtime.onLaunched.addListener(function(input){
-	if (miniLock.session && input.items && input.items[0]) {
-		input.items[0].entry.file(function(file){
-			miniLock.UI.flipToBack()
-			miniLock.UI.handleFileSelection(file)
-		})
-	}
-})
+if (window.chrome.app.runtime) {
+	window.chrome.app.runtime.onLaunched.addListener(function(input){
+		if (miniLock.session && input.items && input.items[0]) {
+			input.items[0].entry.file(function(file){
+				miniLock.UI.flipToBack()
+				miniLock.UI.handleFileSelection(file)
+			})
+		}
+	})
+}
 
 // Handle file selection via drag/drop, select dialog or OS launch.
 miniLock.UI.handleFileSelection = function(file) {
