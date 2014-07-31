@@ -166,7 +166,7 @@ miniLock will output these error codes when running into encryption or decryptio
 * `Error 4`: Invalid header version
 * `Error 5`: Could not validate sender ID
 * `Error 6`: File is not encrypted for this recipient
-* `Error 7`: Could not validate file contents after decryption
+* `Error 7`: Could not validate ciphertext hash
 
 ###8. Caveats
 miniLock is not intended to protect against malicious files being sent and received. It is the user's responsibility to vet the safety of the files they send or receive over miniLock. miniLock cannot protect against malware being sent over it.
