@@ -14,6 +14,10 @@ miniLock.settings = {}
 // Minimum entropy for user key
 miniLock.settings.minKeyEntropy = 100
 
+// Path to miniLock `src` folder. Re-assign to fix `js/workers/crypto.js`
+// script resolution errors in your own program.
+miniLock.settings.pathToSourceFiles = '.'
+
 // This is where session variables are stored
 miniLock.session = {
 	keys: {},
@@ -90,15 +94,22 @@ miniLock.util.isFilenameSuspicious = function(filename) {
 
 miniLock.crypto = {}
 
-// The crypto worker is a Web Worker
-// used in order to perform encryption
-// operations in the background.
-// Check `workers/crypto.js` for more
-// information and comments.
-miniLock.crypto.worker = new Worker('js/workers/crypto.js')
+// The crypto worker performs encryption operations in the 
+// background. Its source file is `js/workers/crypto.js`.
+// miniLock.crypto.worker() returns a reference to the crypto 
+// worker (and it automatically constructs one when needed).
+miniLock.crypto.worker = function() {
+	var pathToSource = miniLock.settings.pathToSourceFiles
+	var pathToWorker = 'js/workers/crypto.js'
+	var cryptoWorker = new Worker(pathToSource + '/' + pathToWorker)
+	cryptoWorker.onmessage = miniLock.crypto.workerOnMessage
+	// Subsequent calls return the same worker.
+	miniLock.crypto.worker = function(){ return cryptoWorker }
+	return cryptoWorker
+}
 
 // Process messages from the crypto worker.
-miniLock.crypto.worker.onmessage = function(message) {
+miniLock.crypto.workerOnMessage = function(message) {
 	message = message.data
 	if (
 		message.hasOwnProperty('error')
@@ -214,7 +225,7 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 // mySecretKey: My secret key (Uint8Array)
 // callback: Name of the callback function to which encrypted result is passed.
 // Result: Sends file to be encrypted, with the result picked up
-//	by miniLock.crypto.worker.onmessage() and sent to the specified callback.
+//	by miniLock.crypto.worker().onmessage() and sent to the specified callback.
 miniLock.crypto.encryptFile = function(
 	file,
 	saveName,
@@ -240,7 +251,7 @@ miniLock.crypto.encryptFile = function(
 			miniLock.crypto.getNonce()
 		)
 	}
-	miniLock.crypto.worker.postMessage({
+	miniLock.crypto.worker().postMessage({
 		operation: 'encrypt',
 		data: new Uint8Array(file.data),
 		name: file.name,
@@ -268,14 +279,14 @@ miniLock.crypto.encryptFile = function(
 // mySecretKey: Sender's secret key (Uint8Array)
 // callback: Name of the callback function to which decrypted result is passed.
 // Result: Sends file to be decrypted, with the result picked up
-//	by miniLock.crypto.worker.onmessage() and sent to the specified callback.
+//	by miniLock.crypto.worker().onmessage() and sent to the specified callback.
 miniLock.crypto.decryptFile = function(
 	file,
 	myMiniLockID,
 	mySecretKey,
 	callback
 ) {
-	miniLock.crypto.worker.postMessage({
+	miniLock.crypto.worker().postMessage({
 		operation: 'decrypt',
 		data: new Uint8Array(file.data),
 		myMiniLockID: myMiniLockID,
