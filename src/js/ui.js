@@ -688,13 +688,13 @@ miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 
 // Uncomment the following to unlock a demo session automatically.
 
- $(window).load(function() {
+/* $(window).load(function() {
 	if ($(document.body).hasClass('startOnLoad')) {
 		$('input.miniLockEmail').val('manufacturing@minilock.io')
 		$('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 		$('form.unlockForm').submit()
 	}
-}) 
+}) */
 
 
 // Quickly setup the default encryption setup screen for design work:
