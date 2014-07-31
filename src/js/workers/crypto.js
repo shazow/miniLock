@@ -213,7 +213,7 @@ if (message.operation === 'encrypt') {
 			encrypted.push(encryptedChunk)
 			postMessage({
 				operation: 'encrypt',
-				progress: c,
+				progress: c + chunkSize,
 				total: message.data.length
 			})
 		}
@@ -444,7 +444,7 @@ if (message.operation === 'decrypt') {
 			decrypted.push(decryptedChunk)
 			postMessage({
 				operation: 'decrypt',
-				progress: c,
+				progress: c + chunkSize,
 				total: message.data.length
 			})
 		}
