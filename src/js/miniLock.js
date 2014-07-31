@@ -103,7 +103,7 @@ miniLock.crypto.worker = function() {
 	var pathToWorker = 'js/workers/crypto.js'
 	var cryptoWorker = new Worker(pathToSource + '/' + pathToWorker)
 	cryptoWorker.onmessage = miniLock.crypto.workerOnMessage
-	// Subsequent calls to return the same worker
+	// Subsequent calls return the same worker.
 	miniLock.crypto.worker = function(){ return cryptoWorker }
 	return cryptoWorker
 }
