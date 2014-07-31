@@ -87,7 +87,7 @@ decryptInfo: {
 			fileName: File's original filename (padded, see notes) (String),
 			fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
 		} (fileInfo is encrypted to recipient's public key using long-term key pair) (Base64),
-} (decryptInfo is encrypted to recipient's public key using ephemeral key pair) (Base64)
+	} (encrypted to recipient's public key using ephemeral key pair) (Base64)
 }
 ```
 
