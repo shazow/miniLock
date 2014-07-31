@@ -159,7 +159,18 @@ $('div.myMiniLockID,div.senderID').click(function() {
 	selection.addRange(range)
 })
 
-// Handle file selection via drag/drop or browsing.
+// Accept and decrypt miniLock files sent to the application
+// from the operating system (usually from a double-click).
+chrome.app.runtime.onLaunched.addListener(function(input){
+	if (miniLock.session && input.items && input.items[0]) {
+		input.items[0].entry.file(function(file){
+			miniLock.UI.flipToBack()
+			miniLock.UI.handleFileSelection(file)
+		})
+	}
+})
+
+// Handle file selection via drag/drop, select dialog or OS launch.
 miniLock.UI.handleFileSelection = function(file) {
 	miniLock.file.get(file, function(result) {
 		miniLock.UI.readFile = result
