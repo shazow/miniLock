@@ -313,16 +313,4 @@ miniLock.file.get = function(file, callback, errorCallback) {
 	reader.readAsArrayBuffer(file)
 }
 
-// -----------------------
-// User Functions
-// -----------------------
-
-miniLock.user = {}
-
-// Input: User key
-// Result: Unlock
-miniLock.user.unlock = function(key, salt) {
-	miniLock.crypto.getKeyPair(key, salt)
-}
-
 })()
