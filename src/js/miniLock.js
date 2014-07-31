@@ -50,8 +50,9 @@ miniLock.util.validateID = function(id) {
 	if (bytes.length !== 33) {
 		return false
 	}
-	var hash = nacl.hash(bytes.subarray(0, 32))
-	if (hash[0] !== bytes[32]) {
+	var hash = new BLAKE2s(1)
+	hash.update(bytes.subarray(0, 32))
+	if (hash.digest()[0] !== bytes[32]) {
 		return false
 	}
 	return true
@@ -123,6 +124,7 @@ miniLock.crypto.workerOnMessage = function(message) {
 		miniLock.UI.animateProgressBar(message.progress, message.total)
 	}
 	else {
+		message.blob = new Blob([message.blob])
 		// Execute callback function from function name
 		var context = window
 		var namespaces = message.callback.split('.')
@@ -178,9 +180,10 @@ miniLock.crypto.checkKeyStrength = function(key) {
 //	secretKey: Secret encryption key (Uint8Array)
 // }
 miniLock.crypto.getKeyPair = function(key, salt) {
-	key = nacl.hash(nacl.util.decodeUTF8(key))
+	key = new BLAKE2s(32)
+	key.update(nacl.util.decodeUTF8(key))
 	salt = nacl.util.decodeUTF8(salt)
-	miniLock.crypto.getScryptKey(key, salt, function(keyBytes) {
+	miniLock.crypto.getScryptKey(key.digest(), salt, function(keyBytes) {
 		miniLock.session.keys = nacl.box.keyPair.fromSecretKey(keyBytes)
 		miniLock.session.keyPairReady = true
 	})
@@ -209,7 +212,9 @@ miniLock.crypto.getMiniLockID = function(publicKey) {
 	for (var i = 0; i < publicKey.length; i++) {
 		id[i] = publicKey[i]
 	}
-	id[32] = nacl.hash(publicKey)[0]
+	var hash = new BLAKE2s(1)
+	hash.update(publicKey)
+	id[32] = hash.digest()[0]
 	return Base58.encode(id)
 }
 
@@ -236,18 +241,10 @@ miniLock.crypto.encryptFile = function(
 ) {
 	saveName += '.minilock'
 	var fileInfoNonces = []
-	var fileKeyNonces  = []
-	var fileNameNonces = []
 	// We are generating the nonces here simply because we cannot do that securely
 	// inside the web worker due to the lack of CSPRNG access.
 	for (var i = 0; i < miniLockIDs.length; i++) {
 		fileInfoNonces.push(
-			miniLock.crypto.getNonce()
-		)
-		fileKeyNonces.push(
-			miniLock.crypto.getNonce()
-		)
-		fileNameNonces.push(
 			miniLock.crypto.getNonce()
 		)
 	}
@@ -259,8 +256,6 @@ miniLock.crypto.encryptFile = function(
 		fileKey: miniLock.crypto.getFileKey(),
 		fileNonce: miniLock.crypto.getNonce().subarray(0, 16),
 		fileInfoNonces: fileInfoNonces,
-		fileKeyNonces: fileKeyNonces,
-		fileNameNonces: fileNameNonces,
 		ephemeral: nacl.box.keyPair(),
 		miniLockIDs: miniLockIDs,
 		myMiniLockID: myMiniLockID,
