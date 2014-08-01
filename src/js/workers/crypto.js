@@ -17,6 +17,7 @@ importScripts(
 )
 
 // Chunk size (in bytes)
+// Warning: Must not be less than 256 bytes
 var chunkSize = 1024 * 1024 * 1
 
 // -----------------------
@@ -159,14 +160,14 @@ var byteArrayToNumber = function(byteArray) {
 //				fileInfo: {
 //					fileKey: Key for file decryption (Base64),
 //					fileNonce: Nonce for file decryption (Base64),
-//					fileName: File's original filename (padded, see notes) (String),
 //					fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
 //				} (fileInfo is encrypted to recipient's public key using long-term key pair) (Base64),
 //			} (encrypted to recipient's public key using ephemeral key pair) (Base64)
 //
 //		}
 //	}
-//	Note that the file name is padded with 0x00 bytes until it reaches 256 bytes in length.
+//	The file's filename is padded with 0x00 bytes until its length equals 256 bytes.
+//	The filename is then prepended to the plaintext prior to encryption and is encrypted as its own chunk.
 //	Note that the nonce used to encrypt decryptInfo is the same as the one used to encrypt fileInfo.
 //	Nonce reuse in this scenario is permitted since we are encrypting using different keys.
 //	The ciphertext in binary format is appended after the header.
@@ -186,10 +187,20 @@ if (message.operation === 'encrypt') {
 			message.fileNonce,
 			chunkSize
 		)
+		var paddedFileName = message.name
+		while (paddedFileName.length < 256) {
+			paddedFileName += String.fromCharCode(0x00)
+		}
 		var fileHash = new BLAKE2s(32)
 		var encrypted = []
+		var encryptedChunk
+		encryptedChunk = streamEncryptor.encryptChunk(
+			nacl.util.decodeUTF8(paddedFileName),
+			false
+		)
+		fileHash.update(encryptedChunk)
+		encrypted.push(encryptedChunk)
 		for (var c = 0; c < message.data.length; c += chunkSize) {
-			var encryptedChunk
 			if (c >= (message.data.length - chunkSize)) {
 				encryptedChunk = streamEncryptor.encryptChunk(
 					message.data.subarray(c),
@@ -219,10 +230,6 @@ if (message.operation === 'encrypt') {
 			})
 		}
 		streamEncryptor.clean()
-		var paddedFileName = message.name
-		while (paddedFileName < 256) {
-			paddedFileName += String.fromCharCode(0x00)
-		}
 		for (var i = 0; i < message.miniLockIDs.length; i++) {
 			var decryptInfo = {
 				senderID: message.myMiniLockID,
@@ -230,7 +237,6 @@ if (message.operation === 'encrypt') {
 				fileInfo: {
 					fileKey: nacl.util.encodeBase64(message.fileKey),
 					fileNonce: nacl.util.encodeBase64(message.fileNonce),
-					fileName: paddedFileName,
 					fileHash: nacl.util.encodeBase64(fileHash.digest())
 				}
 			}
@@ -399,13 +405,6 @@ if (message.operation === 'decrypt') {
 			actualFileInfo.fileKey   = nacl.util.decodeBase64(actualFileInfo.fileKey)
 			actualFileInfo.fileNonce = nacl.util.decodeBase64(actualFileInfo.fileNonce)
 			actualFileInfo.fileHash  = nacl.util.decodeBase64(actualFileInfo.fileHash)
-			while (
-				actualFileInfo.fileName[
-					actualFileInfo.fileName.length - 1
-				] === String.fromCharCode(0x00)
-			) {
-				actualFileInfo.fileName = actualFileInfo.fileName.slice(0, -1)
-			}
 		}
 		catch(err) {
 			postMessage({
@@ -422,8 +421,15 @@ if (message.operation === 'decrypt') {
 		)
 		var fileHash = new BLAKE2s(32)
 		var decrypted = []
-		for (var c = 0; c < message.data.length; c += (4 + 16 + chunkSize)) {
-			var chunk, decryptedChunk
+		var chunk, decryptedChunk
+		chunk = message.data.subarray(0, 4 + 16 + 256)
+		decryptedChunk = streamDecryptor.decryptChunk(
+			chunk,
+			false
+		)
+		fileHash.update(chunk)
+		decrypted.push(decryptedChunk)
+		for (var c = 4 + 16 + 256; c < message.data.length; c += (4 + 16 + chunkSize)) {
 			if (c >= (message.data.length - (4 + 16 + chunkSize))) {
 				chunk = message.data.subarray(c)
 				decryptedChunk = streamDecryptor.decryptChunk(
@@ -455,7 +461,27 @@ if (message.operation === 'decrypt') {
 			})
 		}
 		streamDecryptor.clean()
-		decrypted = (new FileReaderSync()).readAsArrayBuffer(new Blob(decrypted))
+		var fileName = ''
+		try {
+			fileName = nacl.util.encodeUTF8(decrypted[0])
+			decrypted.splice(0, 1)
+			while (
+				fileName[fileName.length - 1] === String.fromCharCode(0x00)
+			) {
+				fileName = fileName.slice(0, -1)
+			}
+			decrypted = (new FileReaderSync()).readAsArrayBuffer(
+				new Blob(decrypted)
+			)
+		}
+		catch(err) {
+			postMessage({
+				operation: 'decrypt',
+				error: 2
+			})
+			throw new Error('miniLock: Decryption failed - general decryption error')
+			return false
+		}
 		if (
 			!nacl.verify(
 				new Uint8Array(fileHash.digest()),
@@ -472,8 +498,8 @@ if (message.operation === 'decrypt') {
 		postMessage({
 			operation: 'decrypt',
 			blob: decrypted,
-			name: actualFileInfo.fileName,
-			saveName: actualFileInfo.fileName,
+			name: fileName,
+			saveName: fileName,
 			senderID: actualDecryptInfo.senderID,
 			callback: message.callback
 		}, [decrypted])
