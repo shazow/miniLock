@@ -81,6 +81,7 @@ decryptInfo: {
 	(One copy of the below object for every recipient)
 	Unique nonce for decrypting this object (Base64): {
 		senderID: Sender's miniLock ID (Base58),
+		recipientID: miniLock ID of this recipient (used for verfication) (Base58),
 		fileInfo: {
 			fileKey: Key for file decryption (Base64),
 			fileNonce: Nonce for file decryption (Base64),
@@ -145,11 +146,11 @@ decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 ...
 ```
 
-Before any file decryption, we compare the 32-byte `BLAKE2` hash of the ciphertext against the decrypted `fileHash`.
+Before any file decryption, the recipient compares the 32-byte `BLAKE2` hash of the ciphertext against the decrypted `fileHash`. The recipient also compares the decrypted `recipientID` against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.
 
 The recipient then removes the padding of `0x00` bytes from the decrypted `fileName` in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.
 
-If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.
+If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, decryption is aborted and an error is returned.
 
 ###6. Key Identity Authentication
 In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 45 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.

@@ -155,6 +155,7 @@ var byteArrayToNumber = function(byteArray) {
 //			(One copy of the below object for every recipient)
 //			Unique nonce for decrypting this object (Base64): {
 //				senderID: Sender's miniLock ID (Base58),
+//				recipientID: miniLock ID of this recipient (used for verfication) (Base58),
 //				fileInfo: {
 //					fileKey: Key for file decryption (Base64),
 //					fileNonce: Nonce for file decryption (Base64),
@@ -225,6 +226,7 @@ if (message.operation === 'encrypt') {
 		for (var i = 0; i < message.miniLockIDs.length; i++) {
 			var decryptInfo = {
 				senderID: message.myMiniLockID,
+				recipientID: message.miniLockIDs[i],
 				fileInfo: {
 					fileKey: nacl.util.encodeBase64(message.fileKey),
 					fileNonce: nacl.util.encodeBase64(message.fileNonce),
@@ -360,7 +362,11 @@ if (message.operation === 'decrypt') {
 				}
 			}
 		}
-		if (!actualDecryptInfo) {
+		if (
+			!actualDecryptInfo
+			|| !({}).hasOwnProperty.call(actualDecryptInfo, 'recipientID')
+			|| actualDecryptInfo.recipientID !== message.myMiniLockID
+		) {
 			postMessage({
 				operation: 'decrypt',
 				error: 6
