@@ -589,17 +589,15 @@ decryptInfo: {
     (One copy of the below object for every recipient)
     Unique nonce for decrypting this object (Base64): {
         senderID: Sender&#39;s miniLock ID (Base58),
+        recipientID: miniLock ID of this recipient (used for verfication) (Base58),
         fileInfo: {
             fileKey: Key for file decryption (Base64),
             fileNonce: Nonce for file decryption (Base64),
-            fileName: File&#39;s original filename (padded, see notes) (String),
             fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
         } (fileInfo is encrypted to recipient&#39;s public key using long-term key pair) (Base64),
     } (encrypted to recipient&#39;s public key using ephemeral key pair) (Base64)
 }
 </code></pre>
-
-<p>Note that in the above header, <code>fileName</code> is padded with the <code>0x00</code> byte until it reaches 256 bytes in length.</p>
 
 <p>Note that the nonce used to encrypt <code>decryptInfo</code> is the same as the one used to encrypt <code>fileInfo</code>. Nonce reuse in this scenario is permitted since we are encrypting using different keys.</p>
 
@@ -612,6 +610,8 @@ decryptInfo: {
 <p>A recipient <code>a</code>&rsquo;s long-term keys are denoted as <code>recipientSecret[a]</code> and <code>recipientPublic[a]</code>.</p>
 
 <p>The sender appends the bytes signalling the beginning of the header to the final encrypted file.</p>
+
+<p>The file&rsquo;s filename is padded with 0x00 bytes until its length equals 256 bytes. The filename is then prepended to the plaintext prior to encryption. The filename is encrypted as its own 256-byte chunk (see chunking format below).</p>
 
 <p>A random 32-byte <code>fileKey</code> and a random 16-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction. We encrypt the plaintext bytes by splitting the plaintext into 1048576-byte chunks. Each chunk is then encrypted using the following model:</p>
 
@@ -630,7 +630,7 @@ encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
 encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 </code></pre>
 
-<p>The sender generates a <code>fileInfo</code> JSON object containing <code>fileKey</code>, <code>fileNonce</code>, <code>fileName</code> and <code>fileHash</code>. For every recipient <code>n</code>, the sender encrypts <code>fileInfo</code> using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores it within a <code>decryptInfo</code> object inside the JSON header along with <code>senderID</code>, as described in §3.</p>
+<p>The sender generates a <code>fileInfo</code> JSON object containing <code>fileKey</code>, <code>fileNonce</code> and <code>fileHash</code>. For every recipient <code>n</code>, the sender encrypts <code>fileInfo</code> using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores it within a <code>decryptInfo</code> object inside the JSON header along with <code>senderID</code>, as described in §3.</p>
 
 <p>The name of the <code>decryptInfo</code> property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with <code>senderEphemeralSecret</code>, to encrypt the underlying JSON object asymmetrically to <code>recipientPublic[n]</code>, using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. Note that this is done once for every recipient, creating a different <code>decryptInfo</code> object for every recipient, each labeled by their unique nonces.</p>
 
@@ -644,6 +644,8 @@ encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 
 <p>If there are multiple properties within <code>decryptInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>decryptInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes.</p>
 
+<p>Before any file decryption, the recipient compares the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>. The recipient also compares the decrypted <code>recipientID</code> against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.</p>
+
 <p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
 
 <pre><code class="language-javascript">fullNonce0 = fileNonce || 0
@@ -653,11 +655,9 @@ decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
 ...
 </code></pre>
 
-<p>Before any file decryption, we compare the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>.</p>
+<p>After decryption, the recipient retrieves the filename from the first 256 bytes of the plaintext. The recipient strips the padding bytes from the filename and is now capable of saving the decrypted file.</p>
 
-<p>The recipient then removes the padding of <code>0x00</code> bytes from the decrypted <code>fileName</code> in order to obtain the intended file name. The recipient is now capable of saving the decrypted file.</p>
-
-<p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, we return an error to the user and halt decryption. No partial data is returned.</p>
+<p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, decryption is aborted and an error is returned.</p>
 
 <h3>6. Key Identity Authentication</h3>
 
