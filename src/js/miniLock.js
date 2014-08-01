@@ -180,10 +180,10 @@ miniLock.crypto.checkKeyStrength = function(key) {
 //	secretKey: Secret encryption key (Uint8Array)
 // }
 miniLock.crypto.getKeyPair = function(key, salt) {
-	key = new BLAKE2s(32)
-	key.update(nacl.util.decodeUTF8(key))
+	keyHash = new BLAKE2s(32)
+	keyHash.update(nacl.util.decodeUTF8(key))
 	salt = nacl.util.decodeUTF8(salt)
-	miniLock.crypto.getScryptKey(key.digest(), salt, function(keyBytes) {
+	miniLock.crypto.getScryptKey(keyHash.digest(), salt, function(keyBytes) {
 		miniLock.session.keys = nacl.box.keyPair.fromSecretKey(keyBytes)
 		miniLock.session.keyPairReady = true
 	})
