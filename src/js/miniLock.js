@@ -180,7 +180,7 @@ miniLock.crypto.checkKeyStrength = function(key) {
 //	secretKey: Secret encryption key (Uint8Array)
 // }
 miniLock.crypto.getKeyPair = function(key, salt) {
-	keyHash = new BLAKE2s(32)
+	var keyHash = new BLAKE2s(32)
 	keyHash.update(nacl.util.decodeUTF8(key))
 	salt = nacl.util.decodeUTF8(salt)
 	miniLock.crypto.getScryptKey(keyHash.digest(), salt, function(keyBytes) {
