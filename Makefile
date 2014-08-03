@@ -2,7 +2,6 @@ lint:
 	@/bin/echo -n "[miniLock] Linting... "
 	@node_modules/.bin/jshint --verbose --config .jshintrc \
 		src/js/*.js \
-		src/js/workers/*.js \
 		src/js/lib/phrase.js \
 		test/tests/*.js
 	@/bin/echo ""

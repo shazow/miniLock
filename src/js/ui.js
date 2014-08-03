@@ -12,19 +12,6 @@ $(window).load(function() {
 		miniLock.UI.start()
 		// Pickup input file from the background page and save it
 		// for the moment when miniLock is unlocked.
-		if (
-			!window.hasOwnProperty('chrome')
-			|| !window.chrome.hasOwnProperty('runtime')
-		) {
-			return
-		}
-		window.chrome.runtime.getBackgroundPage(function(page) {
-			if (page.inputFileEntry) {
-				page.inputFileEntry.file(function(file) {
-					miniLock.UI.readFile = file
-				})
-			}
-		})
 	}
 })
 
@@ -84,25 +71,12 @@ $('form.unlockForm').on('submit', function() {
 						miniLock.session.keys.publicKey
 					)
 				)
-				if (miniLock.UI.readFile) {
-					miniLock.UI.handleFileSelection(miniLock.UI.readFile)
-					delete miniLock.UI.readFile
-					setTimeout(function(){
-						$('div.unlock').hide()
-						$('div.selectFile').show()
-						$('div.squareFront').css({
-							backgroundColor: '#7090ad'
-						})
-					}, 1000)
-				}
-				else {
-					$('div.unlock').delay(200).fadeOut(200, function() {
-						$('div.selectFile').fadeIn(200)
-						$('div.squareFront').animate({
-							backgroundColor: '#7090ad'
-						})
+				$('div.unlock').delay(200).fadeOut(200, function() {
+					$('div.selectFile').fadeIn(200)
+					$('div.squareFront').animate({
+						backgroundColor: '#7090ad'
 					})
-				}
+				})
 			}
 		}, 100)
 	}
@@ -187,31 +161,18 @@ $('div.myMiniLockID,div.senderID').click(function() {
 	selection.addRange(range)
 })
 
-// Accept and decrypt miniLock files sent to the application
-// from the operating system (usually from a double-click).
-if (window.chrome.app.runtime) {
-	window.chrome.app.runtime.onLaunched.addListener(function(input){
-		if (miniLock.session && input.items && input.items[0]) {
-			input.items[0].entry.file(function(file){
-				miniLock.UI.flipToBack()
-				miniLock.UI.handleFileSelection(file)
-			})
-		}
-	})
-}
-
 // Handle file selection via drag/drop, select dialog or OS launch.
 miniLock.UI.handleFileSelection = function(file) {
-	miniLock.file.get(file, function(result) {
-		miniLock.UI.readFile = result
-		var miniLockFileYes = new Uint8Array([
-			0x6d, 0x69, 0x6e, 0x69,
-			0x4c, 0x6f, 0x63, 0x6b
-		])
-		var operation = 'decrypt'
-		var first8Bytes = (new Uint8Array(result.data)).subarray(0, 8)
-		for (var i = 0; i < first8Bytes.length; i++) {
-			if (first8Bytes[i] !== miniLockFileYes[i]) {
+	miniLock.util.resetCurrentFile()
+	miniLock.session.currentFile.fileObject = file
+	var miniLockFileYes = new Uint8Array([
+		0x6d, 0x69, 0x6e, 0x69,
+		0x4c, 0x6f, 0x63, 0x6b
+	])
+	var operation = 'decrypt'
+	miniLock.file.read(miniLock.session.currentFile.fileObject, 0, 8, function(result) {
+		for (var i = 0; i < result.data.length; i++) {
+			if (result.data[i] !== miniLockFileYes[i]) {
 				operation = 'encrypt'
 			}
 		}
@@ -221,18 +182,21 @@ miniLock.UI.handleFileSelection = function(file) {
 			)
 		}, 1000)
 		if (operation === 'encrypt') {
-			$('form.process').trigger('encrypt:setup', file)
+			$('form.process').trigger('encrypt:setup', miniLock.session.currentFile.fileObject)
 		}
 		if (operation === 'decrypt') {
 			miniLock.crypto.decryptFile(
-				result,
+				miniLock.session.currentFile.fileObject,
 				miniLock.crypto.getMiniLockID(
 					miniLock.session.keys.publicKey
 				),
 				miniLock.session.keys.secretKey,
-				'miniLock.crypto.workerDecryptionCallback'
+				miniLock.crypto.decryptionCompleteCallback
 			)
-			$('form.process').trigger('decrypt:start', file)
+			$('form.process').trigger('decrypt:start', {
+				name: miniLock.session.currentFile.fileObject.name,
+				size: miniLock.session.currentFile.fileObject.size
+			})
 		}
 		miniLock.UI.flipToBack()
 	}, function() {
@@ -304,11 +268,11 @@ $('form.process').on('encrypt:setup', function(event, file) {
 })
 
 // Set the screen to show the progress of the encryption operation.
-$('form.process').on('encrypt:start', function(event, file) {
+$('form.process').on('encrypt:start', function(event, fileSize) {
 	$('form.process').removeClass('unprocessed')
 	$('form.process').addClass('encrypting')
 	$('input.encrypt').prop('disabled', true)
-	miniLock.UI.animateProgressBar(0, file.size)
+	miniLock.UI.animateProgressBar(0, fileSize)
 })
 
 // Set the screen to save an encrypted file.
@@ -472,17 +436,16 @@ $('form.process').on('submit', function(event) {
 		}).toArray()
 		var outputName = $('form.process div.output.name input').val().trim()
 		miniLock.crypto.encryptFile(
-			miniLock.UI.readFile,
+			miniLock.session.currentFile.fileObject,
 			outputName,
 			miniLockIDs,
 			miniLock.crypto.getMiniLockID(
 				miniLock.session.keys.publicKey
 			),
 			miniLock.session.keys.secretKey,
-			'miniLock.crypto.workerEncryptionCallback'
+			miniLock.crypto.encryptionCompleteCallback
 		)
-		$('form.process').trigger('encrypt:start', miniLock.UI.readFile)
-		delete miniLock.UI.readFile
+		$('form.process').trigger('encrypt:start', miniLock.session.currentFile.fileObject.size)
 	}
 })
 
@@ -497,7 +460,7 @@ $('form.process').on('decrypt:start', function(event, file) {
 	$('form.process input.encrypt').prop('disabled', true)
 	// Render input name and let all the other names be undefined.
 	miniLock.UI.renderAllFilenameTags({
-		'input': file.name.replace(/.minilock$/, '')
+		'input': file.name.replace(/\.minilock$/i, '')
 	})
 	// Activate the input name tag.
 	$('form.process div.input.name').addClass('activated')
@@ -625,8 +588,6 @@ miniLock.UI.expireLinkToSaveFile = function() {
 	$('a.fileSaveLink').css('visibility', 'hidden')
 }
 
-// The crypto worker calls this method when a
-// decrypt or encrypt operation is complete.
 // Input: Object:
 //	{
 //		name: File name,
