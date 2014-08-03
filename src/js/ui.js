@@ -669,6 +669,9 @@ miniLock.UI.readableFileSize = function(bytes) {
 // Animate progress bar based on currentProgress and total.
 miniLock.UI.animateProgressBar = function(currentProgress, total) {
 	var percentage = total ? currentProgress / total * 100 : 0
+	// If percentage overflows 100 due to chunkSize greater
+	// than the size of the file itself, set it to 100
+	percentage = percentage > 100 ? 100 : percentage
 	$('form.process div.progressBarFill').css({
 		'transition': 'none'
 	})
