@@ -512,7 +512,7 @@ pre[class*="language-"]:after {
 
 <h3>Download</h3>
 
-<p><a href="https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao"><img src="http://minilock.io/files/chromeStore.png" width="250"></a></p>
+<p><a href="https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao" onclick="chromeStoreDownload()"><img src="http://minilock.io/files/chromeStore.png" width="250"></a></p>
 
 <p>miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  </p>
 
@@ -734,6 +734,18 @@ Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|(^|[^:])\/\/
 Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|get|if|implements|import|in|instanceof|interface|let|new|null|package|private|protected|public|return|set|static|super|switch|this|throw|true|try|typeof|var|void|while|with|yield)\b/g,number:/\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/<script[\w\W]*?>[\w\W]*?<\/script>/ig,inside:{tag:{pattern:/<script[\w\W]*?>|<\/script>/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});
 
 </script>
+
+<script type="text/javascript">
+var chromeStoreDownload = function() {
+	if (navigator.userAgent.match('Chrome')) {
+		chrome.webstore.install(
+			'https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao'
+		)
+		return false
+	}
+}
+</script>
+
 </body>
 
 </html>
