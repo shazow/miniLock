@@ -58,6 +58,7 @@ $('form.unlockForm').on('submit', function() {
 		return false
 	}
 	if (miniLock.crypto.checkKeyStrength(key)) {
+		$('div.unlock').animate({marginTop: 90})
 		$('div.unlockInfo').animate({height: 20})
 		$('div.unlockInfo').text($('div.unlockInfo').data('keyok'))
 		$('input.miniLockKey').attr('readonly', 'readonly')
@@ -89,7 +90,8 @@ $('form.unlockForm').on('submit', function() {
 				}
 			)
 		)
-		$('div.unlockInfo').animate({height: 175})
+		$('div.unlock').animate({marginTop: 50})
+		$('div.unlockInfo').animate({height: 190})
 		$('div.unlockInfo input[type=text]').unbind().click(function() {
 			$(this).select()
 		})
