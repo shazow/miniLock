@@ -8,9 +8,10 @@
 * **Follow on [Twitter](https://twitter.com/minilockapp)** for latest project news
 
 ###Download
+[<img src="http://minilock.io/files/chromeStore.png" width="250">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
+
 miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  
 
-[<img src="http://minilock.io/files/chromeStore.png" width="100">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
 
 ###Software Status
 miniLock was subjected to a cryptographic code audit carried out by [Cure53](https://cure53.de/) and with the support of the [Open Technology Fund](https://www.opentechfund.org/). Quoting from the conclusion of the audit report (**[PDF](http://minilock.io/files/cure53.pdf)**):
