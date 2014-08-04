@@ -27,9 +27,6 @@
 	],
 	"file_handlers": {
 		"any": {
-			"types": [
-				"*"
-			],
 			"extensions": [
 				"minilock"
 			],
