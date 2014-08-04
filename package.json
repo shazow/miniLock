@@ -1,6 +1,6 @@
 {
   "name": "miniLock",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "File encryption software that does more with less.",
   "directories": {},
   "dependencies": {},
