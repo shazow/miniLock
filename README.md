@@ -1,13 +1,18 @@
-#![miniLock](https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon48.png) miniLock  [![Build Status](https://travis-ci.org/kaepora/miniLock.svg?branch=master)](https://travis-ci.org/kaepora/miniLock)
+#<img src="https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon128.png" width="48"> miniLock  
 ##File encryption software that does more with less.
+
+[<img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" width="80">](https://travis-ci.org/kaepora/miniLock)
 
 * **[Code](https://github.com/kaepora/miniLock)** | **[Issues and Discussion](https://github.com/kaepora/miniLock/issues)**
 * **HOPE X [Video](https://vimeo.com/101237413) | [Slides](http://minilock.io/files/HOPEX.pdf)**
 * **Follow on [Twitter](https://twitter.com/minilockapp)** for latest project news
 
-###Software Status: Pre-Release Feedback Period
-miniLock is currently audited, peer-reviewed software. However, before a general release, we would like to allow a feedback period. We encourage further review of the software before a release is made for general public use. We hope to provide a public release by **Monday August 4th, 2014**. Our first release platform will be Google Chrome and Chrome OS.
+###Download
+miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  
 
+[<img src="http://minilock.io/files/chromeStore.png" width="100">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
+
+###Software Status
 miniLock was subjected to a cryptographic code audit carried out by [Cure53](https://cure53.de/) and with the support of the [Open Technology Fund](https://www.opentechfund.org/). Quoting from the conclusion of the audit report (**[PDF](http://minilock.io/files/cure53.pdf)**):
 
 > Cure53 was tasked to test against the application security of miniLock and evaluate its cryptographic properties and promises. Over the course of four days of manual testing, no severe errors have been spotted. The code is soundly and neatly written, well structured, minimal and therefore offers no sinks for direct exploitation.
