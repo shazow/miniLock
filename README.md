@@ -189,19 +189,14 @@ Sincere thanks are presented to Dr. Mario Heiderich and his team at [Cure53](htt
 Finally, sincere thanks are presented to the wonderful, constructive members of the miniLock community who have contributed many improvements and ideas to the miniLock design and codebase. You rock!
 
 ###10. Credits
-**miniLock**
-* Copyright 2014 [Nadim Kobeissi](http://nadim.computer). Released under the AGPLv3 license.
+####miniLock
+Copyright 2014 [Nadim Kobeissi](http://nadim.computer). Released under the AGPLv3 license.
 
-**TweetNaCL**
-* [Daniel J. Bernstein](http://cr.yp.to/djb.html)
-* Wesley Janssen
-* [Tanja Lange](http://hyperelliptic.org/tanja)
-* [Peter Schwabe](http://www.cryptojedi.org/users/peter/)
-* [Matthew Dempsky](https://github.com/mdempsky)
+####TweetNaCL
+[Daniel J. Bernstein](http://cr.yp.to/djb.html), Wesley Janssen, [Tanja Lange](http://hyperelliptic.org/tanja), [Peter Schwabe](http://www.cryptojedi.org/users/peter/), [Matthew Dempsky](https://github.com/mdempsky)
 
-**TweetNaCL-JS**
-* [Dmitry Chestnykh](http://github.com/dchest)
-* [Devi Mandiri](https://github.com/devi)
+####TweetNaCL-JS
+[Dmitry Chestnykh](http://github.com/dchest), [Devi Mandiri](https://github.com/devi)
 
-**scrypt**
-* [Colin Percival](http://www.tarsnap.com/scrypt.html)
+####scrypt
+[Colin Percival](http://www.tarsnap.com/scrypt.html)
