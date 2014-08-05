@@ -299,8 +299,9 @@ miniLock.crypto.encryptFile = function(
 	)
 	var paddedFileName = new Uint8Array(256)
 	var fileNameBytes = nacl.util.decodeUTF8(file.name)
-	if (fileNameBytes.length > paddedFileName.length)
+	if (fileNameBytes.length > paddedFileName.length) {
 		throw new Error('miniLock: Encryption failed - file name is too long')
+	}
 	paddedFileName.set(fileNameBytes)
 	miniLock.session.currentFile.hashObject = new BLAKE2s(32)
 	var encryptedChunk
