@@ -141,7 +141,7 @@ In order to decrypt the file, the recipient needs the information stored within 
 
 If there are multiple properties within `decryptInfo`, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a `decryptInfo` property occurs, the recipient can then use the obtained `senderID` along with their long-term secret key to decrypt `fileKey` and use it in conjunction with `fileNonce` to perform an authenticated decryption of the ciphertext bytes.
 
-Before any file decryption, the recipient compares the 32-byte `BLAKE2` hash of the ciphertext against the decrypted `fileHash`. The recipient also compares the decrypted `recipientID` against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.
+Before or during file decryption, the recipient compares the 32-byte `BLAKE2` hash of the ciphertext against the decrypted `fileHash`. The recipient also compares the decrypted `recipientID` against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.
 
 In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the `poly1305` authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:
 
