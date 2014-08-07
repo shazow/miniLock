@@ -701,16 +701,16 @@ form.process.withoutMyMiniLockID div.missingMyMiniLockIDNotice {
 form.process div.missingMyMiniLockIDNotice span.octicon {
 	position: absolute;
 	display: block;
-	font-size: 23px;
+	font-size: 25px;
 	line-height: 25px;
-	text-align: center;
-	left: -30px;
-	top: 5px;
+	text-align: left;
+	left: -32px;
+	top: 6px;
 	color: rgba(255, 255, 255, 0.45);
 }
 
 form.process div.missingMyMiniLockIDNotice span.text {
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.5);
 }
 
 /* Encrypt file button */
