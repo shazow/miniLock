@@ -1,5 +1,5 @@
 /*
-	* Meta
+	* Typefaces
 */
 
 
@@ -50,8 +50,9 @@
 */
 
 body {
+	font-family: 'Open Sans', sans-serif;
 	font-size: 16px;
-	line-height: 1.5em;
+	line-height: 24px;
 	background: #7090ad;
 }
 
@@ -83,6 +84,12 @@ input:hover {
 
 input:active {
 	background: rgba(255, 255, 255, 0.2);
+}
+
+code,
+input[type=text].code {
+	font-family: 'Inconsolata', monospace; 
+	font-size: 16px;
 }
 
 .hidden {

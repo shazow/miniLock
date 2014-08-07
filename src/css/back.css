@@ -169,12 +169,19 @@ form.decrypt.process.failed div.statusIcon a.failed.octicon {
 
 /* Filename styles */
 
+form.process { 
+	font-size: 12px;
+	line-height: 16px;
+}
+
+
+
 form.process div.nameContainer {
 	position: absolute;
 	top: 0px;
 	right: 50px;
 	left: 110px;
-	bottom: 15px;
+	bottom: 14px;
 	overflow: hidden;
 }
 
@@ -183,7 +190,8 @@ form.process div.name {
 	left: 0;
 	right: 0;
 	opacity: 1;
-	bottom: -60px;
+	bottom: -55px;
+	margin-bottom: 4px;
 }
 
 form.process div.name.activated {
@@ -202,7 +210,7 @@ form.process.decrypting div.input.name {
 
 form.process.decrypted div.input.name.expired {
 	opacity: 0;
-	bottom: 60px;
+	bottom: 55px;
 	transition: bottom 200ms ease-out, opacity 200ms linear;
 }
 
@@ -234,12 +242,12 @@ form.process.unprocessed div.original.name {
 
 form.process div.original.name.shelved {
 	visibility: visible;
-	bottom: 60px;
+	bottom: 55px;
 }
 
 form.process.unprocessed div.original.name.shelved {
 	visibility: visible;
-	bottom: 60px;
+	bottom: 55px;
 	transition: bottom 200ms ease-out;
 }
 
@@ -249,6 +257,16 @@ form.process.unprocessed div.random.name {
 
 form.process.unprocessed div.random.name.activated {
 	bottom: 0px;
+}
+
+
+form.process div.name h1 { 
+	font-size: 24px;
+	line-height: 25px;
+}
+
+form.process div.name h1 b.basename {
+	font-weight: bold;
 }
 
 form.process div.name h1 * {
@@ -291,8 +309,8 @@ form.process.encrypted div.activated.name span.miniLockExtension { color: white;
 
 form.process div.infoContainer {
 	position: absolute;
-	bottom: 0px;
-	height: 15px;
+	bottom: -2px;
+	height: 16px;
 	left: 110px;
 	right: 110px;
 	overflow: hidden;
@@ -444,8 +462,6 @@ form.process.decrypted div.senderID h3 {
 }
 
 form.process div.senderID code {
-	font-family: Menlo;
-	font-size: 13px;
 	display: block;
 	opacity: 0;
 	-webkit-user-select: text;
@@ -574,10 +590,14 @@ form.decrypt.process.failed div.recipients {
 
 form.process div.recipients > header {
 	position: absolute;
-	top: -30px;
+	top: -32px;
 	left: 10px;
 	right: 10px;
 	margin-top: -2px;
+}
+
+form.process div.recipients > header h2 {
+	color: white;
 }
 
 /* Identity elements  */
@@ -620,29 +640,24 @@ form.process div.identity input[type=text]:focus {
 
 form.process div.identity label {
 	position: absolute;
-	right: 405px;
+	right: 400px;
 	top: 7px;
 	display: block;
-	height: 18px;
-	line-height: 18px;
-	padding-left: 4px;
-	color: #7090AD;
-	background: #A3B6CC;
+	box-sizing: border-box;
+	margin-right: -5px;
+	height: 19px;
+	line-height: 14px;
+	padding: 3px 10px 2px 5px;
 	text-align: right;
 	white-space: nowrap;
+	color: #7090AD;
+	background: #A3B6CC;
+	font-weight: bold;
+	-webkit-mask-image: url(../img/label.png);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: right;
+	-webkit-mask-size: auto 100%;
 }
-form.process div.identity label:after {
-	left: 100%;
-	top: 50%;
-	margin-top: -9px;
-	border: 9px solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	border-left-color: #A3B6CC;
-}
-
 form.process div.identity label,
 form.process div.blank.identity label,
 form.process div.expired.session.identity label,

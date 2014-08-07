@@ -164,13 +164,10 @@ div.myMiniLockID span {
 	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
-	font-weight: bold;
 }
 
 div.myMiniLockID code {
 	border-radius: 0 5px 5px 0;
-	font-size: 0.8em;
-	font-family: monospace;
 	background: rgba(255, 255, 255, 0.1);
 	-webkit-user-select: text;
 	margin-left: -4px;
