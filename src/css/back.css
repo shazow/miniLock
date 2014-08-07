@@ -686,7 +686,6 @@ form.process div.missingMyMiniLockIDNotice {
 	height: 85px;
 	left: 200px;
 	right: 50px;
-	overflow: auto;
 	opacity: 0;
 	bottom: 15px;
 	transition: opacity 600ms linear, bottom 0ms linear 600ms;
