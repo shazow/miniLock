@@ -4,17 +4,17 @@
 [<img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" width="80">](https://travis-ci.org/kaepora/miniLock)
 
 * **[Code](https://github.com/kaepora/miniLock)** | **[Issues and Discussion](https://github.com/kaepora/miniLock/issues)**
-* **HOPE X [Video](https://vimeo.com/101237413) | [Slides](http://minilock.io/files/HOPEX.pdf)**
+* **HOPE X [Video](https://vimeo.com/101237413) | [Slides](https://minilock.io/files/HOPEX.pdf)**
 * **Follow on [Twitter](https://twitter.com/minilockapp)** for latest project news
 
 ###Download
-[<img src="http://minilock.io/files/chromeStore.png" width="250">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
+[<img src="https://minilock.io/files/chromeStore.png" width="250">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
 
 miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  
 
 
 ###Software Status
-miniLock was subjected to a cryptographic code audit carried out by [Cure53](https://cure53.de/) and with the support of the [Open Technology Fund](https://www.opentechfund.org/). Quoting from the conclusion of the audit report (**[PDF](http://minilock.io/files/cure53.pdf)**):
+miniLock was subjected to a cryptographic code audit carried out by [Cure53](https://cure53.de/) and with the support of the [Open Technology Fund](https://www.opentechfund.org/). Quoting from the conclusion of the audit report (**[PDF](https://minilock.io/files/cure53.pdf)**):
 
 > Cure53 was tasked to test against the application security of miniLock and evaluate its cryptographic properties and promises. Over the course of four days of manual testing, no severe errors have been spotted. The code is soundly and neatly written, well structured, minimal and therefore offers no sinks for direct exploitation.
 
