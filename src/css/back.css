@@ -252,6 +252,10 @@ form.process.unprocessed div.random.name.activated {
 	bottom: 0px;
 }
 
+form.process b.basename {
+	font-weight: bold;
+}
+
 form.process div.name h1 b.basename,
 form.process div.name h1 span.extensions {
 	color: white;
@@ -571,6 +575,10 @@ form.process div.recipients > header {
 	left: 10px;
 	right: 10px;
 	margin-top: -2px;
+}
+
+form.process div.recipients > header h2 {
+	color: white;
 }
 
 /* Identity elements  */
