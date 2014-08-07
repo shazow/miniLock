@@ -685,11 +685,12 @@ form.process div.missingMyMiniLockIDNotice {
 	padding-top: 3px;
 	height: 85px;
 	left: 200px;
-	right: 100px;
+	right: 50px;
 	overflow: auto;
 	opacity: 0;
 	bottom: 15px;
 	transition: opacity 600ms linear, bottom 0ms linear 600ms;
+	outline: 1px solid purple;
 }
 
 form.process.withoutMyMiniLockID div.missingMyMiniLockIDNotice {
