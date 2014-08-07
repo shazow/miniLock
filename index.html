@@ -652,7 +652,7 @@ encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
 
 <p>If there are multiple properties within <code>decryptInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>decryptInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes.</p>
 
-<p>Before any file decryption, the recipient compares the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>. The recipient also compares the decrypted <code>recipientID</code> against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.</p>
+<p>Before or during file decryption, the recipient compares the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>. The recipient also compares the decrypted <code>recipientID</code> against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.</p>
 
 <p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
 
