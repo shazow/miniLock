@@ -632,7 +632,7 @@ form.process div.identity input[type=text]:focus {
 form.process div.identity label {
 	position: absolute;
 	right: 400px;
-	top: 6px;
+	top: 7px;
 	display: block;
 	box-sizing: border-box;
 	margin-right: -5px;
