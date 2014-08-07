@@ -171,7 +171,7 @@ form.decrypt.process.failed div.statusIcon a.failed.octicon {
 
 form.process div.nameContainer {
 	position: absolute;
-	top: 15px;
+	top: 0px;
 	right: 50px;
 	left: 110px;
 	bottom: 15px;
