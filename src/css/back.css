@@ -169,6 +169,13 @@ form.decrypt.process.failed div.statusIcon a.failed.octicon {
 
 /* Filename styles */
 
+form.process { 
+	font-size: 12px;
+	line-height: 16px;
+}
+
+
+
 form.process div.nameContainer {
 	position: absolute;
 	top: 15px;
@@ -252,7 +259,12 @@ form.process.unprocessed div.random.name.activated {
 	bottom: 0px;
 }
 
-form.process b.basename {
+form.process div.name h1 { 
+	font-size: 24px;
+	line-height: 25px;
+}
+
+form.process div.name h1 b.basename {
 	font-weight: bold;
 }
 
@@ -441,8 +453,6 @@ form.process.decrypted div.senderID h3 {
 }
 
 form.process div.senderID code {
-	font-family: Menlo;
-	font-size: 13px;
 	display: block;
 	opacity: 0;
 	-webkit-user-select: text;
