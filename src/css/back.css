@@ -284,8 +284,8 @@ form.process.encrypted div.activated.name span.miniLockExtension { color: white;
 
 form.process div.infoContainer {
 	position: absolute;
-	bottom: 0px;
-	height: 15px;
+	bottom: -2px;
+	height: 16px;
 	left: 110px;
 	right: 110px;
 	overflow: hidden;
