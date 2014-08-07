@@ -690,33 +690,35 @@ form.process div.blank.identity input[type=button].remove {
 form.process div.missingMyMiniLockIDNotice {
 	position: absolute;
 	box-sizing: border-box;
-	padding-top: 3px;
-	height: 85px;
-	left: 200px;
-	right: 100px;
-	overflow: auto;
+	padding: 3px 0 2px;
+	height: 35px;
+	left: 190px;
+	right: 50px;
+	bottom: 60px;
 	opacity: 0;
-	bottom: 15px;
-	transition: opacity 600ms linear, bottom 0ms linear 600ms;
+	visibility: hidden;
+	transition: opacity 600ms linear, visibility 0 linear 600ms;
 }
 
 form.process.withoutMyMiniLockID div.missingMyMiniLockIDNotice {
 	opacity: 1;
+	visibility: visible;
+	transition: opacity 600ms linear, visibility 0 linear;
 }
 
 form.process div.missingMyMiniLockIDNotice span.octicon {
 	position: absolute;
 	display: block;
-	font-size: 23px;
+	font-size: 25px;
 	line-height: 25px;
-	text-align: center;
-	left: -30px;
+	text-align: left;
+	left: -32px;
 	top: 5px;
 	color: rgba(255, 255, 255, 0.45);
 }
 
 form.process div.missingMyMiniLockIDNotice span.text {
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.5);
 }
 
 /* Encrypt file button */
