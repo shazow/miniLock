@@ -425,7 +425,7 @@ form.process.decrypted  div.senderID {
 form.process div.senderID h3 {
 	position: absolute;
 	top: -20px;
-	left :0;
+	left: 10px;
 	opacity: 0;
 }
 
