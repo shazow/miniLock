@@ -613,29 +613,24 @@ form.process div.identity input[type=text]:focus {
 
 form.process div.identity label {
 	position: absolute;
-	right: 405px;
-	top: 7px;
+	right: 400px;
+	top: 6px;
 	display: block;
-	height: 18px;
-	line-height: 18px;
-	padding-left: 4px;
-	color: #7090AD;
-	background: #A3B6CC;
+	box-sizing: border-box;
+	margin-right: -5px;
+	height: 19px;
+	line-height: 14px;
+	padding: 3px 10px 2px 5px;
 	text-align: right;
 	white-space: nowrap;
+	color: #7090AD;
+	background: #A3B6CC;
+	font-weight: bold;
+	-webkit-mask-image: url(../img/label.png);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: right;
+	-webkit-mask-size: auto 100%;
 }
-form.process div.identity label:after {
-	left: 100%;
-	top: 50%;
-	margin-top: -9px;
-	border: 9px solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	border-left-color: #A3B6CC;
-}
-
 form.process div.identity label,
 form.process div.blank.identity label,
 form.process div.expired.session.identity label,
