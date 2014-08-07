@@ -509,7 +509,6 @@ miniLock.crypto.decryptFile = function(
 					({}).hasOwnProperty.call(header.decryptInfo, i)
 					&& miniLock.util.validateNonce(i, 24)
 				) {
-					nacl.util.decodeBase64(header.decryptInfo[i])
 					actualDecryptInfo = nacl.box.open(
 						nacl.util.decodeBase64(header.decryptInfo[i]),
 						nacl.util.decodeBase64(i),

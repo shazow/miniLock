@@ -10,7 +10,8 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 0
-		}
+		},
+		'Sender can decrypt, no other recipients'
 	)
 
 	recipientIDs = [
@@ -22,7 +23,8 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 1
-		}
+		},
+		'Sender can decrypt, 1 other recipient'
 	)
 
 	recipientIDs = [
@@ -35,7 +37,8 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 		{
 			senderCanDecryptFile: true,
 			totalRecipients: 2
-		}
+		},
+		'Sender can decrypt, two other recipients'
 	)
 
 	recipientIDs = ['6msgdRKNGxSmqrxsbUxFwawhRzcAns9PCumStmUtJFHv']
@@ -44,7 +47,8 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 		{
 			senderCanDecryptFile: false,
 			totalRecipients: 1
-		}
+		},
+		'Sender cannot decrypt, one recipient'
 	)
 
 	recipientIDs = [
@@ -56,6 +60,7 @@ QUnit.test('UI.summarizeRecipients', function(assert) {
 		{
 			senderCanDecryptFile: false,
 			totalRecipients: 2
-		}
+		},
+		'Sender cannot decrypt, two recipients'
 	)
 })
