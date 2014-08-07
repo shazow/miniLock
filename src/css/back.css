@@ -183,7 +183,7 @@ form.process div.name {
 	left: 0;
 	right: 0;
 	opacity: 1;
-	bottom: -60px;
+	bottom: -55px;
 	margin-bottom: 4px;
 }
 
@@ -203,7 +203,7 @@ form.process.decrypting div.input.name {
 
 form.process.decrypted div.input.name.expired {
 	opacity: 0;
-	bottom: 60px;
+	bottom: 55px;
 	transition: bottom 200ms ease-out, opacity 200ms linear;
 }
 
@@ -235,12 +235,12 @@ form.process.unprocessed div.original.name {
 
 form.process div.original.name.shelved {
 	visibility: visible;
-	bottom: 60px;
+	bottom: 55px;
 }
 
 form.process.unprocessed div.original.name.shelved {
 	visibility: visible;
-	bottom: 60px;
+	bottom: 55px;
 	transition: bottom 200ms ease-out;
 }
 
