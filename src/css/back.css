@@ -567,7 +567,7 @@ form.decrypt.process.failed div.recipients {
 
 form.process div.recipients > header {
 	position: absolute;
-	top: -30px;
+	top: -32px;
 	left: 10px;
 	right: 10px;
 	margin-top: -2px;
