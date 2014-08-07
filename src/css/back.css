@@ -251,6 +251,14 @@ form.process.unprocessed div.random.name.activated {
 	bottom: 0px;
 }
 
+form.process div.name h1 * {
+	vertical-align: middle;
+}
+
+form.process div.name h1 span.spaceToAllowWordWrapOnExtensions {
+	font-size: 0px;
+}
+
 form.process div.name h1 b.basename,
 form.process div.name h1 span.extensions {
 	color: white;

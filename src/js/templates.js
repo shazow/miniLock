@@ -17,5 +17,6 @@ miniLock.templates.recipientListIdentity = ''
 
 miniLock.templates.filename = ''
 	+ '<b class="basename">{{basename}}</b>'
+	+ '<span class="spaceToAllowWordWrapOnExtensions"> </span>'
 	+ '<span class="extensions">{{extensions}}</span>'
 	+ '<span class="miniLockExtension">.minilock</span>'
