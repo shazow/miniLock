@@ -70,17 +70,6 @@
 		h3 {
 			margin: 5px 0;
 		}
-		strong.download {
-			margin: 10px 0;
-			width: 200px;
-			color: #FFF;
-			background: #89AFDC;
-			display: block;
-			border-radius: 5px;
-			text-align: center;
-			font-size: 0.8em;
-			opacity: 0.9;
-		}
 		div.main {
 			width: 700px;
 			margin: 0 auto;
@@ -112,6 +101,18 @@
 			float: left;
 			width: 250px;
 		}
+		div.leftSide h4 {
+			margin: 10px 0;
+			width: 200px;
+			color: #FFF;
+			background: #89AFDC;
+			display: block;
+			border-radius: 5px;
+			text-align: center;
+			font-size: 0.8em;
+			opacity: 0.9;
+			font-weight: normal;
+		}
 		div.leftSide img.icon {
 			width: 200px;
 			height: auto;
@@ -122,6 +123,25 @@
 			height: auto;
 			display: block;
 			margin: 10px 0;
+		}
+		div.leftSide ul.features {
+			padding: 0;
+			margin: 0;
+			font-size: 0.7em;
+		}
+		div.leftSide li:before {
+			content: '';
+			display: inline-block;
+			width: 30px;
+			height: 20px;
+			background-image: url('img/check.png');
+			background-size: 20px 20px;
+			background-repeat: no-repeat;
+			position:relative;
+			top: 4px;
+		}
+		div.leftSide li {
+			list-style: none;
 		}
 		div.rightSide {
 			float: right;
@@ -144,9 +164,18 @@
 		<div class="leftSide">
 			<img src="img/icon512.png" alt="" class="icon" />
 			<a href="https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao" onclick="return chromeStoreDownload()">
-				<strong class="download">Download miniLock</strong>
+				<h4>Download miniLock</h4>
 				<img src="img/chromeStore.png" alt="Available on the Chrome Web Store" class="chromeStore" />
 			</a>
+			<h4>Cool features</h4>
+			<ul class="features">
+				<li>Easy to use!</li>
+				<li>No key files, just a passphrase</li>
+				<li>Encrypt to multiple recipients</li>
+				<li>Encrypt files to yourself for later use</li>
+				<li>Ciphertext hides sender/recipient IDs</li>
+				<li>miniLock IDs are tiny, fit in a tweet</li>
+			</ul>
 		</div>
 		<div class="rightSide">
 			<strong>miniLock makes encrypting files and sharing them with friends easy. It's a modern standard for file encryption.</strong>
