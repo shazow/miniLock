@@ -215,11 +215,12 @@ miniLock.crypto.getScryptKey = function(key, salt, callback) {
 	}, 'base64');
 }
 
-// Input: User key
+// Input: User key, user email
 // Output: Whether key is strong enough
-miniLock.crypto.checkKeyStrength = function(key) {
+miniLock.crypto.checkKeyStrength = function(key, email) {
 	var minEntropy = miniLock.settings.minKeyEntropy
 	if (key.length < 32) { return false }
+	if (key.match(email)) { return false }
 	return (zxcvbn(key).entropy > minEntropy)
 }
 

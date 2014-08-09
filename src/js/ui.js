@@ -57,7 +57,7 @@ $('form.unlockForm').on('submit', function() {
 		$('input.miniLockKey').select()
 		return false
 	}
-	if (miniLock.crypto.checkKeyStrength(key)) {
+	if (miniLock.crypto.checkKeyStrength(key, email)) {
 		$('div.unlock').animate({marginTop: 90})
 		$('div.unlockInfo').animate({height: 20})
 		$('div.unlockInfo').text($('div.unlockInfo').data('keyok'))

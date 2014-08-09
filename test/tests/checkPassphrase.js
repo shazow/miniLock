@@ -6,7 +6,8 @@ QUnit.test('checkPassphrase', function(assert) {
 		'Not bad but not good either',
 		'What is the meaning of love?',
 		'Estoy usando el Internet!',
-		miniLock.phrase.get(2)
+		miniLock.phrase.get(2),
+		'This passphrase is supposed to be good enough for miniLock. :-) email@email.com',
 	]
 	var good = [
 		'This passphrase is supposed to be good enough for miniLock. :-)',
@@ -16,9 +17,9 @@ QUnit.test('checkPassphrase', function(assert) {
 		miniLock.phrase.get(8)
 	]
 	for (var b = 0; b < bad.length; b++) {
-		assert.ok(!miniLock.crypto.checkKeyStrength(bad[b]), 'Bad passphrase ' + b)
+		assert.ok(!miniLock.crypto.checkKeyStrength(bad[b], 'email@email.com'), 'Bad passphrase ' + b)
 	}
 	for (var g = 0; g < good.length; g++) {
-		assert.ok(miniLock.crypto.checkKeyStrength(good[g]), 'Good passphrase ' + g)
+		assert.ok(miniLock.crypto.checkKeyStrength(good[g], 'email@email.com'), 'Good passphrase ' + g)
 	}
 })
