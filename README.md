@@ -8,7 +8,7 @@
 * **Follow on [Twitter](https://twitter.com/minilockapp)** for latest project news
 
 ###Download
-[<img src="https://minilock.io/files/chromeStore.png" width="250">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
+[<img src="https://minilock.io/img/chromeStore.png" width="250">](https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao)
 
 miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  
 
