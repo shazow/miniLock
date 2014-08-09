@@ -128,18 +128,6 @@
 			width: 440px;
 		}
 	</style>
-	<script type="application/javascript">
-		window.onload = function() {
-			var chromeStoreDownload = function() {
-				if (navigator.userAgent.match('Chrome')) {
-					chrome.webstore.install(
-						'https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao'
-					)
-					return false
-				}
-			}
-		}
-	</script>
 </head>
 <body>
 	<div class="main">
@@ -176,5 +164,15 @@
 			</p>
 		</div>
 	</div>
+	<script type="application/javascript">
+		var chromeStoreDownload = function() {
+			if (navigator.userAgent.match('Chrome')) {
+				chrome.webstore.install(
+					'https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao'
+				)
+				return false
+			}
+		}
+	</script>
 </body>
 </html>
