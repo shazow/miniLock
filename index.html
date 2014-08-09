@@ -1,753 +1,180 @@
-<!DOCTYPE html><html>
-
+<!DOCTYPE html>
 <head>
-<meta charset="utf-8">
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon128.png" />
-<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao" />
-<title>miniLock</title>
-<style type="text/css">
-body {
-  font-family: Helvetica, arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: white;
-  padding: 30px; }
-
-body > *:first-child {
-  margin-top: 0 !important; }
-body > *:last-child {
-  margin-bottom: 0 !important; }
-
-a {
-  color: #4183C4; }
-a.absent {
-  color: #cc0000; }
-a.anchor {
-  display: block;
-  padding-left: 30px;
-  margin-left: -30px;
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0; }
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 20px 0 10px;
-  padding: 0;
-  font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  cursor: text;
-  position: relative; }
-
-h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
-  text-decoration: none; }
-
-h1 tt, h1 code {
-  font-size: inherit; }
-
-h2 tt, h2 code {
-  font-size: inherit; }
-
-h3 tt, h3 code {
-  font-size: inherit; }
-
-h4 tt, h4 code {
-  font-size: inherit; }
-
-h5 tt, h5 code {
-  font-size: inherit; }
-
-h6 tt, h6 code {
-  font-size: inherit; }
-
-h1 {
-  font-size: 28px;
-  color: black; }
-
-h2 {
-  font-size: 24px;
-  border-bottom: 1px solid #cccccc;
-  color: black; }
-
-h3 {
-  font-size: 18px; }
-
-h4 {
-  font-size: 16px; }
-
-h5 {
-  font-size: 14px; }
-
-h6 {
-  color: #777777;
-  font-size: 14px; }
-
-p, blockquote, ul, ol, dl, li, table, pre {
-  margin: 15px 0; }
-
-hr {
-  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
-  border: 0 none;
-  color: #cccccc;
-  height: 4px;
-  padding: 0;
-}
-
-body > h2:first-child {
-  margin-top: 0;
-  padding-top: 0; }
-body > h1:first-child {
-  margin-top: 0;
-  padding-top: 0; }
-  body > h1:first-child + h2 {
-    margin-top: 0;
-    padding-top: 0; }
-body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
-  margin-top: 0;
-  padding-top: 0; }
-
-a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
-  margin-top: 0;
-  padding-top: 0; }
-
-h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
-  margin-top: 0; }
-
-li p.first {
-  display: inline-block; }
-li {
-  margin: 0; }
-ul, ol {
-  padding-left: 30px; }
-
-ul :first-child, ol :first-child {
-  margin-top: 0; }
-
-dl {
-  padding: 0; }
-  dl dt {
-    font-size: 14px;
-    font-weight: bold;
-    font-style: italic;
-    padding: 0;
-    margin: 15px 0 5px; }
-    dl dt:first-child {
-      padding: 0; }
-    dl dt > :first-child {
-      margin-top: 0; }
-    dl dt > :last-child {
-      margin-bottom: 0; }
-  dl dd {
-    margin: 0 0 15px;
-    padding: 0 15px; }
-    dl dd > :first-child {
-      margin-top: 0; }
-    dl dd > :last-child {
-      margin-bottom: 0; }
-
-blockquote {
-  border-left: 4px solid #dddddd;
-  padding: 0 15px;
-  color: #777777; }
-  blockquote > :first-child {
-    margin-top: 0; }
-  blockquote > :last-child {
-    margin-bottom: 0; }
-
-table {
-  padding: 0;border-collapse: collapse; }
-  table tr {
-    border-top: 1px solid #cccccc;
-    background-color: white;
-    margin: 0;
-    padding: 0; }
-    table tr:nth-child(2n) {
-      background-color: #f8f8f8; }
-    table tr th {
-      font-weight: bold;
-      border: 1px solid #cccccc;
-      margin: 0;
-      padding: 6px 13px; }
-    table tr td {
-      border: 1px solid #cccccc;
-      margin: 0;
-      padding: 6px 13px; }
-    table tr th :first-child, table tr td :first-child {
-      margin-top: 0; }
-    table tr th :last-child, table tr td :last-child {
-      margin-bottom: 0; }
-
-img {
-  max-width: 100%; }
-
-span.frame {
-  display: block;
-  overflow: hidden; }
-  span.frame > span {
-    border: 1px solid #dddddd;
-    display: block;
-    float: left;
-    overflow: hidden;
-    margin: 13px 0 0;
-    padding: 7px;
-    width: auto; }
-  span.frame span img {
-    display: block;
-    float: left; }
-  span.frame span span {
-    clear: both;
-    color: #333333;
-    display: block;
-    padding: 5px 0 0; }
-span.align-center {
-  display: block;
-  overflow: hidden;
-  clear: both; }
-  span.align-center > span {
-    display: block;
-    overflow: hidden;
-    margin: 13px auto 0;
-    text-align: center; }
-  span.align-center span img {
-    margin: 0 auto;
-    text-align: center; }
-span.align-right {
-  display: block;
-  overflow: hidden;
-  clear: both; }
-  span.align-right > span {
-    display: block;
-    overflow: hidden;
-    margin: 13px 0 0;
-    text-align: right; }
-  span.align-right span img {
-    margin: 0;
-    text-align: right; }
-span.float-left {
-  display: block;
-  margin-right: 13px;
-  overflow: hidden;
-  float: left; }
-  span.float-left span {
-    margin: 13px 0 0; }
-span.float-right {
-  display: block;
-  margin-left: 13px;
-  overflow: hidden;
-  float: right; }
-  span.float-right > span {
-    display: block;
-    overflow: hidden;
-    margin: 13px auto 0;
-    text-align: right; }
-
-code, tt {
-  margin: 0 2px;
-  padding: 0 5px;
-  white-space: nowrap;
-  border: 1px solid #eaeaea;
-  background-color: #f8f8f8;
-  border-radius: 3px; }
-
-pre code {
-  margin: 0;
-  padding: 0;
-  white-space: pre;
-  border: none;
-  background: transparent; }
-
-.highlight pre {
-  background-color: #f8f8f8;
-  border: 1px solid #cccccc;
-  font-size: 13px;
-  line-height: 19px;
-  overflow: auto;
-  padding: 6px 10px;
-  border-radius: 3px; }
-
-pre {
-  background-color: #f8f8f8;
-  border: 1px solid #cccccc;
-  font-size: 13px;
-  line-height: 19px;
-  overflow: auto;
-  padding: 6px 10px;
-  border-radius: 3px; }
-  pre code, pre tt {
-    background-color: transparent;
-    border: none; }
-
-sup {
-    font-size: 0.83em;
-    vertical-align: super;
-    line-height: 0;
-}
-* {
-	-webkit-print-color-adjust: exact;
-}
-@media screen and (min-width: 914px) {
-    body {
-        width: 854px;
-        margin:0 auto;
-    }
-}
-@media print {
-	table, pre {
-		page-break-inside: avoid;
-	}
-	pre {
-		word-wrap: break-word;
-	}
-}
-</style>
-<style type="text/css">
-/**
- * prism.js Coy theme for JavaScript, CoffeeScript, CSS and HTML
- * Based on https://github.com/tshedor/workshop-wp-theme (Example: http://workshop.kansan.com/category/sessions/basics or http://workshop.timshedor.com/category/sessions/basics);
- * @author Tim  Shedor
- */
-
-code[class*="language-"],
-pre[class*="language-"] {
-  color: black;
-  font-family: Consolas, Monaco, 'Andale Mono', monospace;
-  direction: ltr;
-  text-align: left;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
-
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-  position:relative;
-  padding: 1em;
-  margin: .5em 0;
-  -webkit-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-  -moz-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-  box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
-  border-left: 10px solid #358ccb;
-  background-color: #fdfdfd;
-  background-image: -webkit-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-  background-image: -moz-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-  background-image: -ms-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-  background-image: -o-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-  background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
-  background-size: 3em 3em;
-  background-origin:content-box;
-  overflow:visible;
-  max-height:30em;
-}
-
-code[class*="language"] {
-  max-height:29em;
-  display:block;
-  overflow:scroll;
-}
-
-/* Margin bottom to accomodate shadow */
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-  background-color:#fdfdfd;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin-bottom: 1em;
-}
-
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-  position:relative;
-  padding: .2em;
-  -webkit-border-radius: 0.3em;
-  -moz-border-radius: 0.3em;
-  -ms-border-radius: 0.3em;
-  -o-border-radius: 0.3em;
-  border-radius: 0.3em;
-  color: #c92c2c;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-pre[class*="language-"]:before,
-pre[class*="language-"]:after {
-  content: '';
-  z-index: -2;
-  display:block;
-  position: absolute;
-  bottom: 0.75em;
-  left: 0.18em;
-  width: 40%;
-  height: 20%;
-  -webkit-box-shadow: 0px 13px 8px #979797;
-  -moz-box-shadow: 0px 13px 8px #979797;
-  box-shadow: 0px 13px 8px #979797;
-  -webkit-transform: rotate(-2deg);
-  -moz-transform: rotate(-2deg);
-  -ms-transform: rotate(-2deg);
-  -o-transform: rotate(-2deg);
-  transform: rotate(-2deg);
-}
-
-:not(pre) > code[class*="language-"]:after,
-pre[class*="language-"]:after {
-  right: 0.75em;
-  left: auto;
-  -webkit-transform: rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -ms-transform: rotate(2deg);
-  -o-transform: rotate(2deg);
-  transform: rotate(2deg);
-}
-
-.token.comment,
-.token.block-comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #7D8B99;
-}
-
-.token.punctuation {
-  color: #5F6364;
-}
-
-.token.property,
-.token.tag,
-.token.boolean,
-.token.number,
-.token.function-name,
-.token.constant,
-.token.symbol {
-  color: #c92c2c;
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.function,
-.token.builtin {
-  color: #2f9c0a;
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.token.variable {
-  color: #a67f59;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword,
-.token.class-name {
-  color: #1990b8;
-}
-
-.token.regex,
-.token.important {
-  color: #e90;
-}
-.language-css .token.string,
-.style .token.string {
-  color: #a67f59;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.token.important {
-  font-weight: normal;
-}
-
-.token.entity {
-  cursor: help;
-}
-
-.namespace {
-  opacity: .7;
-}
-
-@media screen and (max-width:767px){
-  pre[class*="language-"]:before,
-  pre[class*="language-"]:after {
-    bottom:14px;
-    -webkit-box-shadow:none;
-    -moz-box-shadow:none;
-    box-shadow:none;
-  }
-
-}
-
-/* Plugin styles */
-.token.tab:not(:empty):before,
-.token.cr:before,
-.token.lf:before {
-  color: #e0d7d1;
-}
-
-</style>
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="minilock, file encryption, encrypt files, chrome file encryption" />
+	<meta name="description" content="miniLock is a new standard for encrypting files and sharing them with friends and colleagues. Available now for Chrome." />
+	<meta property="og:image" content="https://minilock.io/img/icon512.png" />
+	<meta property="og:title" content="miniLock — File encryption software that does more with less." />
+	<meta property="og:description" content="miniLock is a new standard for encrypting files and sharing them with friends and colleagues. Available now for Chrome." />
+	<title>miniLock — File encryption software that does more with less</title>
+	<link rel="icon" type="image/png" href="https://minilock.io/img/icon512.png" />
+	<link rel="image_src" href="https://minilock.io/img/icon512.png" />
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao"/>
+	<style type="text/css">
+		@font-face {
+			font-family: 'Open Sans';
+			font-style: normal;
+			font-weight: 400;
+			src: url('woff/openSans.woff') format('woff');
+		}
+		@font-face {
+			font-family: 'Open Sans';
+			font-style: bold;
+			font-weight: 700;
+			src: url('woff/openSansBold.woff') format('woff');
+		}
+		@font-face {
+			font-family: 'Open Sans';
+			font-style: italic;
+			font-weight: 400;
+			src: url('woff/openSansItalic.woff') format('woff');
+		}
+		@font-face {
+			font-family: 'Open Sans';
+			font-style: italic;
+			font-weight: 700;
+			src: url('woff/openSansBoldItalic.woff') format('woff');
+		}
+		@font-face {
+			font-family: 'Inconsolata';
+			font-style: normal;
+			font-weight: 400;
+			src: url('woff/inconsolata.woff') format('woff');
+		}
+		@font-face {
+			font-family: 'Octicons';
+			font-style: normal;
+			font-weight: 400;
+			src: url('woff/octicons.woff') format('woff');
+		}
+		body {
+			font-family: 'Open Sans', 'Helvetica Neue', 'Arial', sans-serif;
+			color: #333;
+			font-size: 14px;
+			line-height: 1.8em;
+		}
+		hr {
+			border: none;
+			border-top: 1px solid #CCC;
+		}
+		a {
+			color: #89AFDC;
+			text-decoration: none;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
+		a img {
+			border: none;
+		}
+		h3 {
+			margin: 5px 0;
+		}
+		strong.download {
+			margin: 10px 0;
+			width: 200px;
+			color: #FFF;
+			background: #89AFDC;
+			display: block;
+			border-radius: 5px;
+			text-align: center;
+			font-size: 0.8em;
+			opacity: 0.9;
+		}
+		div.main {
+			width: 700px;
+			margin: 0 auto;
+		}
+		div.title {
+			color: #444;
+		}
+		div.title h1 {
+			margin-bottom: 5px;
+		}
+		div.title h2 {
+			font-weight: normal;
+			margin: 0;
+			font-size: 1.2em;
+		}
+		div.menu {
+			background: #95B7DF;
+			padding: 0 10px 0 5px;
+			margin-bottom: 15px;
+			border-radius: 5px;
+			opacity: 0.9;
+			font-size: 0.8em;
+		}
+		div.menu a {
+			margin-right: 15px;
+			color: #FFF;
+		}
+		div.leftSide {
+			float: left;
+			width: 250px;
+		}
+		div.leftSide img.icon {
+			width: 200px;
+			height: auto;
+			display: block;
+		}
+		div.leftSide img.chromeStore {
+			width: 200px;
+			height: auto;
+			display: block;
+			margin: 10px 0;
+		}
+		div.rightSide {
+			float: right;
+			width: 440px;
+		}
+	</style>
+	<script type="application/javascript">
+		window.onload = function() {
+			var chromeStoreDownload = function() {
+				if (navigator.userAgent.match('Chrome')) {
+					chrome.webstore.install(
+						'https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao'
+					)
+					return false
+				}
+			}
+		}
+	</script>
 </head>
 <body>
-<h1><img src="https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon128.png" width="48"> miniLock</h1>
-
-<h2>File encryption software that does more with less.</h2>
-
-<p><a href="https://travis-ci.org/kaepora/miniLock"><img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" width="80"></a></p>
-
-<ul>
-<li><strong><a href="https://github.com/kaepora/miniLock">Code</a></strong> | <strong><a href="https://github.com/kaepora/miniLock/issues">Issues and Discussion</a></strong></li>
-<li><strong>HOPE X <a href="https://vimeo.com/101237413">Video</a> | <a href="https://minilock.io/files/HOPEX.pdf">Slides</a></strong></li>
-<li><strong>Follow on <a href="https://twitter.com/minilockapp">Twitter</a></strong> for latest project news</li>
-</ul>
-
-<h3>Download</h3>
-
-<p><a href="https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao" onclick="return chromeStoreDownload()"><img src="https://minilock.io/files/chromeStore.png" width="250"></a></p>
-
-<p>miniLock is currently audited, peer-reviewed software. An initial public release is available for Google Chrome and Chrome OS.  </p>
-
-<h3>Software Status</h3>
-
-<p>miniLock was subjected to a cryptographic code audit carried out by <a href="https://cure53.de/">Cure53</a> and with the support of the <a href="https://www.opentechfund.org/">Open Technology Fund</a>. Quoting from the conclusion of the audit report (<strong><a href="https://minilock.io/files/cure53.pdf">PDF</a></strong>):</p>
-
-<blockquote>
-<p>Cure53 was tasked to test against the application security of miniLock and evaluate its cryptographic properties and promises. Over the course of four days of manual testing, no severe errors have been spotted. The code is soundly and neatly written, well structured, minimal and therefore offers no sinks for direct exploitation.</p>
-</blockquote>
-
-<p>miniLock also ships with a Unit Test Kit located in <code>test</code>.</p>
-
-<h3>0. Overview</h3>
-
-<p>miniLock is a small, portable file encryption software. The idea behind its design is that passphrase memorized by the user, along with their email address, can act as a complete, portable basis for a persistent public key identity and provide a full substitute for other key pair models, such as having the key pair stored on disk media (the PGP approach).  </p>
-
-<p>Advancements in elliptic curve cryptography, specifically in systems such as <code>curve25519</code>, allow us to generate key pairs where the lengths of both public and private keys are relatively very small. This means that public keys become far easier to share (miniLock public keys, called <em>miniLock IDs</em>, fit inside less than half a tweet). This also means that a human-memorizable passphrase of adequate entropy can be used as the basis for deriving a private key.</p>
-
-<p>When first opened, miniLock asks the user for their email address and a passphrase which it then uses to derive the user&rsquo;s private and public keys. Via this model, the user can establish their key pair on any computer that has miniLock installed using only this passphrase, without having to manage key files or identities and so on. Thanks to the small key sizes present in <code>curve25519</code>, we are guaranteed small, easily tweetable public keys and private keys that can be derived from passphrases. miniLock also contains checks to ensure the passphrases entered by the user are of sufficient entropy. miniLock will refuse weak passphrases completely and instead suggest stronger passphrases for use by the user.</p>
-
-<p>miniLock then allows the user to encrypt files to other miniLock users via their miniLock IDs and decrypt files sent to them. miniLock&rsquo;s encryption format supports encrypting a single file to multiple recipients with a negligible increase in file size. Another feature is that analyzing a miniLock-encrypted file does not yield the miniLock IDs or identities of the sender or the recipient(s). Upon decryption, a legitimate recipient will be able to know and verify the identity of the sender, but will still be unable to determine the identity of other potential recipients.</p>
-
-<p>miniLock file encryption provides both confidentiality and integrity. miniLock uses the <a href="http://tweetnacl.cr.yp.to">TweetNaCL</a> cryptography library, <a href="https://github.com/dchest/tweetnacl-js">ported to JavaScript</a>, entirely due to its focus on simplicity, auditability and small size. Similarly, miniLock is designed to be as simple, portable, auditable and usable as possible. miniLock also uses <a href="http://www.tarsnap.com/scrypt.html">scrypt</a> for <q>memory-hard</q> key derivation.</p>
-
-<h3>1. User Flow</h3>
-
-<p>This section outlines an example user flow in order to help demonstrate how miniLock is supposed to help people.</p>
-
-<p>Alice wants to send a scan of her passport to Bob. Sending it over email would compromise personal information, so Alice decided to first encrypt the scan using miniLock.</p>
-
-<p>Bob opens miniLock and enters his email address and passphrase. miniLock displays his miniLock ID, which is tied to his passphrase and is persistent. He sends Alice his miniLock ID, which looks something like this:
-<code>quBSaJLXKsRiaSrhgkPnswKocth711H29ZamMi1H9j4Mb</code></p>
-
-<p>Alice drags and drops her passport scan into miniLock and enters Bob&rsquo;s miniLock ID as the recipient. She clicks the encrypt button and sends the resulting <code>.minilock</code> file to Bob. Once Bob drags the encrypted file into miniLock, it automatically detects it as a miniLock-encrypted file destined to Bob, and decrypts and saves the passport scan on his computer.</p>
-
-<h3>2. Key Derivation</h3>
-
-<p>miniLock uses the <a href="https://github.com/dropbox/zxcvbn">zxcvbn</a> library in order to impose a strict limit on the amount of detected entropy present in entered passphrases. miniLock will not allow passphrases that fall below the threshold of 100 bits of entropy: if a passphrase of lower entropy is detected, miniLock will refuse it and will not allow access to encryption or decryption functions.</p>
-
-<p>Users are encouraged to use passphrases which are easier to remember but harder to guess. If a user fails to enter a sufficiently entropic passphrase, miniLock will use a built-in dictionary of the 58,110 most common words in the English language to suggest a seven-word passphrase. This gives us a passphrase with approximately 111 bits of entropy, since 58110<sup>7</sup> ~= 2<sup>111</sup>.</p>
-
-<p>Once we obtain a suitable passphrase, we hash it using <code>BLAKE2</code> and pass the resulting 32 bytes through <code>scrypt</code> in order to obtain the user&rsquo;s private <code>curve25519</code> key. <code>scrypt</code> is invoked using the following parameters::</p>
-
-<ul>
-<li>N = 2<sup>17</sup></li>
-<li>r = 8,</li>
-<li>p = 1,</li>
-<li>L = 32</li>
-</ul>
-
-<p>miniLock uses the email address entered by the user as the <code>scrypt</code> key derivation salt. Email addresses are unique by nature and therefore provide a good basis for a salt.</p>
-
-<p>Once we obtain our 32-byte private key, the public key is derived for use with the TweetNaCL <code>curve25519-xsalsa20-poly1305</code> construction.</p>
-
-<p>The user&rsquo;s <code>miniLock ID</code> consists of 33 bytes. The first 32 bytes are the user&rsquo;s <code>curve25519</code> public key. The last byte acts as a checksum: it is derived by hashing the first 32 bytes with <code>BLAKE2</code> set to a 1-byte output. After constructing the 33 bytes of the miniLock ID, it is encoded into a Base58 representation, meant to be easily communicable via email or instant messaging.</p>
-
-<h3>3. File format</h3>
-
-<p>miniLock saves encrypted files as binary blobs with the following format:</p>
-
-<pre><code class="language-javascript">miniLock magic bytes (8 bytes)
-Header length in bytes (4 bytes, little-endian)
-Header bytes
-Ciphertext bytes
-</code></pre>
-
-<p>miniLock magic bytes identify that this is a miniLock-encrypted file:</p>
-
-<pre><code class="language-javascript">0x6d, 0x69, 0x6e, 0x69,
-0x4c, 0x6f, 0x63, 0x6b
-</code></pre>
-
-<p>The header itself is a stringified JSON object which contains information necessary for the recipients to decrypt the file. The JSON object has the following format:</p>
-
-<pre><code class="language-javascript">{
-version: Version of the miniLock protocol used for this file (Currently 1) (Number)
-ephemeral: Public key from ephemeral key pair used to encrypt decryptInfo object (Base64),
-decryptInfo: {
-    (One copy of the below object for every recipient)
-    Unique nonce for decrypting this object (Base64): {
-        senderID: Sender&#39;s miniLock ID (Base58),
-        recipientID: miniLock ID of this recipient (used for verfication) (Base58),
-        fileInfo: {
-            fileKey: Key for file decryption (Base64),
-            fileNonce: Nonce for file decryption (Base64),
-            fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
-        } (fileInfo is encrypted to recipient&#39;s public key using long-term key pair) (Base64),
-    } (encrypted to recipient&#39;s public key using ephemeral key pair) (Base64)
-}
-</code></pre>
-
-<p>Note that the nonce used to encrypt <code>decryptInfo</code> is the same as the one used to encrypt <code>fileInfo</code>. Nonce reuse in this scenario is permitted since we are encrypting using different keys.</p>
-
-<h3>4. File encryption</h3>
-
-<p>The sender begins by generating a new ephemeral <code>curve25519</code> key pair, <code>senderEphemeralSecret</code> and <code>senderEphemeralPublic</code>.</p>
-
-<p>The sender&rsquo;s long-term keys are denoted as <code>senderSecret</code> and <code>senderPublic</code>.</p>
-
-<p>A recipient <code>a</code>&rsquo;s long-term keys are denoted as <code>recipientSecret[a]</code> and <code>recipientPublic[a]</code>.</p>
-
-<p>The sender appends the bytes signalling the beginning of the header to the final encrypted file.</p>
-
-<p>The file&rsquo;s filename is padded with 0x00 bytes until its length equals 256 bytes. The filename is then prepended to the plaintext prior to encryption. The filename is encrypted as its own 256-byte chunk (see chunking format below).</p>
-
-<p>A random 32-byte <code>fileKey</code> and a random 16-byte <code>fileNonce</code> are generated and used to symmetrically encrypt the plaintext bytes using TweetNaCL&rsquo;s <code>xsalsa20-poly1305</code> construction. We encrypt the plaintext bytes by splitting the plaintext into 1048576-byte chunks. Each chunk is then encrypted using the following model:</p>
-
-<pre><code class="language-javascript">fullNonce0 = fileNonce || 0
-encryptedChunk0 = length(chunk0) || nacl.secretbox(chunk0, fullNonce0, fileKey)
-fullNonce1 = fileNonce || 1
-encryptedChunk1 = length(chunk1) || nacl.secretbox(chunk1, fullNonce1, fileKey)
-...
-</code></pre>
-
-<p>In the above example, the 24-byte <code>fullNonce</code> is acquired by concatenating the 16-byte <code>fileNonce</code> and 8-byte little-endian chunk number. Also,<code>length(chunk)</code> is a 4-byte little-endian plaintext chunk length.</p>
-
-<p>The last chunk is encrypted as follows:</p>
-
-<pre><code class="language-javascript">fullNonceN = fileNonce || setMostSignificantBit(N)
-encryptedChunkN = length(chunkN) || nacl.secretbox(chunkN, fullNonceN, fileKey)
-</code></pre>
-
-<p>The sender generates a <code>fileInfo</code> JSON object containing <code>fileKey</code>, <code>fileNonce</code> and <code>fileHash</code>. For every recipient <code>n</code>, the sender encrypts <code>fileInfo</code> using <code>senderSecret</code> and <code>recipientPublic[n]</code> and stores it within a <code>decryptInfo</code> object inside the JSON header along with <code>senderID</code>, as described in §3.</p>
-
-<p>The name of the <code>decryptInfo</code> property in which the aforementioned elements are stored is a 24-byte nonce. The sender uses this nonce, along with <code>senderEphemeralSecret</code>, to encrypt the underlying JSON object asymmetrically to <code>recipientPublic[n]</code>, using TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction. Note that this is done once for every recipient, creating a different <code>decryptInfo</code> object for every recipient, each labeled by their unique nonces.</p>
-
-<p>Finally, the sender appends the bytes signalling the end of the header, followed by the ciphertext bytes.</p>
-
-<p>TweetNaCL&rsquo;s <code>curve25519-xsalsa20-poly1305</code> construction provides authenticated encryption, guaranteeing both confidentiality and ciphertext integrity. The above header construction makes it impossible to determine the sender or recipient(s) of a miniLock-encrypted file simply by analyzing the ciphertext.</p>
-
-<h3>5. File decryption</h3>
-
-<p>In order to decrypt the file, the recipient needs the information stored within the <code>decryptInfo</code> section of the header. They also will need the <code>ephemeral</code> property of the header in order to derive the shared secret, in conjunction with their long-term secret key, which can be used to decrypt their copy of the <code>decryptInfo</code> header object.</p>
-
-<p>If there are multiple properties within <code>decryptInfo</code>, the recipient must iterate through every property until she obtains an authenticated decryption of the underlying object. Once a successful authenticated decryption of a <code>decryptInfo</code> property occurs, the recipient can then use the obtained <code>senderID</code> along with their long-term secret key to decrypt <code>fileKey</code> and use it in conjunction with <code>fileNonce</code> to perform an authenticated decryption of the ciphertext bytes.</p>
-
-<p>Before or during file decryption, the recipient compares the 32-byte <code>BLAKE2</code> hash of the ciphertext against the decrypted <code>fileHash</code>. The recipient also compares the decrypted <code>recipientID</code> against their own miniLock ID. If any of these checks fail, decryption is aborted and an error is returned.</p>
-
-<p>In order to decrypt the ciphertext bytes, the recipient breaks the ciphertext down to chunks consisting of the original 1048576 bytes of the plaintext chunk, plus the 4 bytes defining the chunk length and the 16 bytes defining the <code>poly1305</code> authentication code of that particular ciphertext chunk. Each chunk is then decrypted sequentially using the following model:</p>
-
-<pre><code class="language-javascript">fullNonce0 = fileNonce || 0
-decryptedChunk0 = nacl.secretbox.open(chunk0, fullNonce0, fileKey)
-fullNonce1 = fileNonce || 1
-decryptedChunk1 = nacl.secretbox.open(chunk1, fullNonce1, fileKey)
-...
-</code></pre>
-
-<p>After decryption, the recipient retrieves the filename from the first 256 bytes of the plaintext. The recipient strips the padding bytes from the filename and is now capable of saving the decrypted file.</p>
-
-<p>If the authenticated asymmetric decryption of any header object fails, or the authenticated symmetric decryption of the file ciphertext fails, decryption is aborted and an error is returned.</p>
-
-<h3>6. Key Identity Authentication</h3>
-
-<p>In PGP, public keys can be substantially larger than miniLock IDs, therefore necessitating the generation of key fingerprints which can then be used for out-of-band key identity authentication. With miniLock, users are able to authenticate out-of-band directly using the miniLock ID, due to its small length (approximately 45 Base58-encoded characters). Therefore, no specialized key identity authentication mechanism is required.</p>
-
-<h3>7. Error Codes</h3>
-
-<p>miniLock will output these error codes when running into encryption or decryption errors. The user interface can then handle these errors in order to display information that is relevant to users:</p>
-
-<p><strong>Encryption errors</strong></p>
-
-<ul>
-<li><code>Error 1</code>: General encryption error</li>
-</ul>
-
-<p><strong>Decryption errors</strong></p>
-
-<ul>
-<li><code>Error 2</code>: General decryption error</li>
-<li><code>Error 3</code>: Could not parse header</li>
-<li><code>Error 4</code>: Invalid header version</li>
-<li><code>Error 5</code>: Could not validate sender ID</li>
-<li><code>Error 6</code>: File is not encrypted for this recipient</li>
-<li><code>Error 7</code>: Could not validate ciphertext hash</li>
-</ul>
-
-<h3>8. Caveats</h3>
-
-<p>miniLock is not intended to protect against malicious files being sent and received. It is the user&rsquo;s responsibility to vet the safety of the files they send or receive over miniLock. miniLock cannot protect against malware being sent over it.</p>
-
-<h3>9. Thanks</h3>
-
-<p>Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback on an early draft of this document.</p>
-
-<p>Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock&rsquo;s design, which introduced sender ID anonymity in the ciphertext.</p>
-
-<p>Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript and his general cooperation with the miniLock project, including many helpful and crucial suggestions.</p>
-
-<p>Sincere thanks are presented to Dr. Mario Heiderich and his team at <a href="https://cure53.de/">Cure53</a> for their work on performing a full audit of the miniLock codebase. We also sincerely thank the <a href="https://www.opentechfund.org/">Open Technology Fund</a> for funding the audit.</p>
-
-<p>Finally, sincere thanks are presented to the wonderful, constructive members of the miniLock community who have contributed many improvements and ideas to the miniLock design and codebase. You rock!</p>
-
-<h3>10. Credits</h3>
-
-<h4>miniLock</h4>
-
-<p>Copyright 2014 <a href="http://nadim.computer">Nadim Kobeissi</a>. Released under the AGPLv3 license.</p>
-
-<h4>TweetNaCL</h4>
-
-<p><a href="http://cr.yp.to/djb.html">Daniel J. Bernstein</a>, Wesley Janssen, <a href="http://hyperelliptic.org/tanja">Tanja Lange</a>, <a href="http://www.cryptojedi.org/users/peter/">Peter Schwabe</a>, <a href="https://github.com/mdempsky">Matthew Dempsky</a></p>
-
-<h4>TweetNaCL-JS</h4>
-
-<p><a href="http://github.com/dchest">Dmitry Chestnykh</a>, <a href="https://github.com/devi">Devi Mandiri</a></p>
-
-<h4>scrypt</h4>
-
-<p><a href="http://www.tarsnap.com/scrypt.html">Colin Percival</a></p>
-
-<script type="text/javascript">
-var self=typeof window!="undefined"?window:{},Prism=function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{encode:function(e){return e instanceof n?new n(e.type,t.util.encode(e.content)):t.util.type(e)==="Array"?e.map(t.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var r={};for(var i in e)e.hasOwnProperty(i)&&(r[i]=t.util.clone(e[i]));return r;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var r=t.util.clone(t.languages[e]);for(var i in n)r[i]=n[i];return r},insertBefore:function(e,n,r,i){i=i||t.languages;var s=i[e],o={};for(var u in s)if(s.hasOwnProperty(u)){if(u==n)for(var a in r)r.hasOwnProperty(a)&&(o[a]=r[a]);o[u]=s[u]}return i[e]=o},DFS:function(e,n){for(var r in e){n.call(e,r,e[r]);t.util.type(e)==="Object"&&t.languages.DFS(e[r],n)}}},highlightAll:function(e,n){var r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');for(var i=0,s;s=r[i++];)t.highlightElement(s,e===!0,n)},highlightElement:function(r,i,s){var o,u,a=r;while(a&&!e.test(a.className))a=a.parentNode;if(a){o=(a.className.match(e)||[,""])[1];u=t.languages[o]}if(!u)return;r.className=r.className.replace(e,"").replace(/\s+/g," ")+" language-"+o;a=r.parentNode;/pre/i.test(a.nodeName)&&(a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+o);var f=r.textContent;if(!f)return;var l={element:r,language:o,grammar:u,code:f};t.hooks.run("before-highlight",l);if(i&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){l.highlightedCode=n.stringify(JSON.parse(e.data),o);t.hooks.run("before-insert",l);l.element.innerHTML=l.highlightedCode;s&&s.call(l.element);t.hooks.run("after-highlight",l)};c.postMessage(JSON.stringify({language:l.language,code:l.code}))}else{l.highlightedCode=t.highlight(l.code,l.grammar,l.language);t.hooks.run("before-insert",l);l.element.innerHTML=l.highlightedCode;s&&s.call(r);t.hooks.run("after-highlight",l)}},highlight:function(e,r,i){var s=t.tokenize(e,r);return n.stringify(t.util.encode(s),i)},tokenize:function(e,n,r){var i=t.Token,s=[e],o=n.rest;if(o){for(var u in o)n[u]=o[u];delete n.rest}e:for(var u in n){if(!n.hasOwnProperty(u)||!n[u])continue;var a=n[u],f=a.inside,l=!!a.lookbehind,c=0;a=a.pattern||a;for(var h=0;h<s.length;h++){var p=s[h];if(s.length>e.length)break e;if(p instanceof i)continue;a.lastIndex=0;var d=a.exec(p);if(d){l&&(c=d[1].length);var v=d.index-1+c,d=d[0].slice(c),m=d.length,g=v+m,y=p.slice(0,v+1),b=p.slice(g+1),w=[h,1];y&&w.push(y);var E=new i(u,f?t.tokenize(d,f):d);w.push(E);b&&w.push(b);Array.prototype.splice.apply(s,w)}}}return s},hooks:{all:{},add:function(e,n){var r=t.hooks.all;r[e]=r[e]||[];r[e].push(n)},run:function(e,n){var r=t.hooks.all[e];if(!r||!r.length)return;for(var i=0,s;s=r[i++];)s(n)}}},n=t.Token=function(e,t){this.type=e;this.content=t};n.stringify=function(e,r,i){if(typeof e=="string")return e;if(Object.prototype.toString.call(e)=="[object Array]")return e.map(function(t){return n.stringify(t,r,e)}).join("");var s={type:e.type,content:n.stringify(e.content,r,i),tag:"span",classes:["token",e.type],attributes:{},language:r,parent:i};s.type=="comment"&&(s.attributes.spellcheck="true");t.hooks.run("wrap",s);var o="";for(var u in s.attributes)o+=u+'="'+(s.attributes[u]||"")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'" '+o+">"+s.content+"</"+s.tag+">"};if(!self.document){if(!self.addEventListener)return self.Prism;self.addEventListener("message",function(e){var n=JSON.parse(e.data),r=n.language,i=n.code;self.postMessage(JSON.stringify(t.tokenize(i,t.languages[r])));self.close()},!1);return self.Prism}var r=document.getElementsByTagName("script");r=r[r.length-1];if(r){t.filename=r.src;document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)}return self.Prism}();typeof module!="undefined"&&module.exports&&(module.exports=Prism);
-</script>
-<script type="text/javascript">
-Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|(^|[^:])\/\/.*?(\r?\n|$))/g,lookbehind:!0},string:/("|')(\\?.)*?\1/g,"class-name":{pattern:/((?:(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[a-z0-9_\.\\]+/ig,lookbehind:!0,inside:{punctuation:/(\.|\\)/}},keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/g,"boolean":/\b(true|false)\b/g,"function":{pattern:/[a-z0-9_]+\(/ig,inside:{punctuation:/\(/}},number:/\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?)\b/g,operator:/[-+]{1,2}|!|<=?|>=?|={1,3}|&{1,2}|\|?\||\?|\*|\/|\~|\^|\%/g,ignore:/&(lt|gt|amp);/gi,punctuation:/[{}[\];(),.:]/g};
-</script>
-<script type="text/javascript">
-Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|get|if|implements|import|in|instanceof|interface|let|new|null|package|private|protected|public|return|set|static|super|switch|this|throw|true|try|typeof|var|void|while|with|yield)\b/g,number:/\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/<script[\w\W]*?>[\w\W]*?<\/script>/ig,inside:{tag:{pattern:/<script[\w\W]*?>|<\/script>/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});
-
-</script>
-
-<script type="text/javascript">
-var chromeStoreDownload = function() {
-	if (navigator.userAgent.match('Chrome')) {
-		chrome.webstore.install(
-			'https://chrome.google.com/webstore/detail/mknafpnfcafklkflhenhaldedggpciao'
-		)
-		return false
-	}
-}
-</script>
-
+	<div class="main">
+		<div class="title">
+			<h1>miniLock</h1>
+			<h2>File encryption software that does more with less.</h2>
+			<div class="menu">
+				<a href="https://github.com/kaepora/miniLock">Codebase</a>
+				<a href="https://github.com/kaepora/miniLock/issues">Discussion</a>
+				<a href="https://github.com/kaepora/miniLock/blob/master/README.md#-minilock">Design Document</a>
+				<a href="https://twitter.com/minilockapp">Twitter</a>
+			</div>
+		</div>
+		<div class="leftSide">
+			<img src="img/icon512.png" alt="" class="icon" />
+			<a href="https://chrome.google.com/webstore/detail/minilock/mknafpnfcafklkflhenhaldedggpciao" onclick="return chromeStoreDownload()">
+				<strong class="download">Download miniLock</strong>
+				<img src="img/chromeStore.png" alt="Available on the Chrome Web Store" class="chromeStore" />
+			</a>
+		</div>
+		<div class="rightSide">
+			<strong>miniLock makes encrypting files and sharing them with friends easy. It's a modern standard for file encryption.</strong>
+			<h3>Easy to use</h3>
+			<p>
+				miniLock uses your email and secret passphrase to generate a miniLock ID. miniLock IDs are small and easy to share online — anyone can use your ID to encrypt files to you, and you can encrypt files to friends using their miniLock IDs.
+			</p>
+			<h3>Modern</h3>
+			<p>
+				Enter your miniLock passphrase on any computer, and you'll get access to your miniLock ID. No key storage or management — just a single passphrase to access your miniLock identity anywhere. miniLock uses modern cryptographic primitives to accomplish this securely.
+			</p>
+			<h3>Proven cryptography</h3>
+			<p>
+				miniLock is audited, peer-reviewed software. It's developed by experts, using proven cryptographic standards and under the scrutiny of the open source cryptography community.
+			</p>
+		</div>
+	</div>
 </body>
-
 </html>
