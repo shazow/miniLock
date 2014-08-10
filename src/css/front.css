@@ -35,7 +35,6 @@ div.unlock input.miniLockKey {
 	height: 23px;
 	position: relative;
 	bottom: 4px;
-	font-family: 'Octicons';
 }
 
 div.unlock input.showMiniLockKey {
