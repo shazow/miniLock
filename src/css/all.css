@@ -143,6 +143,7 @@ div.square {
 	transform-style: preserve-3d;
 	position: relative;
 	border-radius: 2px;
+	-moz-backface-visibility: hidden; /* Accommodation for Firefox bug */
 }
 
 div.squareFront, div.squareBack {
