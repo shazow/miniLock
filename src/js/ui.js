@@ -197,12 +197,16 @@ miniLock.UI.handleDirectorySelection = function(directory) {
         var results = []
         dir.createReader().readEntries(function(list) {
             var pending = list.length
-            if (!pending) return done(results, null)
+            if (!pending) {
+                return done(results, null)
+            }
             list.forEach(function(l) {
                 if (l.isDirectory) {
                     walk(l, function(res) {
                         results = results.concat(res)
-                        if (!--pending) done(results, null)
+                        if (!--pending) {
+                            done(results, null)
+                        }
                     })
                 } else {
                     l.file(function(file) {
@@ -212,7 +216,9 @@ miniLock.UI.handleDirectorySelection = function(directory) {
                                 path: l.fullPath,
                                 content: reader.result
                             })
-                            if (!--pending) done(results, null)
+                            if (!--pending) {
+                                done(results, null)
+                            }
                         }
                         reader.readAsArrayBuffer(file)
                     })
@@ -227,7 +233,9 @@ miniLock.UI.handleDirectorySelection = function(directory) {
     // and call handleFileSelection using it as
     // the file to encrypt
     walk(directory, function(res, err) {
-        if (err) throw err
+        if (err) {
+            throw err
+        }
         var zip = new JSZip()
         res.forEach(function(r) {
             zip.file(r.path, r.content)
