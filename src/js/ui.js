@@ -129,13 +129,13 @@ $('div.fileSelector').on('drop', function(e) {
 	)
 	e.preventDefault()
 
-    // Treat the dropped file as a DataTransferItem
-    // such to easily convert it to an DataTransferEntry
-    // using Webkit. This way we can take advantage of
-    // the attribute isDirectory
+    	// Treat the dropped file as a DataTransferItem
+    	// such to easily convert it to an DataTransferEntry
+    	// using Webkit. This way we can take advantage of
+    	// the attribute isDirectory
 	var item = e.originalEvent.dataTransfer.items[0]
 
-    // Sadly, works only using Webkit at the moment ...
+    	// Sadly, works only using Webkit at the moment ...
 	if (item.webkitGetAsEntry().isDirectory) {
 		miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
 	} else {
@@ -157,10 +157,10 @@ $('input.fileSelectDialog').change(function(e) {
 	$('span.dragFileInfo').text(
 		$('span.dragFileInfo').data('read')
 	)
-    // Treat the dropped file as a DataTransferItem
-    // such to easily convert it to an DataTransferEntry
-    // using Webkit. This way we can take advantage of
-    // the attribute isDirectory
+    	// Treat the dropped file as a DataTransferItem
+    	// such to easily convert it to an DataTransferEntry
+    	// using Webkit. This way we can take advantage of
+    	// the attribute isDirectory
 	var item = e.originalEvent.dataTransfer.items[0]
 
 
