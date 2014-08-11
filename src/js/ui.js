@@ -189,6 +189,10 @@ $('div.myMiniLockID,div.senderID').click(function() {
 
 miniLock.UI.handleDirectorySelection = function(directory) {
 
+	$('span.dragFileInfo').text(
+		$('span.dragFileInfo').data('zip')
+	)
+
     var walk = function(dir, done) {
         var results = []
         dir.createReader().readEntries(function(list) {
@@ -233,6 +237,11 @@ miniLock.UI.handleDirectorySelection = function(directory) {
         // fake handleFileSelection dealing with a true File,
         // not a Blob
         archive.name = directory.name + '.zip'
+
+        $('span.dragFileInfo').text(
+            $('span.dragFileInfo').data('read')
+        )
+
         miniLock.UI.handleFileSelection(archive)
     })
 
