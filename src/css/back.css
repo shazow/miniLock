@@ -169,7 +169,7 @@ form.decrypt.process.failed div.statusIcon a.failed.octicon {
 
 /* Filename styles */
 
-form.process { 
+form.process {
 	font-size: 12px;
 	line-height: 16px;
 }
@@ -260,7 +260,7 @@ form.process.unprocessed div.random.name.activated {
 }
 
 
-form.process div.name h1 { 
+form.process div.name h1 {
 	font-size: 24px;
 	line-height: 25px;
 }
@@ -488,6 +488,10 @@ form.process div.summary {
 form.process.encrypted div.summary,
 form.process.decrypted div.summary {
 	visibility: visible;
+}
+
+form.process div.summary span.spaceToAllowWordWrapOnExtensions {
+	font-size: 0px;
 }
 
 /* Notice when the filename of a decrypted file is suspect */
