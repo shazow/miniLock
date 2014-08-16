@@ -146,13 +146,26 @@ $('div.fileSelector').on('dragleave', function() {
 	return false
 })
 
+
 $('div.fileSelector').on('drop', function(e) {
 	$('span.dragFileInfo').text(
 		$('span.dragFileInfo').data('read')
 	)
 	e.preventDefault()
-	var file = e.originalEvent.dataTransfer.files[0]
-	miniLock.UI.handleFileSelection(file)
+
+	// Treat the dropped file as a DataTransferItem
+	// such to easily convert it to an DataTransferEntry
+	// using Webkit. This way we can take advantage of
+	// the attribute isDirectory
+	var item = e.originalEvent.dataTransfer.items[0]
+
+    // Sadly, works only using Webkit at the moment ...
+	if (item.webkitGetAsEntry().isDirectory) {
+		miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
+	} else {
+		miniLock.UI.handleFileSelection(item.getAsFile())
+	}
+
 	return false
 })
 
@@ -168,12 +181,23 @@ $('input.fileSelectDialog').change(function(e) {
 	$('span.dragFileInfo').text(
 		$('span.dragFileInfo').data('read')
 	)
-	var file = this.files[0]
+    	// Treat the dropped file as a DataTransferItem
+    	// such to easily convert it to an DataTransferEntry
+    	// using Webkit. This way we can take advantage of
+    	// the attribute isDirectory
+	var item = e.originalEvent.dataTransfer.items[0]
+
+
 	// Pause to give the operating system a moment to close its
 	// file selection dialog box so that the transition to the
 	// next screen will be smoother.
 	setTimeout(function(){
-		miniLock.UI.handleFileSelection(file)
+        // Sadly, works only using Webkit at the moment ...
+        if (item.webkitGetAsEntry().isDirectory) {
+            miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
+        } else {
+            miniLock.UI.handleFileSelection(item.getAsFile())
+        }
 	}, 600)
 	return false
 })
@@ -187,17 +211,69 @@ $('div.myMiniLockID,div.senderID').click(function() {
 	selection.addRange(range)
 })
 
-// Accept and decrypt miniLock files sent to the application
-// from the operating system (usually from a double-click).
-if (window.chrome && window.chrome.app && window.chrome.app.runtime) {
-	window.chrome.app.runtime.onLaunched.addListener(function(input){
-		if (miniLock.session && input.items && input.items[0]) {
-			input.items[0].entry.file(function(file){
-				miniLock.UI.handleFileSelection(file)
-				miniLock.UI.flipToBack()
-			})
-		}
-	})
+miniLock.UI.handleDirectorySelection = function(directory) {
+	$('span.dragFileInfo').text(
+		$('span.dragFileInfo').data('zip')
+	)
+    var walk = function(dir, done) {
+        var results = []
+        dir.createReader().readEntries(function(list) {
+            var pending = list.length
+            if (!pending) {
+                return done(results, null)
+            }
+            list.forEach(function(l) {
+                if (l.isDirectory) {
+                    walk(l, function(res) {
+                        results = results.concat(res)
+                        if (!--pending) {
+                            done(results, null)
+                        }
+                    })
+                } else {
+                    l.file(function(file) {
+                        var reader = new FileReader()
+                        reader.onload = function() {
+                            results.push({
+                                path: l.fullPath,
+                                content: reader.result
+                            })
+                            if (!--pending) {
+                                done(results, null)
+                            }
+                        }
+                        reader.readAsArrayBuffer(file)
+                    })
+                }
+            })
+        }, function(err) {
+            return done(err)
+        })
+    }
+
+    // Walk through the tree, then zip the result
+    // and call handleFileSelection using it as
+    // the file to encrypt
+    walk(directory, function(res, err) {
+        if (err) {
+            throw err
+        }
+        var zip = new JSZip()
+        res.forEach(function(r) {
+            zip.file(r.path, r.content)
+        })
+        var archive = new Blob([zip.generate({type: 'blob'})], {})
+        // We add a name attribute to our archive such to
+        // fake handleFileSelection dealing with a true File,
+        // not a Blob
+        archive.name = directory.name + '.zip'
+
+        $('span.dragFileInfo').text(
+            $('span.dragFileInfo').data('read')
+        )
+
+        miniLock.UI.handleFileSelection(archive)
+    })
 }
 
 // Handle file selection via drag/drop, select dialog or OS launch.
@@ -242,6 +318,19 @@ miniLock.UI.handleFileSelection = function(file) {
 		$('span.dragFileInfo').text(
 			$('span.dragFileInfo').data('error')
 		)
+	})
+}
+
+// Accept and decrypt miniLock files sent to the application
+// from the operating system (usually from a double-click).
+if (window.chrome && window.chrome.app && window.chrome.app.runtime) {
+	window.chrome.app.runtime.onLaunched.addListener(function(input){
+		if (miniLock.session && input.items && input.items[0]) {
+			input.items[0].entry.file(function(file){
+				miniLock.UI.handleFileSelection(file)
+				miniLock.UI.flipToBack()
+			})
+		}
 	})
 }
 

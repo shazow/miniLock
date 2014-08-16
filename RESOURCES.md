@@ -28,6 +28,10 @@ License: MIT
 Origin: https://github.com/symeapp/utip
 License: MIT
 
+##JSZip
+Origin: https://github.com/Stuk/jszip
+License: MIT
+
 ##Mustache.js
 Origin: https://github.com/janl/mustache.js/
 License: MIT
