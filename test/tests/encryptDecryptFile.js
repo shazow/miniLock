@@ -2,38 +2,21 @@
 QUnit.asyncTest('encryptDecryptFile', function(assert) {
 	'use strict';
 
+	var dataURItoBlob = function(dataURI, dataTYPE) {
+    	var binary = atob(dataURI.split(',')[1]), array = []
+        for (var i = 0; i < binary.length; i++) {
+			array.push(binary.charCodeAt(i))
+		}
+        return new Blob([new Uint8Array(array)], {type: dataTYPE})
+    }
+
 	// Chunk size (in bytes)
 	// Warning: Must not be less than 256 bytes
 	miniLock.crypto.chunkSize = 1024 * 1024 * 1
 
-	var xhr = new XMLHttpRequest()
-	xhr.open('GET', 'files/test.jpg', true)
-	xhr.responseType = 'blob'
-	xhr.onload = function() {
-		assert.deepEqual(this.response.size, 348291, 'Original file size')
-		miniLock.file.read(this.response, 0, this.response.size, function(result) {
-			var hash = new BLAKE2s(32)
-			hash.update(result.data)
-			assert.deepEqual(
-				nacl.util.encodeBase64(hash.digest()),
-				'b5Uwx4IPiILdDL6Ym0GD/w1PIMu9hP1evJgYSKBH+/c=',
-				'Original file hash'
-			)
-		})
-		this.response.name = 'test.jpg'
-		miniLock.crypto.encryptFile(
-			this.response,
-			'test.jpg',
-			[
-				'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
-				'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7Xe12'
-			],
-			'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
-			Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
-			miniLock.test.encryptFileCallback
-		)
-	}
-	xhr.send()
+	var blob = dataURItoBlob(testFile)
+	blob.name = 'test.jpg'
+	assert.deepEqual(blob.size, 348291, 'Original file size')
 	miniLock.test.encryptFileCallback = function(blob, saveName, senderID) {
 		assert.deepEqual(saveName, 'test.jpg.minilock', 'Encrypted file name')
 		assert.deepEqual(blob.size, 349779, 'Encrypted file size')
@@ -63,4 +46,24 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 		}
 		reader.readAsArrayBuffer(blob)
 	}
+	miniLock.file.read(blob, 0, blob.size, function(result) {
+		var hash = new BLAKE2s(32)
+		hash.update(result.data)
+		assert.deepEqual(
+			nacl.util.encodeBase64(hash.digest()),
+			'b5Uwx4IPiILdDL6Ym0GD/w1PIMu9hP1evJgYSKBH+/c=',
+			'Original file hash'
+		)
+	})
+	miniLock.crypto.encryptFile(
+		blob,
+		'test.jpg',
+		[
+			'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
+			'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7Xe12'
+		],
+		'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
+		Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
+		miniLock.test.encryptFileCallback
+	)
 })
