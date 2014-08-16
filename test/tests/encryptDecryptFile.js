@@ -14,7 +14,7 @@ QUnit.asyncTest('encryptDecryptFile', function(assert) {
 	// Warning: Must not be less than 256 bytes
 	miniLock.crypto.chunkSize = 1024 * 1024 * 1
 
-	var blob = dataURItoBlob(testFile)
+	var blob = dataURItoBlob(miniLock.test.testFile)
 	blob.name = 'test.jpg'
 	assert.deepEqual(blob.size, 348291, 'Original file size')
 	miniLock.test.encryptFileCallback = function(blob, saveName, senderID) {
