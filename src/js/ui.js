@@ -231,7 +231,8 @@ miniLock.UI.handleDirectorySelection = function(directory) {
                             done(results, null)
                         }
                     })
-                } else {
+                }
+				else {
                     l.file(function(file) {
                         var reader = new FileReader()
                         reader.onload = function() {
@@ -251,7 +252,6 @@ miniLock.UI.handleDirectorySelection = function(directory) {
             return done(err)
         })
     }
-
     // Walk through the tree, then zip the result
     // and call handleFileSelection using it as
     // the file to encrypt
@@ -268,11 +268,9 @@ miniLock.UI.handleDirectorySelection = function(directory) {
         // fake handleFileSelection dealing with a true File,
         // not a Blob
         archive.name = directory.name + '.zip'
-
         $('span.dragFileInfo').text(
             $('span.dragFileInfo').data('read')
         )
-
         miniLock.UI.handleFileSelection(archive)
     })
 }
