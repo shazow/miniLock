@@ -498,7 +498,7 @@ form.process div.summary span.spaceToAllowWordWrapOnExtensions {
 
 form.process div.suspectFilenameNotice {
 	position: fixed;
-	top: 355px;
+	top: 385px;
 	left: 100px;
 	right: 100px;
 	padding: 10px;
