@@ -10,10 +10,22 @@ $(window).load(function() {
 	if ($(document.body).hasClass('startOnLoad')) {
 		miniLock.UI.setup()
 		miniLock.UI.start()
-		// Pickup input file from the background page and save it
-		// for the moment when miniLock is unlocked.
+		// Pickup file input in Chrome App processes.
+		if (window.chrome && window.chrome.runtime) {
+			window.chrome.runtime.getBackgroundPage(function(process){
+				// If the process was launched with a file...
+				if (process.launchFileEntry) {
+					// Set miniLock.session.launchFile to an instance of File so that it
+					// can be decrypted immediately after miniLock is unlocked.
+					process.launchFileEntry.file(function(file){
+						miniLock.session.launchFile = file
+					})
+				}
+			})
+		}
 	}
 })
+
 
 // UI Startup
 miniLock.UI.start = function() {
@@ -72,12 +84,24 @@ $('form.unlockForm').on('submit', function() {
 						miniLock.session.keys.publicKey
 					)
 				)
-				$('div.unlock').delay(200).fadeOut(200, function() {
-					$('div.selectFile').fadeIn(200)
-					$('div.squareFront').animate({
-						backgroundColor: '#7090ad'
+				if (miniLock.session.launchFile) {
+					miniLock.UI.handleFileSelection(miniLock.session.launchFile)
+					delete miniLock.session.launchFile
+					miniLock.UI.flipToBack()
+					setTimeout(function(){
+						$('div.unlock').hide()
+						$('div.selectFile').show()
+						$('div.squareFront').css({backgroundColor: '#7090ad'})
+					}, 500)
+				}
+				else {
+					$('div.unlock').delay(200).fadeOut(200, function() {
+						$('div.selectFile').fadeIn(200)
+						$('div.squareFront').animate({
+							backgroundColor: '#7090ad'
+						})
 					})
-				})
+				}
 			}
 		}, 100)
 	}
@@ -162,6 +186,19 @@ $('div.myMiniLockID,div.senderID').click(function() {
 	selection.removeAllRanges()
 	selection.addRange(range)
 })
+
+// Accept and decrypt miniLock files sent to the application
+// from the operating system (usually from a double-click).
+if (window.chrome && window.chrome.app && window.chrome.app.runtime) {
+	window.chrome.app.runtime.onLaunched.addListener(function(input){
+		if (miniLock.session && input.items && input.items[0]) {
+			input.items[0].entry.file(function(file){
+				miniLock.UI.handleFileSelection(file)
+				miniLock.UI.flipToBack()
+			})
+		}
+	})
+}
 
 // Handle file selection via drag/drop, select dialog or OS launch.
 miniLock.UI.handleFileSelection = function(file) {
