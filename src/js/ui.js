@@ -153,15 +153,13 @@ $('div.fileSelector').on('drop', function(e) {
 		$('span.dragFileInfo').data('read')
 	)
 	e.preventDefault()
-
 	// Treat the dropped file as a DataTransferItem
 	// such to easily convert it to an DataTransferEntry
 	// using Webkit. This way we can take advantage of
 	// the attribute isDirectory
 	var item = e.originalEvent.dataTransfer.items[0]
-
-    // Sadly, works only using Webkit at the moment ...
 	if (item.webkitGetAsEntry().isDirectory) {
+		// Sadly, works only using Webkit at the moment...
 		miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
 	} else {
 		miniLock.UI.handleFileSelection(item.getAsFile())
@@ -799,13 +797,13 @@ miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 
 // Uncomment the following to unlock a demo session automatically.
 
-$(window).load(function() {
+/* $(window).load(function() {
 	if ($(document.body).hasClass('startOnLoad')) {
 		$('input.miniLockEmail').val('manufacturing@minilock.io')
 		$('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 		$('form.unlockForm').submit()
 	}
-})
+}) */
 
 
 // Quickly setup the default encryption setup screen for design work:
