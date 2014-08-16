@@ -9,7 +9,7 @@ miniLock.templates.keyStrengthMoreInfo = ''
 	+ '<input type="button" value="Get another phrase" /></p>'
 
 miniLock.templates.recipientListIdentity = ''
-	+ '<div class="{{className}} identity">'
+	+ '<div class="{{className}} identity" data-me="Me" data-invalid="Invalid" data-duplicate="Duplicate">'
 	+ 	'<label>{{label}}</label>'
 	+ 	'<input class="code" type="text" placeholder="Add another miniLock ID" value="{{id}}" spellcheck="false" />'
 	+ 	'<input class="remove" type="button" value="&#xf081;" tabindex="-1" />'

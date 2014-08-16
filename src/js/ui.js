@@ -368,6 +368,14 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	// Render the size of the input file.
 	$('form.process a.fileSize').html(miniLock.UI.readableFileSize(file.size))
 	// Insert the sender's miniLock ID if the list is empty.
+	if ($('form.process div.blank.identity').size() === 0) {
+		for (var i = 0; i < 4; i++) {
+			$('form.process div.miniLockIDList').append(Mustache.render(
+				miniLock.templates.recipientListIdentity,
+				{'className': 'blank'}
+			))
+		}
+	}
 	if ($('form.process div.blank.identity').size() === $('form.process div.identity').size()) {
 		var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
 		$('form.process div.blank.identity:first-child').replaceWith(Mustache.render(
@@ -470,18 +478,22 @@ $('form.process').on('input', 'div.identity', function() {
 	$(this).removeClass('blank invalid session')
 	$(this).find('label').empty()
 	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	var inputID   = $(this).find('input[type=text]').val().trim()
+	var inputID      = $(this).find('input[type=text]').val().trim()
 	if (inputID.length === 0) {
 		$(this).addClass('blank')
 	}
 	else {
-		if (inputID === myMiniLockID) {
-			$(this).addClass('session')
-			$(this).find('label').text('Me')
-		}
 		if (!miniLock.util.validateID(inputID)) {
 			$(this).addClass('invalid')
-			$(this).find('label').text('Invalid')
+			$(this).find('label').text(
+				$(this).data('invalid')
+			)
+		}
+		else if (inputID === myMiniLockID) {
+			$(this).addClass('session')
+			$(this).find('label').text(
+				$(this).data('me')
+			)
 		}
 	}
 	var withoutMyMiniLockID = $('form.process div.session.identity:not(.expired)').size() === 0
