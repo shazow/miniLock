@@ -31,7 +31,7 @@ $(window).load(function() {
 miniLock.UI.start = function() {
 	$('[data-utip]').utip()
 	$('input.miniLockEmail').focus()
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('select')
 	)
 }
@@ -134,14 +134,14 @@ $('form.unlockForm').on('submit', function() {
 // -----------------------
 
 $('div.fileSelector').on('dragover', function() {
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('drop')
 	)
 	return false
 })
 
 $('div.fileSelector').on('dragleave', function() {
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('select')
 	)
 	return false
@@ -149,7 +149,7 @@ $('div.fileSelector').on('dragleave', function() {
 
 
 $('div.fileSelector').on('drop', function(e) {
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('read')
 	)
 	e.preventDefault()
@@ -179,26 +179,15 @@ $('input.fileSelectDialog').change(function(e) {
 	if (!this.files) {
 		return false
 	}
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('read')
 	)
-    	// Treat the dropped file as a DataTransferItem
-    	// such to easily convert it to an DataTransferEntry
-    	// using Webkit. This way we can take advantage of
-    	// the attribute isDirectory
-	var item = e.originalEvent.dataTransfer.items[0]
-
-
+	var file = this.files[0]
 	// Pause to give the operating system a moment to close its
 	// file selection dialog box so that the transition to the
 	// next screen will be smoother.
 	setTimeout(function(){
-        // Sadly, works only using Webkit at the moment ...
-        if (item.webkitGetAsEntry().isDirectory) {
-            miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
-        } else {
-            miniLock.UI.handleFileSelection(item.getAsFile())
-        }
+        miniLock.UI.handleFileSelection(file)
 	}, 600)
 	return false
 })
@@ -213,7 +202,7 @@ $('div.myMiniLockID,div.senderID').click(function() {
 })
 
 miniLock.UI.handleDirectorySelection = function(directory) {
-	$('span.dragFileInfo').text(
+	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('zip')
 	)
     var walk = function(dir, done) {
@@ -268,7 +257,7 @@ miniLock.UI.handleDirectorySelection = function(directory) {
         // fake handleFileSelection dealing with a true File,
         // not a Blob
         archive.name = directory.name + '.zip'
-        $('span.dragFileInfo').text(
+        $('span.dragFileInfo').html(
             $('span.dragFileInfo').data('read')
         )
         miniLock.UI.handleFileSelection(archive)
@@ -291,7 +280,7 @@ miniLock.UI.handleFileSelection = function(file) {
 			}
 		}
 		setTimeout(function() {
-			$('span.dragFileInfo').text(
+			$('span.dragFileInfo').html(
 				$('span.dragFileInfo').data('select')
 			)
 		}, 1000)
@@ -314,7 +303,7 @@ miniLock.UI.handleFileSelection = function(file) {
 		}
 		miniLock.UI.flipToBack()
 	}, function() {
-		$('span.dragFileInfo').text(
+		$('span.dragFileInfo').html(
 			$('span.dragFileInfo').data('error')
 		)
 	})
@@ -810,13 +799,13 @@ miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 
 // Uncomment the following to unlock a demo session automatically.
 
-/* $(window).load(function() {
+$(window).load(function() {
 	if ($(document.body).hasClass('startOnLoad')) {
 		$('input.miniLockEmail').val('manufacturing@minilock.io')
 		$('input.miniLockKey').val('Sometimes miniLock people use this key when they are working on the software')
 		$('form.unlockForm').submit()
 	}
-}) */
+})
 
 
 // Quickly setup the default encryption setup screen for design work:
