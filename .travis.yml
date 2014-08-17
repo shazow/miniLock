@@ -3,8 +3,10 @@ language: node_js
 node_js:
   - "0.10"
 
-before_script:
+install:
+  - "npm install -g grunt-cli"
   - "npm install"
 
 script:
   - "make lint"
+  - "npm test"

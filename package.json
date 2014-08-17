@@ -5,11 +5,17 @@
   "directories": {},
   "dependencies": {},
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-saucelabs": "^8.3.1",
     "jshint": "latest"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/kaepora/miniLock.git"
+  },
+  "scripts": {
+    "test": "grunt test"
   },
   "keywords": [
     "encryption",
