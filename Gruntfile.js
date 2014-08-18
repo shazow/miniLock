@@ -14,9 +14,7 @@ module.exports = function(grunt) {
 					urls: ["http://127.0.0.1:9999/test/mUTK.html"],
 					build: process.env.TRAVIS_JOB_ID,
 					browsers: [{ browserName: "chrome" }],
-					testname: "miniLock QUnit Tests",
-					username: SAUCE_USERNAME,
-					key: SAUCE_ACCESS_KEY
+					testname: "miniLock QUnit Tests"
 				}
 			}
 		}
