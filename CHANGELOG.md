@@ -1,5 +1,10 @@
 #Changelog
 
+##miniLock 1.0.2
+**August 18 2014**
+- miniLock now supports folder encryption. Simply drag and drop the folder into miniLock to compress and encrypt it.
+- Bug fixes and improvements.
+
 ##miniLock 1.0.1
 **August 7 2014**
 
