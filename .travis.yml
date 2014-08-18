@@ -1,12 +1,13 @@
 language: node_js
-
-node_js:
-  - "0.10"
-
+  node_js:
+    - '0.10'
 install:
-  - "npm install -g grunt-cli"
-  - "npm install"
-
+  - npm install -g grunt-cli
+  - npm install
 script:
-  - "make lint"
-  - "npm test"
+  - make lint
+  - npm test
+env:
+  global:
+  - secure: ABz2bohIJOzD3t978zLqaRK8jfN7utFdg4VLaBKvMgc5th0QWc0l3nqPjEPGu9pp8YETcIa/zQGSVB0jcQGKOfzq3532bV4Hsw2tifC1KRmUZGYU/8cPQj3EBRbOQqEHxxtQnQO6ykKTM/fzNO2/vAS4VkazS1UNDomaM8xxi5I=
+  - secure: TLF3PDH6YMye/fZoQSg2bm/udSxru/cc1cT9EhXuyMaiBsgWcwyRIPDKNcRuBqQh3+XhwKmMP9hVDFUQkQcFaEq3OyN3SqE/rxRvVO0lVj+bJDzbB+Mz3KRP2oSX0TuuYw6bwfYN/8r+Xwv/eDoSRMJ+QPT0L53xtzSBxOL5aqo=

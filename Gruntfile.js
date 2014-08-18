@@ -15,8 +15,8 @@ module.exports = function(grunt) {
 					build: process.env.TRAVIS_JOB_ID,
 					browsers: [{ browserName: "chrome" }],
 					testname: "miniLock QUnit Tests",
-					username: "kaepora",
-					key: "131ae777-402f-464c-88e7-6a6e7c8e8727"
+					username: SAUCE_USERNAME,
+					key: SAUCE_ACCESS_KEY
 				}
 			}
 		}
