@@ -1,9 +1,12 @@
 {
 	"name": "miniLock",
 	"short_name": "miniLock",
+	"default_locale": "en",
 	"description": "File encryption software that does more with less.",
 	"version": "1.0.1",
 	"author": "Nadim Kobeissi",
+	"homepage_url": "https://minilock.io",
+	"minimum_chrome_version": "36",
 	"manifest_version": 2,
 	"offline_enabled": true,
 	"icons": {
