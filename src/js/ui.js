@@ -185,7 +185,7 @@ $('input.fileSelectDialog').change(function(e) {
 	// file selection dialog box so that the transition to the
 	// next screen will be smoother.
 	setTimeout(function(){
-        miniLock.UI.handleFileSelection(file)
+		miniLock.UI.handleFileSelection(file)
 	}, 600)
 	return false
 })
@@ -203,63 +203,63 @@ miniLock.UI.handleDirectorySelection = function(directory) {
 	$('span.dragFileInfo').html(
 		$('span.dragFileInfo').data('zip')
 	)
-    var walk = function(dir, done) {
-        var results = []
-        dir.createReader().readEntries(function(list) {
-            var pending = list.length
-            if (!pending) {
-                return done(results, null)
-            }
-            list.forEach(function(l) {
-                if (l.isDirectory) {
-                    walk(l, function(res) {
-                        results = results.concat(res)
-                        if (!--pending) {
-                            done(results, null)
-                        }
-                    })
-                }
+	var walk = function(dir, done) {
+		var results = []
+		dir.createReader().readEntries(function(list) {
+			var pending = list.length
+			if (!pending) {
+				return done(results, null)
+			}
+			list.forEach(function(l) {
+				if (l.isDirectory) {
+					walk(l, function(res) {
+						results = results.concat(res)
+						if (!--pending) {
+							done(results, null)
+						}
+					})
+				}
 				else {
-                    l.file(function(file) {
-                        var reader = new FileReader()
-                        reader.onload = function() {
-                            results.push({
-                                path: l.fullPath,
-                                content: reader.result
-                            })
-                            if (!--pending) {
-                                done(results, null)
-                            }
-                        }
-                        reader.readAsArrayBuffer(file)
-                    })
-                }
-            })
-        }, function(err) {
-            return done(err)
-        })
-    }
-    // Walk through the tree, then zip the result
-    // and call handleFileSelection using it as
-    // the file to encrypt
-    walk(directory, function(res, err) {
-        if (err) {
-            throw err
-        }
-        var zip = new JSZip()
-        res.forEach(function(r) {
-            zip.file(r.path, r.content)
-        })
-        var archive = new Blob([zip.generate({type: 'blob'})], {})
-        // We add a name attribute to our archive such to
-        // fake handleFileSelection dealing with a true File,
-        // not a Blob
-        archive.name = directory.name + '.zip'
-        $('span.dragFileInfo').html(
-            $('span.dragFileInfo').data('read')
-        )
-        miniLock.UI.handleFileSelection(archive)
-    })
+					l.file(function(file) {
+						var reader = new FileReader()
+						reader.onload = function() {
+							results.push({
+								path: l.fullPath,
+								content: reader.result
+							})
+							if (!--pending) {
+								done(results, null)
+							}
+						}
+						reader.readAsArrayBuffer(file)
+					})
+				}
+			})
+		}, function(err) {
+			return done(err)
+		})
+	}
+	// Walk through the tree, then zip the result
+	// and call handleFileSelection using it as
+	// the file to encrypt
+	walk(directory, function(res, err) {
+		if (err) {
+			throw err
+		}
+		var zip = new JSZip()
+		res.forEach(function(r) {
+			zip.file(r.path, r.content)
+		})
+		var archive = new Blob([zip.generate({type: 'blob'})], {})
+		// We add a name attribute to our archive such to
+		// fake handleFileSelection dealing with a true File,
+		// not a Blob
+		archive.name = directory.name + '.zip'
+		$('span.dragFileInfo').html(
+			$('span.dragFileInfo').data('read')
+		)
+		miniLock.UI.handleFileSelection(archive)
+	})
 }
 
 // Handle file selection via drag/drop, select dialog or OS launch.
@@ -349,11 +349,11 @@ $('form.process').on('encrypt:setup', function(event, file) {
 	$('form.process').removeClass(miniLock.UI.resetProcessFormClasses)
 	$('form.process').addClass('unprocessed')
 	var originalName = file.name
-	var inputName    = file.name
+	var inputName	= file.name
 	var randomName   = miniLock.util.getRandomFilename()
 	var outputName   = $('form.process').hasClass('withRandomName') ? randomName : originalName
 	miniLock.UI.renderAllFilenameTags({
-		'input':    inputName,
+		'input':	inputName,
 		'output':   outputName,
 		'original': originalName,
 		'random':   randomName
@@ -478,7 +478,7 @@ $('form.process').on('input', 'div.identity', function() {
 	$(this).removeClass('blank invalid session')
 	$(this).find('label').empty()
 	var myMiniLockID = miniLock.crypto.getMiniLockID(miniLock.session.keys.publicKey)
-	var inputID      = $(this).find('input[type=text]').val().trim()
+	var inputID	  = $(this).find('input[type=text]').val().trim()
 	if (inputID.length === 0) {
 		$(this).addClass('blank')
 	}
@@ -677,7 +677,7 @@ miniLock.UI.renderAllFilenameTags = function(filenames){
 	$('form.process div.name').removeClass('activated shelved expired')
 	$('form.process div.name input').val('')
 	$('form.process div.name h1').empty()
-	miniLock.UI.renderFilenameTag('input',    filenames.input)
+	miniLock.UI.renderFilenameTag('input',	filenames.input)
 	miniLock.UI.renderFilenameTag('output',   filenames.output)
 	miniLock.UI.renderFilenameTag('original', filenames.original)
 	miniLock.UI.renderFilenameTag('random',   filenames.random)
@@ -740,8 +740,8 @@ miniLock.UI.fileOperationHasFailed = function(operation, errorCode) {
 // For example, 7493 becomes '7KB'.
 miniLock.UI.readableFileSize = function(bytes) {
 	var KB = bytes / 1024
-	var MB = KB    / 1024
-	var GB = MB    / 1024
+	var MB = KB	/ 1024
+	var GB = MB	/ 1024
 	if (KB < 1024) {
 		return Math.ceil(KB) + 'KB'
 	}
@@ -792,7 +792,7 @@ miniLock.UI.getBasenameAndExtensions = function(filename) {
 //	totalRecipients: Number of total recipients, not including sender, if applicable (Number)
 // }
 miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
-	var totalRecipients      = recipientIDs.length
+	var totalRecipients	  = recipientIDs.length
 	var senderCanDecryptFile = recipientIDs.indexOf(myMiniLockID) === -1 ? false : true
 	if (senderCanDecryptFile) {
 		totalRecipients--
