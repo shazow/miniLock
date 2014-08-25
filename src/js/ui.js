@@ -224,7 +224,8 @@ miniLock.UI.handleDirectorySelection = function(directory) {
 						var reader = new FileReader()
 						reader.onload = function() {
 							results.push({
-								path: l.fullPath,
+								// Making relative path from absolute one
+								path: l.fullPath.slice(1),
 								content: reader.result
 							})
 							if (!--pending) {
