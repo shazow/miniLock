@@ -1,4 +1,4 @@
-#<img src="https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon128.png" width="48"> miniLock  
+#<img src="https://raw.githubusercontent.com/kaepora/miniLock/master/src/img/icon128.png" width="48" alt="" /> miniLock  
 ##File encryption software that does more with less.
 
 [<img src="https://travis-ci.org/kaepora/miniLock.svg?branch=master" width="80">](https://travis-ci.org/kaepora/miniLock)
