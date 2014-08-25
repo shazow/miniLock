@@ -158,7 +158,7 @@ $('div.fileSelector').on('drop', function(e) {
 	// using Webkit. This way we can take advantage of
 	// the attribute isDirectory
 	var items = e.originalEvent.dataTransfer.items
-	var item = items[0]
+	var item = null
 	for (var i = 0; i < items.length; i++) {
 		if (items[i].kind === 'file') {
 			item = items[i]
