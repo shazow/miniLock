@@ -620,7 +620,13 @@ $('form.process').on('decrypt:complete', function(event, file) {
 		miniLock.UI.getBasenameAndExtensions(inputName)
 	))
 	// Show the suspect filename notice when applicable.
-	if (miniLock.util.isFilenameSuspicious(outputName)) {
+	var myMiniLockID = miniLock.crypto.getMiniLockID(
+		miniLock.session.keys.publicKey
+	)
+	if (
+		miniLock.util.isFilenameSuspicious(outputName)
+		&& file.senderID !== myMiniLockID
+	) {
 		$('form.process').addClass('withSuspectFilename')
 	}
 })
