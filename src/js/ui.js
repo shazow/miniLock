@@ -157,7 +157,17 @@ $('div.fileSelector').on('drop', function(e) {
 	// such to easily convert it to an DataTransferEntry
 	// using Webkit. This way we can take advantage of
 	// the attribute isDirectory
-	var item = e.originalEvent.dataTransfer.items[0]
+	var items = e.originalEvent.dataTransfer.items
+	var item = null
+	for (var i = 0; i < items.length; i++) {
+		if (items[i].kind === 'file') {
+			item = items[i]
+			break
+		}
+	}
+	if (!item) {
+		throw new Error('miniLock: File handling failed - not valid file')
+	}
 	if (item.webkitGetAsEntry().isDirectory) {
 		// Sadly, works only using Webkit at the moment...
 		miniLock.UI.handleDirectorySelection(item.webkitGetAsEntry())
