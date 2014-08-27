@@ -489,6 +489,12 @@ $('form.process').on('input', 'div.identity', function() {
 				$(this).data('invalid')
 			)
 		}
+		else if (miniLock.UI.isDuplicateID(inputID)) {
+			$(this).addClass('invalid')
+			$(this).find('label').text(
+				$(this).data('duplicate')
+			)
+		}
 		else if (inputID === myMiniLockID) {
 			$(this).addClass('session')
 			$(this).find('label').text(
@@ -509,7 +515,7 @@ $('form.process').on('input', 'div.identity', function() {
 	}
 })
 
-// Remove an identity from from the list.
+// Remove an identity from the list.
 $('form.process').on('mousedown', 'div.identity input.remove', function() {
 	var identity = $(this).closest('div.identity')
 	identity.find('input.code').blur()
@@ -801,6 +807,18 @@ miniLock.UI.summarizeRecipients = function(recipientIDs, myMiniLockID) {
 		senderCanDecryptFile: senderCanDecryptFile,
 		totalRecipients: totalRecipients
 	}
+}
+
+miniLock.UI.isDuplicateID = function(miniLockID) {
+	var miniLockIDs = $('div.identity:not(.blank) input[type=text]').map(function() {
+		return this.value.trim()
+	}).toArray()
+	for (var i = 0, counter = 0; i < miniLockIDs.length; i++) {
+		if (miniLockIDs[i] === miniLockID) {
+			counter++
+		}
+	}
+	return counter > 1 ? true : false
 }
 
 // -----------------------
