@@ -8,3 +8,6 @@ npm-debug.log
 # miniLock
 release
 Thumbs.db
+
+# WebStorm
+.idea
