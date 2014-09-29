@@ -79,21 +79,22 @@ miniLock magic bytes identify that this is a miniLock-encrypted file:
 
 The header itself is a stringified JSON object which contains information necessary for the recipients to decrypt the file. The JSON object has the following format:
 
-```json
+```javascript
 {
-version: Version of the miniLock protocol used for this file (Currently 1) (Number)
-ephemeral: Public key from ephemeral key pair used to encrypt decryptInfo object (Base64),
-decryptInfo: {
-	(One copy of the below object for every recipient)
-	Unique nonce for decrypting this object (Base64): {
-		senderID: Sender's miniLock ID (Base58),
-		recipientID: miniLock ID of this recipient (used for verfication) (Base58),
-		fileInfo: {
-			fileKey: Key for file decryption (Base64),
-			fileNonce: Nonce for file decryption (Base64),
-			fileHash: BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
-		} (fileInfo is encrypted to recipient's public key using long-term key pair) (Base64),
-	} (encrypted to recipient's public key using ephemeral key pair) (Base64)
+  "version": 1, // Version of the miniLock protocol used for this file (Currently 1) (Number)
+  "ephemeral": "...", // Public key from ephemeral key pair used to encrypt decryptInfo object (Base64)
+  "decryptInfo": {
+    // (One copy of the below object for every recipient)
+    "...": { // Key is a unique nonce for decrypting this object (Base64)
+      "senderID": "...", // Sender's miniLock ID (Base58)
+      "recipientID": "...", // miniLock ID of this recipient (used for verfication) (Base58)
+      "fileInfo": {
+        "fileKey": "...", // Key for file decryption (Base64)
+        "fileNonce": "...", // Nonce for file decryption (Base64)
+        "fileHash": "..." // BLAKE2 hash (32 bytes) of the ciphertext bytes. (Base64)
+      } // fileInfo is encrypted to recipient's public key using long-term key pair (Base64)
+    } // encrypted to recipient's public key using ephemeral key pair (Base64)
+  }
 }
 ```
 
